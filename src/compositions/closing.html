@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Closing - Gemini Flash 4</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --cream: #EBE7E1;
+        --ink: #1E1C1A;
+        --red: #C83329;
+        --grey: #716D67;
+        --card: #FBFAF8;
+        --caption-inactive: #B5AFA7;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--cream);
+        color: var(--ink);
+        font-family: 'Instrument Sans', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--cream);
+      }
+
+      /* 1. Top Status Tag (JetBrains Mono 25px, y: 132px) */
+      .top-tag {
+        position: absolute;
+        left: 120px;
+        top: 132px;
+        width: 840px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 25px;
+        font-weight: 700;
+        color: var(--grey);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        z-index: 10;
+        opacity: 0;
+      }
+
+      .top-tag .status-red {
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      /* 2. Captions Container at x: 120px, y: 196px, width: 850px */
+      #captions {
+        position: absolute;
+        left: 120px;
+        top: 196px;
+        width: 850px;
+        display: block;
+        z-index: 50;
+      }
+
+      .caption-line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 850px;
+        display: block;
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 500;
+        font-size: 62px;
+        line-height: 1.25;
+        letter-spacing: -0.025em;
+        word-spacing: 0.04em;
+        opacity: 0;
+      }
+
+      .word {
+        display: inline;
+        color: var(--caption-inactive);
+      }
+
+      .word.keyword {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 72px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        vertical-align: -2px;
+      }
+
+      /* 3. Card Stage (x: 120px, y: 560px, width: 840px, height: 380px) */
+      #card-stage {
+        position: absolute;
+        left: 120px;
+        top: 560px;
+        width: 840px;
+        height: 380px;
+        z-index: 20;
+        opacity: 0;
+      }
+
+      /* Halftone dot shadow: 1.7px dots on 8px grid, offset 13px left, 12px down */
+      .halftone-shadow {
+        position: absolute;
+        left: -13px;
+        top: 12px;
+        width: 840px;
+        height: 380px;
+        border-radius: 20px;
+        background-image: radial-gradient(circle, var(--ink) 1.7px, transparent 1.8px);
+        background-size: 8px 8px;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* A. Clean 4-Pillars Summary Card (0.0s to 3.8s) */
+      #summary-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 840px;
+        height: 380px;
+        background-color: var(--card);
+        border: 3px solid var(--ink);
+        border-radius: 20px;
+        padding: 24px 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+        opacity: 1;
+      }
+
+      .summary-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .summary-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--grey);
+        letter-spacing: 0.08em;
+      }
+
+      .summary-badge {
+        font-family: 'Anton', sans-serif;
+        font-size: 26px;
+        color: var(--red);
+        letter-spacing: 0.04em;
+      }
+
+      .pillars-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 10px;
+      }
+
+      .pillar-item {
+        background: #F4F1EC;
+        border: 2px solid var(--ink);
+        border-radius: 14px;
+        padding: 12px 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 128px;
+      }
+
+      .pillar-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .pillar-num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--red);
+      }
+
+      .pillar-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--ink);
+        background: #E4DFD7;
+        padding: 2px 7px;
+        border-radius: 4px;
+      }
+
+      .pillar-tag.slashed {
+        color: var(--red);
+        background: #FDE8E7;
+      }
+
+      .pillar-stat {
+        font-family: 'Anton', sans-serif;
+        font-size: 42px;
+        color: var(--ink);
+        line-height: 1;
+      }
+
+      .pillar-stat.red {
+        color: var(--red);
+      }
+
+      .pillar-desc {
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 17px;
+        font-weight: 600;
+        color: var(--grey);
+      }
+
+      /* B. Exact Hook Frame 0 Problem Card (transitions in at 3.8s) */
+      #problem-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 840px;
+        height: 380px;
+        border-radius: 20px;
+        border: 3px solid var(--ink);
+        background-color: var(--card);
+        padding: 34px 38px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 3;
+        overflow: hidden;
+        opacity: 0;
+      }
+
+      .card-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: #F8ECEB;
+        border: 1.5px solid var(--red);
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--red);
+      }
+
+      .status-pill-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--red);
+        letter-spacing: 0.04em;
+      }
+
+      .server-cluster-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--grey);
+        letter-spacing: 0.05em;
+      }
+
+      .problem-headline-block {
+        margin-top: 4px;
+      }
+
+      .problem-headline {
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .problem-subheadline {
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--grey);
+        margin-top: 6px;
+        letter-spacing: -0.01em;
+      }
+
+      .progress-bar-wrap {
+        width: 100%;
+        margin-top: 2px;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 44px;
+        background: var(--cream);
+        border: 2.5px solid var(--ink);
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        width: 14%;
+        height: 100%;
+        background: var(--red);
+        border-right: 2px solid var(--ink);
+      }
+
+      .progress-bar-legend {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .legend-left {
+        color: var(--red);
+      }
+
+      .legend-right {
+        color: var(--grey);
+      }
+
+      .problem-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1.5px dashed #D6D1CA;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+      }
+
+      .footer-item {
+        color: var(--grey);
+      }
+
+      .footer-item strong {
+        color: var(--ink);
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="closing"
+      data-start="0"
+      data-duration="5.31"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Top Tag (JetBrains Mono 25px, y: 132px) -->
+      <div id="top-tag" class="top-tag">
+        <span>SUMMARY · FLASH 4</span>
+        <span>LEAKS: <span class="status-red">CONFIRMED</span></span>
+      </div>
+
+      <!-- Spoken Captions Container (x: 120px, y: 196px, width: 850px) -->
+      <div id="captions">
+        <!-- Phrase 1 (0.0s to 3.42s): "If these leaks deliver developers will finally never have to worry that" -->
+        <div id="phrase-1" class="caption-line">
+          <span id="w-if" class="word">If</span>
+          <span id="w-these" class="word">these</span>
+          <span id="w-leaks" class="word">leaks</span>
+          <span id="w-deliver" class="word">deliver</span>
+          <span id="w-developers" class="word">developers</span>
+          <span id="w-will" class="word">will</span>
+          <span id="w-finally" class="word">finally</span>
+          <span id="w-never" class="word">never</span>
+          <span id="w-have" class="word">have</span>
+          <span id="w-to" class="word">to</span>
+          <span id="w-worry" class="word">worry</span>
+          <span id="w-that" class="word">that</span>
+        </div>
+
+        <!-- Phrase 2 (3.48s to 5.31s): "Heavy models are too slow" (Exact match for Hook Frame 0) -->
+        <div id="phrase-2" class="caption-line">
+          <span id="w-heavy" class="word w-heavy">Heavy</span>
+          <span id="w-models" class="word w-models">models</span>
+          <span id="w-are" class="word w-are">are</span>
+          <span id="w-too" class="word keyword w-too">too</span>
+          <span id="w-slow" class="word w-slow">slow</span>
+        </div>
+      </div>
+
+      <!-- Card Stage (x: 120px, y: 560px, width: 840px, height: 380px) -->
+      <div id="card-stage">
+        <!-- Halftone Dot Shadow: offset 13px left, 12px down -->
+        <div class="halftone-shadow"></div>
+
+        <!-- 4 Pillars Summary Card (0.0s - 3.8s) -->
+        <div id="summary-card">
+          <div class="summary-header">
+            <span class="summary-tag">GEMINI FLASH 4 SPECIFICATION</span>
+            <span class="summary-badge">4 PILLARS</span>
+          </div>
+
+          <div class="pillars-grid" data-layout-ignore="true">
+            <div class="pillar-item">
+              <div class="pillar-meta">
+                <span class="pillar-num">01 · LATENCY</span>
+                <span class="pillar-tag">STREAM</span>
+              </div>
+              <div class="pillar-stat">SUB-20MS</div>
+              <div class="pillar-desc">Instant interactive speed</div>
+            </div>
+
+            <div class="pillar-item">
+              <div class="pillar-meta">
+                <span class="pillar-num">02 · CONTEXT</span>
+                <span class="pillar-tag">MEMORY</span>
+              </div>
+              <div class="pillar-stat">10M TOKENS</div>
+              <div class="pillar-desc">Full repo in-memory context</div>
+            </div>
+
+            <div class="pillar-item">
+              <div class="pillar-meta">
+                <span class="pillar-num">03 · RUNTIME</span>
+                <span class="pillar-tag">BAKED IN</span>
+              </div>
+              <div class="pillar-stat">NATIVE TOOLS</div>
+              <div class="pillar-desc">Zero middleware glue code</div>
+            </div>
+
+            <div class="pillar-item">
+              <div class="pillar-meta">
+                <span class="pillar-num">04 · PRICING</span>
+                <span class="pillar-tag slashed">SLASHED</span>
+              </div>
+              <div class="pillar-stat red">-90% COST</div>
+              <div class="pillar-desc">Edge distillation efficiency</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exact Problem Card from Hook Frame 0 (transitions in at 3.8s) -->
+        <div id="problem-card" data-layout-ignore="true">
+          <div class="card-header-row">
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              <span class="status-pill-text">LATENCY BOTTLENECK</span>
+            </div>
+            <div class="server-cluster-tag">CLUSTER US-EAST-NODE-04</div>
+          </div>
+
+          <div class="problem-headline-block">
+            <div class="problem-headline">LAGGING SERVER COMPUTE - 4,820ms</div>
+            <div class="problem-subheadline">Time to First Token (TTFT) • Critical Model Stalling</div>
+          </div>
+
+          <div class="progress-bar-wrap">
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+            <div class="progress-bar-legend">
+              <span class="legend-left">STUCK AT 14% COMPUTATION</span>
+              <span class="legend-right">TIMEOUT CEILING: 5,000ms</span>
+            </div>
+          </div>
+
+          <div class="problem-card-footer">
+            <div class="footer-item">THROUGHPUT: <strong>2.8 tok/s</strong></div>
+            <div class="footer-item">MEMORY: <strong>98.4% (OOM)</strong></div>
+            <div class="footer-item">THREADS: <strong>100% BLOCKED</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Initialize GSAP Root Timeline
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["closing"] = tl;
+
+      // Initial State
+      gsap.set("#top-tag", { opacity: 0 });
+      gsap.set("#phrase-1", { opacity: 0, y: 0 });
+      gsap.set("#phrase-2", { opacity: 0, y: 15 });
+      gsap.set("#card-stage", { opacity: 0, y: 70 });
+      gsap.set("#summary-card", { opacity: 1, scale: 1 });
+      gsap.set("#problem-card", { opacity: 0, scale: 0.96 });
+
+      // Scene Entrance at 0.0s
+      tl.to("#top-tag", { opacity: 1, duration: 0.25, ease: "power2.out" }, 0.0);
+      tl.fromTo("#card-stage", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.0);
+      tl.to("#phrase-1", { opacity: 1, duration: 0.15, ease: "power2.out" }, 0.0);
+
+      // Caption Phrase 1 Word Sync: Starts #B5AFA7, turns ink #1E1C1A in 0.2s
+      const p1 = [
+        { id: "#w-if", t: 0.0 },
+        { id: "#w-these", t: 0.2 },
+        { id: "#w-leaks", t: 0.4 },
+        { id: "#w-deliver", t: 0.8 },
+        { id: "#w-developers", t: 1.3 },
+        { id: "#w-will", t: 1.7 },
+        { id: "#w-finally", t: 2.0 },
+        { id: "#w-never", t: 2.3 },
+        { id: "#w-have", t: 2.6 },
+        { id: "#w-to", t: 2.8 },
+        { id: "#w-worry", t: 3.1 },
+        { id: "#w-that", t: 3.3 }
+      ];
+      p1.forEach(function (w) {
+        tl.to(w.id, { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, w.t);
+      });
+
+      // Caption Phrase 1 Exits, Phrase 2 Enters
+      tl.to("#phrase-1", { opacity: 0, y: -18, duration: 0.16, ease: "power2.in" }, 3.15);
+      tl.to("#phrase-2", { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" }, 3.22);
+
+      // Caption Phrase 2 Word Sync
+      tl.to("#w-heavy", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 3.52);
+      tl.to("#w-models", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 3.68);
+      tl.to("#w-are", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 4.04);
+      // Key word "too": Instrument Serif italic, red #D7372C
+      tl.to("#w-too", { color: "#C83329", duration: 0.2, ease: "power2.out" }, 4.34);
+      tl.to("#w-slow", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 4.50);
+
+      // Card Transition at 3.8s into Hook Frame 0 Problem Card
+      tl.to("#top-tag", { opacity: 0, duration: 0.25, ease: "power2.in" }, 3.8);
+      tl.to("#summary-card", { opacity: 0, scale: 0.96, duration: 0.28, ease: "power2.in" }, 3.8);
+      tl.fromTo("#problem-card", { scale: 0.96, opacity: 0 }, { opacity: 1, scale: 1, duration: 0.32, ease: "power2.out" }, 3.86);
+
+      // Frame 0 Match for Infinite Seamless Loop
+      // Transition words back to #B5AFA7 so that the final frame at 5.31s
+      // matches Frame 0.0s of Hook 1 identically
+      tl.to(["#w-heavy", "#w-models", "#w-are", "#w-too", "#w-slow"], {
+        color: "#B5AFA7",
+        duration: 0.14,
+        ease: "power2.inOut"
+      }, 5.15);
+
+      tl.seek(0);
+    </script>
+  </body>
+</html>

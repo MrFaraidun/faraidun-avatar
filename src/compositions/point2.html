@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --ground: #EBE7E1;
+        --ink: #1E1C1A;
+        --red: #D7372C;
+        --grey: #8A857E;
+        --grey-inactive: #B5AFA7;
+        --card-bg: #FBFAF8;
+        --font-display: 'Anton', sans-serif;
+        --font-body: 'Instrument Sans', sans-serif;
+        --font-serif: 'Instrument Serif', serif;
+        --font-mono: 'JetBrains Mono', monospace;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--ground);
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--ground);
+      }
+
+      /* Subtle engineering background grid */
+      .bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(to right, rgba(138, 133, 126, 0.09) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(138, 133, 126, 0.09) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+      }
+
+      /* Small label at y: 132px */
+      #meta-label {
+        position: absolute;
+        left: 120px;
+        top: 132px;
+        width: 840px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 25px;
+        font-weight: 500;
+        color: var(--grey);
+        letter-spacing: 0.04em;
+        line-height: 1;
+        z-index: 10;
+      }
+
+      .meta-right span {
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      /* Captions at x: 120, y: 196, width: 850px */
+      #captions {
+        position: absolute;
+        left: 120px;
+        top: 196px;
+        width: 850px;
+        font-family: var(--font-body);
+        font-weight: 500;
+        font-size: 62px;
+        line-height: 1.18;
+        letter-spacing: -0.02em;
+        z-index: 10;
+      }
+
+      .cap-word {
+        display: inline-block;
+        color: var(--grey-inactive);
+        margin-right: 14px;
+        transform-origin: center bottom;
+      }
+
+      .cap-key {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 72px;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+      }
+
+      /* Title slams in at 0.0s */
+      #title-wrapper {
+        position: absolute;
+        left: 120px;
+        top: 434px;
+        width: 840px;
+        z-index: 15;
+        transform-origin: left bottom;
+        opacity: 0;
+      }
+
+      #title-text {
+        font-family: var(--font-display);
+        font-size: 120px;
+        line-height: 0.92;
+        letter-spacing: -0.01em;
+        white-space: nowrap;
+      }
+
+      #swash-svg {
+        display: block;
+        margin-top: 4px;
+        overflow: visible;
+      }
+
+      #swash-path {
+        stroke-dasharray: 760;
+        stroke-dashoffset: 760;
+      }
+
+      /* Main Card at x: 120, y: 620, width: 840, height: 420 */
+      #main-card-group {
+        position: absolute;
+        left: 120px;
+        top: 620px;
+        width: 840px;
+        height: 420px;
+        z-index: 20;
+        opacity: 0;
+      }
+
+      .card-halftone-shadow {
+        position: absolute;
+        left: 12px;
+        top: 12px;
+        width: 840px;
+        height: 420px;
+        border-radius: 20px;
+        background-image: radial-gradient(circle, #1E1C1A 2px, transparent 2.5px);
+        background-size: 8px 8px;
+        opacity: 0.45;
+        z-index: 1;
+      }
+
+      .main-card {
+        position: absolute;
+        inset: 0;
+        background: var(--card-bg);
+        border: 3px solid var(--ink);
+        border-radius: 20px;
+        padding: 32px 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+        box-shadow: 4px 4px 0px rgba(30, 28, 26, 0.08);
+      }
+
+      .card-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-label-badge {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--grey);
+        letter-spacing: 0.06em;
+      }
+
+      .card-dot-green {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #16A34A;
+        border: 1.5px solid var(--ink);
+      }
+
+      #card-badge {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--red);
+        border: 2.5px solid var(--ink);
+        color: var(--card-bg);
+        font-family: var(--font-display);
+        font-size: 32px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 2px 2px 0px var(--ink);
+        opacity: 0;
+      }
+
+      .card-counter-section {
+        margin: 4px 0;
+      }
+
+      #counter-num {
+        font-family: var(--font-display);
+        font-size: 102px;
+        line-height: 0.92;
+        color: var(--ink);
+        letter-spacing: -0.02em;
+      }
+
+      .counter-sub {
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--red);
+        letter-spacing: 0.06em;
+        margin-top: 6px;
+      }
+
+      /* Stamp on ten-million */
+      #stamp-box {
+        position: absolute;
+        right: 32px;
+        top: 108px;
+        border: 5px solid var(--red);
+        border-radius: 8px;
+        padding: 6px 20px;
+        background: rgba(251, 250, 248, 0.98);
+        box-shadow: 4px 4px 0px rgba(215, 55, 44, 0.25);
+        transform: rotate(-6deg);
+        opacity: 0;
+        z-index: 10;
+      }
+
+      #stamp-box span {
+        font-family: var(--font-display);
+        font-size: 52px;
+        color: var(--red);
+        letter-spacing: 0.08em;
+        line-height: 1;
+        display: block;
+      }
+
+      /* Terminal logs line */
+      #terminal-box {
+        background: var(--ground);
+        border: 2px solid var(--ink);
+        border-radius: 12px;
+        padding: 12px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        opacity: 0;
+      }
+
+      .term-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .term-prompt {
+        font-family: var(--font-mono);
+        font-size: 18px;
+        color: var(--grey);
+      }
+
+      .term-code {
+        font-family: var(--font-mono);
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .term-tag {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--red);
+        background: rgba(215, 55, 44, 0.1);
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid var(--red);
+      }
+
+      /* Demo animation: 5 document cards stacking infinitely in perspective */
+      #demo-stack-container {
+        position: absolute;
+        left: 120px;
+        top: 610px;
+        width: 840px;
+        height: 580px;
+        z-index: 25;
+        opacity: 0;
+      }
+
+      .demo-stack-stage {
+        position: relative;
+        width: 840px;
+        height: 480px;
+        perspective: 1100px;
+        perspective-origin: 50% 20%;
+        transform-style: preserve-3d;
+      }
+
+      .doc-card {
+        position: absolute;
+        left: 0;
+        width: 840px;
+        height: 200px;
+        background: var(--card-bg);
+        border: 3px solid var(--ink);
+        border-radius: 16px;
+        padding: 18px 24px;
+        box-shadow: 0 12px 24px rgba(30, 28, 26, 0.16), 4px 4px 0px var(--ink);
+        transform-style: preserve-3d;
+        opacity: 0;
+      }
+
+      #doc4 { top: 20px; z-index: 1; transform: translate3d(0, 0, -200px) rotateX(18deg) scale(0.84); }
+      #doc3 { top: 70px; z-index: 2; transform: translate3d(0, 0, -150px) rotateX(18deg) scale(0.88); }
+      #doc2 { top: 120px; z-index: 3; transform: translate3d(0, 0, -100px) rotateX(18deg) scale(0.92); }
+      #doc1 { top: 170px; z-index: 4; transform: translate3d(0, 0, -50px) rotateX(18deg) scale(0.96); }
+      #doc0 { top: 220px; z-index: 5; transform: translate3d(0, 0, 0px) rotateX(18deg) scale(1.0); }
+
+      .doc-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 2px solid rgba(30, 28, 26, 0.12);
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+      }
+
+      .doc-dots {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+
+      .doc-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 1.5px solid var(--ink);
+      }
+
+      .d-red { background: var(--red); }
+      .d-grey { background: var(--grey); }
+
+      .doc-path {
+        font-family: var(--font-mono);
+        font-size: 19px;
+        font-weight: 700;
+        color: var(--ink);
+      }
+
+      .doc-badge {
+        font-family: var(--font-mono);
+        font-size: 15px;
+        font-weight: 700;
+        background: var(--red);
+        color: var(--card-bg);
+        padding: 4px 10px;
+        border-radius: 6px;
+        border: 1.5px solid var(--ink);
+      }
+
+      .doc-code {
+        font-family: var(--font-mono);
+        font-size: 16px;
+        line-height: 1.4;
+        color: var(--ink);
+      }
+
+      .c-line {
+        color: var(--grey);
+        margin-right: 12px;
+        user-select: none;
+      }
+
+      .c-kw {
+        color: var(--red);
+        font-weight: 700;
+      }
+
+      .c-fn {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      #demo-summary {
+        margin-top: 18px;
+        background: var(--ink);
+        color: var(--card-bg);
+        border-radius: 12px;
+        padding: 14px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-weight: 700;
+        box-shadow: 4px 4px 0px rgba(215, 55, 44, 0.4);
+        opacity: 0;
+      }
+
+      .sum-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sum-icon {
+        color: #16A34A;
+        font-size: 14px;
+      }
+
+      .sum-tokens {
+        color: #FBFAF8;
+        background: var(--red);
+        padding: 4px 12px;
+        border-radius: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="point2"
+      data-start="0"
+      data-duration="6.54"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div class="bg-grid"></div>
+
+      <!-- Small label at y: 132px -->
+      <div id="meta-label">
+        <div class="meta-left">02 · CONTEXT</div>
+        <div class="meta-right">TOKENS: <span>10M</span></div>
+      </div>
+
+      <!-- Captions (x: 120, y: 196, width: 850px) -->
+      <div id="captions">
+        <div id="cap-phase-1" class="cap-phase">
+          <span class="cap-word" id="w-second">Second </span>
+          <span class="cap-word" id="w-supply">supply </span>
+          <span class="cap-word" id="w-chains">chains </span>
+          <span class="cap-word" id="w-whisper">whisper </span>
+          <span class="cap-word" id="w-about">about </span>
+          <span class="cap-word" id="w-a">a </span>
+          <span class="cap-word" id="w-staggering">staggering </span>
+          <span class="cap-word cap-key" id="w-tenmillion">ten-million </span>
+        </div>
+        <div id="cap-phase-2" class="cap-phase" style="display: none; opacity: 0;">
+          <span class="cap-word" id="w-token">token </span>
+          <span class="cap-word" id="w-memory">memory </span>
+          <span class="cap-word" id="w-window">window </span>
+          <span class="cap-word" id="w-that">that </span>
+          <span class="cap-word" id="w-remembers">remembers </span>
+          <span class="cap-word" id="w-entire">entire </span>
+          <span class="cap-word" id="w-codebases">codebases</span>
+        </div>
+      </div>
+
+      <!-- Title slams in at 0.0s -->
+      <div id="title-wrapper">
+        <h1 id="title-text">
+          <span style="color: #1E1C1A;">TEN</span> <span style="color: #D7372C;">MILLION</span>
+        </h1>
+        <svg id="swash-svg" viewBox="0 0 740 32" width="740" height="32" fill="none">
+          <path id="swash-path" d="M 6 22 C 180 32, 460 10, 730 16" stroke="#D7372C" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </div>
+
+      <!-- Main Card at x: 120, y: 620, width: 840, height: 420 -->
+      <div id="main-card-group">
+        <div class="card-halftone-shadow"></div>
+        <div class="main-card" id="main-card">
+          <div class="card-header-row">
+            <div class="card-label-badge">
+              <span class="card-dot-green"></span>
+              <span>ACTIVE ATTENTION BUFFER</span>
+            </div>
+            <div id="card-badge">#2</div>
+          </div>
+
+          <div class="card-counter-section">
+            <div id="counter-num">1,000,000</div>
+            <div class="counter-sub">TOKENS · REPOSITORY CONTEXT</div>
+          </div>
+
+          <div id="stamp-box">
+            <span>MASSIVE</span>
+          </div>
+
+          <div id="terminal-box">
+            <div class="term-left">
+              <span class="term-prompt">sys.kv ></span>
+              <span class="term-code">cache_hit: 100% (zero evictions)</span>
+            </div>
+            <span class="term-tag">10M_CONTEXT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Demo animation: 5 document cards stacking infinitely in perspective -->
+      <div id="demo-stack-container" data-layout-ignore="true">
+        <div class="demo-stack-stage">
+          <div class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc4">
+            <div class="doc-header">
+              <div class="doc-dots">
+                <span class="d-red"></span><span class="d-grey"></span><span class="d-grey"></span>
+              </div>
+              <div class="doc-path">llvm-project/llvm/lib/Transforms/</div>
+              <div class="doc-badge">2.1M TOKENS</div>
+            </div>
+            <div class="doc-code">
+              <div><span class="c-line">01</span> <span class="c-kw">void</span> <span class="c-fn">LoopVectorizePass</span>::buildVPlan() {</div>
+              <div><span class="c-line">02</span>   <span class="c-kw">auto</span> *Plan = <span class="c-fn">createInitialVPlan</span>(L);</div>
+              <div><span class="c-line">03</span>   <span class="c-kw">return</span> Plan-&gt;<span class="c-fn">execute</span>(State);</div>
+            </div>
+          </div>
+
+          <div class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc3">
+            <div class="doc-header">
+              <div class="doc-dots">
+                <span class="d-red"></span><span class="d-grey"></span><span class="d-grey"></span>
+              </div>
+              <div class="doc-path">postgres/src/backend/executor/</div>
+              <div class="doc-badge">1.6M TOKENS</div>
+            </div>
+            <div class="doc-code">
+              <div><span class="c-line">01</span> <span class="c-kw">TupleTableSlot</span> *<span class="c-fn">ExecScan</span>(ScanState *node) {</div>
+              <div><span class="c-line">02</span>   <span class="c-kw">return</span> node-&gt;<span class="c-fn">ScanNext</span>(node);</div>
+              <div><span class="c-line">03</span> }</div>
+            </div>
+          </div>
+
+          <div class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc2">
+            <div class="doc-header">
+              <div class="doc-dots">
+                <span class="d-red"></span><span class="d-grey"></span><span class="d-grey"></span>
+              </div>
+              <div class="doc-path">pytorch/torch/csrc/autograd/</div>
+              <div class="doc-badge">1.8M TOKENS</div>
+            </div>
+            <div class="doc-code">
+              <div><span class="c-line">01</span> <span class="c-kw">variable_list</span> <span class="c-fn">Engine</span>::execute() {</div>
+              <div><span class="c-line">02</span>   <span class="c-kw">auto</span> graph = <span class="c-fn">build_backward_graph</span>();</div>
+              <div><span class="c-line">03</span>   <span class="c-kw">return</span> evaluate_edges(graph);</div>
+            </div>
+          </div>
+
+          <div class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc1">
+            <div class="doc-header">
+              <div class="doc-dots">
+                <span class="d-red"></span><span class="d-grey"></span><span class="d-grey"></span>
+              </div>
+              <div class="doc-path">chromium/src/v8/src/compiler/</div>
+              <div class="doc-badge">2.1M TOKENS</div>
+            </div>
+            <div class="doc-code">
+              <div><span class="c-line">01</span> <span class="c-kw">class</span> <span class="c-fn">TurbofanOptimizer</span> : <span class="c-kw">public</span> Pipeline {</div>
+              <div><span class="c-line">02</span>   <span class="c-kw">void</span> <span class="c-fn">OptimizeBytecode</span>(Graph* graph);</div>
+              <div><span class="c-line">03</span> };</div>
+            </div>
+          </div>
+
+          <div class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc0">
+            <div class="doc-header">
+              <div class="doc-dots">
+                <span class="d-red"></span><span class="d-grey"></span><span class="d-grey"></span>
+              </div>
+              <div class="doc-path">linux/kernel/sched/core.c</div>
+              <div class="doc-badge">2.4M TOKENS</div>
+            </div>
+            <div class="doc-code">
+              <div><span class="c-line">01</span> <span class="c-kw">static struct</span> rq *<span class="c-fn">cpu_rq</span>(<span class="c-kw">int</span> cpu) {</div>
+              <div><span class="c-line">02</span>   <span class="c-kw">return</span> &amp;per_cpu(runqueues, cpu);</div>
+              <div><span class="c-line">03</span> }</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="demo-summary">
+          <div class="sum-left">
+            <span class="sum-icon">●</span>
+            <span>REPOSITORIES INGESTED · 5 CODEBASES</span>
+          </div>
+          <div class="sum-tokens">10,000,000 TOKENS</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+
+      const tl = gsap.timeline({ paused: true });
+
+      // 1. Title slams in at 0.0s on spoken word "Second" (scale 1.22 to 1 in 0.24s, power4.out)
+      tl.fromTo("#title-wrapper",
+        { opacity: 0, scale: 1.22 },
+        { opacity: 1, scale: 1.0, duration: 0.24, ease: "power4.out" },
+        0.0
+      );
+
+      // Hand-drawn red swash underline draws across at 0.12s
+      tl.fromTo("#swash-path",
+        { strokeDashoffset: 760 },
+        { strokeDashoffset: 0, duration: 0.36, ease: "power2.out" },
+        0.12
+      );
+
+      // 2. Main Card rises 0.18s later (70px up in 0.4s, power3.out)
+      tl.fromTo("#main-card-group",
+        { opacity: 0, y: 70 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
+        0.18
+      );
+
+      // Number counter: counts up from 1,000,000 to 10,000,000 tokens over 1.15s
+      const counterEl = document.getElementById("counter-num");
+      tl.fromTo(counterEl,
+        { textContent: "1,000,000" },
+        {
+          textContent: 10000000,
+          duration: 1.15,
+          ease: "power2.out",
+          modifiers: {
+            textContent: val => {
+              const n = parseFloat(String(val).replace(/,/g, ""));
+              return isNaN(n) ? "1,000,000" : Math.round(n).toLocaleString("en-US");
+            }
+          }
+        },
+        0.35
+      );
+
+      // Red #2 badge spins in at 0.6s
+      tl.fromTo("#card-badge",
+        { opacity: 0, scale: 0, rotation: -180 },
+        { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2)" },
+        0.60
+      );
+
+      // Terminal logs line: cache_hit: 100% (zero evictions) in under 0.9s
+      tl.fromTo("#terminal-box",
+        { opacity: 0, y: 16 },
+        { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" },
+        0.68
+      );
+
+      // 3. Captions Word sync:
+      // "Second" 0.0s, "supply" 0.46s, "chains" 0.86s, "whisper" 1.14s, "about" 1.50s, "a" 1.58s, "staggering" 1.92s,
+      // "ten-million" 2.32s (KEY WORD: Instrument Serif italic, 72px, red #D7372C), "token" 2.62s, "memory" 3.0s,
+      // "window" 3.4s, "that" 3.94s, "remembers" 4.36s, "entire" 4.68s, "codebases" 5.1s.
+      // Starts #B5AFA7, turns ink #1E1C1A in 0.2s.
+      const captionWords = [
+        { id: "#w-second", time: 0.00, color: "#1E1C1A" },
+        { id: "#w-supply", time: 0.46, color: "#1E1C1A" },
+        { id: "#w-chains", time: 0.86, color: "#1E1C1A" },
+        { id: "#w-whisper", time: 1.14, color: "#1E1C1A" },
+        { id: "#w-about", time: 1.50, color: "#1E1C1A" },
+        { id: "#w-a", time: 1.58, color: "#1E1C1A" },
+        { id: "#w-staggering", time: 1.92, color: "#1E1C1A" },
+        { id: "#w-tenmillion", time: 2.32, color: "#D7372C" },
+        { id: "#w-token", time: 2.62, color: "#1E1C1A" },
+        { id: "#w-memory", time: 3.00, color: "#1E1C1A" },
+        { id: "#w-window", time: 3.40, color: "#1E1C1A" },
+        { id: "#w-that", time: 3.94, color: "#1E1C1A" },
+        { id: "#w-remembers", time: 4.36, color: "#1E1C1A" },
+        { id: "#w-entire", time: 4.68, color: "#1E1C1A" },
+        { id: "#w-codebases", time: 5.10, color: "#1E1C1A" }
+      ];
+
+      tl.set("#cap-phase-1", { display: "block", opacity: 1 }, 0);
+      tl.set("#cap-phase-2", { display: "none", opacity: 0 }, 0);
+      tl.set("#cap-phase-1", { display: "none" }, 2.55);
+      tl.set("#cap-phase-2", { display: "block", opacity: 1 }, 2.55);
+      
+
+      captionWords.forEach(w => {
+        tl.fromTo(w.id,
+          { color: "#B5AFA7" },
+          { color: w.color, duration: 0.20, ease: "power1.out" },
+          w.time
+        );
+      });
+
+      // Stamp lands on key word "ten-million" at 2.32s:
+      // Anton 52px red text MASSIVE inside 5px red border box, tilted -6°.
+      // Motion: stamp: scale 1.75 to 1 and -18° to -6° in 0.2s.
+      tl.fromTo("#stamp-box",
+        { opacity: 0, scale: 1.75, rotation: -18 },
+        { opacity: 1, scale: 1.0, rotation: -6, duration: 0.20, ease: "power4.in" },
+        2.32
+      );
+
+      // Physical micro-impact on card when stamp hits
+      tl.to("#main-card", {
+        scale: 0.985,
+        duration: 0.04,
+        yoyo: true,
+        repeat: 1,
+        ease: "power1.inOut"
+      }, 2.52);
+
+      // 4. Explanation exit & Demo animation:
+      // 0.3s before explanation (~4.6s), card exits upward (50px up, fade out in 0.22s).
+      tl.to("#main-card-group", {
+        y: -50,
+        opacity: 0,
+        duration: 0.22,
+        ease: "power2.in"
+      }, 4.40);
+
+      // Demo animation shows 5 document cards stacking infinitely in perspective:
+      tl.fromTo("#demo-stack-container",
+        { opacity: 0 },
+        { opacity: 1, duration: 0.15 },
+        4.55
+      );
+
+      // 5 cards stack in perspective
+      tl.fromTo("#doc4", { opacity: 0, y: 100 }, { opacity: 0.84, y: 0, duration: 0.32, ease: "power3.out" }, 4.60);
+      tl.fromTo("#doc3", { opacity: 0, y: 100 }, { opacity: 0.88, y: 0, duration: 0.32, ease: "power3.out" }, 4.70);
+      tl.fromTo("#doc2", { opacity: 0, y: 100 }, { opacity: 0.92, y: 0, duration: 0.32, ease: "power3.out" }, 4.80);
+      tl.fromTo("#doc1", { opacity: 0, y: 100 }, { opacity: 0.96, y: 0, duration: 0.32, ease: "power3.out" }, 4.90);
+      tl.fromTo("#doc0", { opacity: 0, y: 100 }, { opacity: 1.0, y: 0, duration: 0.32, ease: "power3.out" }, 5.00);
+
+      // Demo summary bar pops in
+      tl.fromTo("#demo-summary",
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.28, ease: "back.out(1.5)" },
+        5.15
+      );
+
+      window.__timelines["point2"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

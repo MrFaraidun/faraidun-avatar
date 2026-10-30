@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Hook - Gemini Flash 4</title>
+    <!-- Google Fonts: Instrument Sans (500, 700), Instrument Serif (Italic), JetBrains Mono (500, 700) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root {
+        --cream: #EBE7E1;
+        --ink: #1E1C1A;
+        --red: #D7372C;
+        --grey: #8A857E;
+        --card: #FBFAF8;
+        --caption-inactive: #B5AFA7;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--cream);
+        font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: var(--ink);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--cream);
+      }
+
+      /* Base clip rule */
+      .clip {
+        position: absolute;
+        box-sizing: border-box;
+      }
+
+      /* ----------------------------------------------------
+         CAPTIONS SECTION
+         x: 120px, y: 196px, width: 850px. Font: Instrument Sans 500 at 62px.
+         Block container (NOT flexbox), no full stops anywhere.
+         ---------------------------------------------------- */
+      #captions {
+        position: absolute;
+        left: 120px;
+        top: 196px;
+        width: 850px;
+        display: block;
+        z-index: 50;
+      }
+
+      .caption-line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 850px;
+        display: block;
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 500;
+        font-size: 62px;
+        line-height: 1.25;
+        letter-spacing: -0.025em;
+        word-spacing: 0.04em;
+      }
+
+      #caption-line-1 {
+        opacity: 1;
+      }
+
+      #caption-line-2 {
+        opacity: 0;
+      }
+
+      .word {
+        display: inline;
+        color: var(--caption-inactive);
+      }
+
+      .word.keyword {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 72px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+      }
+
+      /* ----------------------------------------------------
+         HALFTONE SHADOW UTILITY
+         1.7px dots on 8px grid
+         ---------------------------------------------------- */
+      .halftone-shadow {
+        position: absolute;
+        pointer-events: none;
+        background-image: radial-gradient(circle, var(--ink) 1.7px, transparent 1.8px);
+        background-size: 8px 8px;
+        z-index: 1;
+      }
+
+      /* ----------------------------------------------------
+         PROBLEM CARD (0.0s - 1.68s)
+         x: 120px, y: 560px, width: 840px, height: 380px.
+         #FBFAF8 with 3px ink border, 20px corners,
+         halftone dot shadow offset 13px left, 12px down.
+         ---------------------------------------------------- */
+      #problem-card-wrapper {
+        position: absolute;
+        left: 120px;
+        top: 560px;
+        width: 840px;
+        height: 380px;
+        z-index: 20;
+      }
+
+      #problem-card-shadow {
+        left: -13px;
+        top: 12px;
+        width: 840px;
+        height: 380px;
+        border-radius: 20px;
+      }
+
+      #problem-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 840px;
+        height: 380px;
+        border-radius: 20px;
+        border: 3px solid var(--ink);
+        background-color: var(--card);
+        padding: 34px 38px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+        overflow: hidden;
+      }
+
+      .card-header-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border-radius: 100px;
+        background: #F8ECEB;
+        border: 1.5px solid var(--red);
+      }
+
+      .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--red);
+      }
+
+      .status-pill-text {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--red);
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .server-cluster-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--grey);
+        letter-spacing: 0.05em;
+      }
+
+      .problem-headline-block {
+        margin-top: 4px;
+      }
+
+      .problem-headline {
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .problem-subheadline {
+        font-size: 17px;
+        font-weight: 500;
+        color: var(--grey);
+        margin-top: 6px;
+        letter-spacing: -0.01em;
+      }
+
+      /* Sluggish Progress Bar */
+      .progress-bar-wrap {
+        width: 100%;
+        margin-top: 2px;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 44px;
+        background: var(--cream);
+        border: 2.5px solid var(--ink);
+        border-radius: 12px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        width: 14%;
+        height: 100%;
+        background: var(--red);
+        border-right: 2px solid var(--ink);
+        position: relative;
+      }
+
+      .progress-bar-legend {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .legend-left {
+        color: var(--red);
+      }
+
+      .legend-right {
+        color: var(--grey);
+      }
+
+      .problem-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1.5px dashed #D6D1CA;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+      }
+
+      .footer-item {
+        color: var(--grey);
+      }
+
+      .footer-item strong {
+        color: var(--ink);
+        font-weight: 700;
+      }
+
+      /* Strike-through SVG */
+      .strikethrough-svg {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 840px;
+        height: 380px;
+        pointer-events: none;
+        z-index: 10;
+      }
+
+      /* ----------------------------------------------------
+         LINE 2 PAYOFF CARDS (1.68s - 7.18s)
+         3 Small payoff cards pop in 0.16s apart:
+         Card A (1.90s): "SUB-20MS STREAM"
+         Card B (2.06s): "10M TOKEN MEMORY"
+         Card C (2.22s): "FLASH 4 ARCHITECTURE" (Main payoff card)
+         Pop motion: scale 0.55 to 1 in 0.34s, ease: back.out(2.2).
+         At 3.4s, hand-drawn red ring draws around Card C.
+         ---------------------------------------------------- */
+      #payoff-container {
+        position: absolute;
+        left: 120px;
+        top: 560px;
+        width: 840px;
+        height: 440px;
+        z-index: 20;
+      }
+
+      .payoff-card-wrapper {
+        position: absolute;
+        box-sizing: border-box;
+        transform-origin: center center;
+        /* Initially hidden */
+        opacity: 0;
+        transform: scale(0.55);
+      }
+
+      /* Card A */
+      #card-a-wrap {
+        left: 0;
+        top: 0;
+        width: 405px;
+        height: 180px;
+      }
+
+      #card-a-shadow {
+        left: -10px;
+        top: 10px;
+        width: 405px;
+        height: 180px;
+        border-radius: 18px;
+      }
+
+      #card-a {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 405px;
+        height: 180px;
+        border-radius: 18px;
+        border: 3px solid var(--ink);
+        background: var(--card);
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+      }
+
+      /* Card B */
+      #card-b-wrap {
+        left: 435px;
+        top: 0;
+        width: 405px;
+        height: 180px;
+      }
+
+      #card-b-shadow {
+        left: -10px;
+        top: 10px;
+        width: 405px;
+        height: 180px;
+        border-radius: 18px;
+      }
+
+      #card-b {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 405px;
+        height: 180px;
+        border-radius: 18px;
+        border: 3px solid var(--ink);
+        background: var(--card);
+        padding: 22px 24px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+      }
+
+      /* Card C (Hero / Main Payoff) */
+      #card-c-wrap {
+        left: 0;
+        top: 210px;
+        width: 840px;
+        height: 205px;
+      }
+
+      #card-c-shadow {
+        left: -13px;
+        top: 12px;
+        width: 840px;
+        height: 205px;
+        border-radius: 20px;
+      }
+
+      #card-c {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 840px;
+        height: 205px;
+        border-radius: 20px;
+        border: 3.5px solid var(--ink);
+        background: var(--card);
+        padding: 26px 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+      }
+
+      /* Typography & details inside payoff cards */
+      .chip-tag {
+        display: inline-block;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--grey);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .payoff-title-compact {
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 700;
+        font-size: 26px;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        color: var(--ink);
+      }
+
+      .payoff-meta-text {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--grey);
+        letter-spacing: -0.01em;
+      }
+
+      .card-c-header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        border-radius: 8px;
+        background: var(--ink);
+        color: var(--card);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .hero-spec-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--red);
+        letter-spacing: 0.04em;
+      }
+
+      .card-c-title {
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 700;
+        font-size: 38px;
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        color: var(--ink);
+      }
+
+      .card-c-subtitle {
+        font-size: 18px;
+        font-weight: 500;
+        color: var(--grey);
+        letter-spacing: -0.01em;
+      }
+
+      /* Hand-Drawn Red Ring SVG around Card C */
+      #card-c-ring-svg {
+        position: absolute;
+        left: -25px;
+        top: 185px;
+        width: 890px;
+        height: 250px;
+        pointer-events: none;
+        z-index: 35;
+        opacity: 0; /* Initially hidden */
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="hook"
+      data-start="0"
+      data-duration="7.18"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- CAPTIONS CONTAINER (x: 120px, y: 196px, width: 850px) -->
+      <div id="captions" class="clip" data-start="0" data-duration="7.18">
+        <!-- Line 1 (0.0s to 1.68s): "Heavy models are too slow" -->
+        <div id="caption-line-1" class="caption-line">
+          <span class="word w-heavy">Heavy</span>
+          <span class="word w-models">models</span>
+          <span class="word w-are">are</span>
+          <span class="word keyword w-too">too</span>
+          <span class="word w-slow">slow</span>
+        </div>
+
+        <!-- Line 2 (1.68s to 7.18s): "New leaks suggest Google's Gemini Flash 4 is about to rewrite the rules of AI speed" -->
+        <div id="caption-line-2" class="caption-line">
+          <span class="word w-new">New</span>
+          <span class="word w-leaks">leaks</span>
+          <span class="word w-suggest">suggest</span>
+          <span class="word w-googles">Google's</span>
+          <span class="word w-gemini">Gemini</span>
+          <span class="word w-flash">Flash</span>
+          <span class="word w-4">4</span>
+          <span class="word w-is">is</span>
+          <span class="word w-about">about</span>
+          <span class="word w-to">to</span>
+          <span class="word w-rewrite">rewrite</span>
+          <span class="word w-the">the</span>
+          <span class="word keyword w-rules">rules</span>
+          <span class="word w-of">of</span>
+          <span class="word w-ai">AI</span>
+          <span class="word w-speed">speed</span>
+        </div>
+      </div>
+
+      <!-- PROBLEM CARD (0.0s to 1.68s) -->
+      <div id="problem-card-wrapper" class="clip" data-start="0" data-duration="1.9">
+        <!-- Halftone Dot Shadow: offset 13px left, 12px down -->
+        <div id="problem-card-shadow" class="halftone-shadow"></div>
+
+        <!-- Problem Card -->
+        <div id="problem-card">
+          <!-- Status row -->
+          <div class="card-header-row">
+            <div class="status-pill">
+              <span class="status-dot"></span>
+              <span class="status-pill-text">LATENCY BOTTLENECK</span>
+            </div>
+            <div class="server-cluster-tag">CLUSTER // US-EAST-NODE-04</div>
+          </div>
+
+          <!-- Headline and metric -->
+          <div class="problem-headline-block">
+            <div class="problem-headline">LAGGING SERVER COMPUTE - 4,820ms</div>
+            <div class="problem-subheadline">Time to First Token (TTFT) • Critical Model Stalling</div>
+          </div>
+
+          <!-- Sluggish Progress Bar stuck at 14% -->
+          <div class="progress-bar-wrap">
+            <div class="progress-track">
+              <div class="progress-fill"></div>
+            </div>
+            <div class="progress-bar-legend">
+              <span class="legend-left">STUCK AT 14% COMPUTATION</span>
+              <span class="legend-right">TIMEOUT CEILING: 5,000ms</span>
+            </div>
+          </div>
+
+          <!-- Footer stats -->
+          <div class="problem-card-footer">
+            <div class="footer-item">THROUGHPUT: <strong>2.8 tok/s</strong></div>
+            <div class="footer-item">MEMORY: <strong>98.4% (OOM)</strong></div>
+            <div class="footer-item">THREADS: <strong>100% BLOCKED</strong></div>
+          </div>
+
+          <!-- Strike-through SVG (draws 0.4s to 0.9s) -->
+          <svg class="strikethrough-svg" viewBox="0 0 840 380" preserveAspectRatio="none">
+            <path
+              id="problem-strikethrough"
+              d="M 50 330 C 260 260, 560 130, 790 50"
+              stroke="#D7372C"
+              stroke-width="6"
+              stroke-linecap="round"
+              fill="none"
+            />
+          </svg>
+        </div>
+      </div>
+
+      <!-- LINE 2 PAYOFF CARDS (1.68s to 7.18s) -->
+      <div id="payoff-container" class="clip" data-start="1.68" data-duration="5.5" data-layout-ignore="true">
+        <!-- Card A (1.90s): "SUB-20MS STREAM" -->
+        <div id="card-a-wrap" class="payoff-card-wrapper">
+          <div id="card-a-shadow" class="halftone-shadow"></div>
+          <div id="card-a">
+            <div class="chip-tag">LATENCY SPECS</div>
+            <div class="payoff-title-compact">SUB-20MS STREAM</div>
+            <div class="payoff-meta-text">Instant continuous token pipeline</div>
+          </div>
+        </div>
+
+        <!-- Card B (2.06s): "10M TOKEN MEMORY" -->
+        <div id="card-b-wrap" class="payoff-card-wrapper">
+          <div id="card-b-shadow" class="halftone-shadow"></div>
+          <div id="card-b">
+            <div class="chip-tag">WORKING MEMORY</div>
+            <div class="payoff-title-compact">10M TOKEN MEMORY</div>
+            <div class="payoff-meta-text">Massive multi-document context</div>
+          </div>
+        </div>
+
+        <!-- Card C (2.22s): "FLASH 4 ARCHITECTURE" (Main Payoff Card) -->
+        <div id="card-c-wrap" class="payoff-card-wrapper">
+          <div id="card-c-shadow" class="halftone-shadow"></div>
+          <div id="card-c">
+            <div class="card-c-header-row">
+              <span class="hero-badge">NEW BREAKTHROUGH</span>
+              <span class="hero-spec-tag">GEMINI FLASH 4 // INTERNAL</span>
+            </div>
+            <div class="card-c-title">FLASH 4 ARCHITECTURE</div>
+            <div class="card-c-subtitle">
+              Ultra-sparse mixture of experts • Zero-latency frontier intelligence
+            </div>
+          </div>
+        </div>
+
+        <!-- Hand-drawn Red Ring around Card C (draws at 3.4s) -->
+        <svg id="card-c-ring-svg" viewBox="0 0 890 250" fill="none">
+          <path
+            id="ring-path"
+            d="M 800 22 C 860 18, 882 72, 880 125 C 878 185, 854 232, 785 238 C 580 248, 310 244, 105 236 C 38 232, 12 185, 12 125 C 12 65, 42 20, 145 16 C 340 12, 605 18, 805 24 C 848 26, 876 38, 880 62"
+            stroke="#D7372C"
+            stroke-width="6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["hook"] = tl;
+
+      // Stroke dash calculations for responsive drawing
+      const strikePath = document.getElementById("problem-strikethrough");
+      const strikeLen = strikePath.getTotalLength();
+      gsap.set(strikePath, { strokeDasharray: strikeLen, strokeDashoffset: strikeLen });
+
+      const ringPath = document.getElementById("ring-path");
+      const ringLen = ringPath.getTotalLength();
+      gsap.set(ringPath, { strokeDasharray: ringLen, strokeDashoffset: ringLen });
+
+      // -----------------------------------------------------------------
+      // LINE 1 CAPTIONS (0.0s to 1.68s)
+      // "Heavy" 0.0s, "models" 0.14s, "are" 0.44s,
+      // "too" 0.72s (KEY WORD: red #D7372C), "slow" 0.90s
+      // Words start in #B5AFA7 and turn #1E1C1A in 0.2s as spoken
+      // -----------------------------------------------------------------
+      tl.to(".w-heavy", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.0);
+      tl.to(".w-models", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.14);
+      tl.to(".w-are", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.44);
+      tl.to(".w-too", { color: "#D7372C", duration: 0.2, ease: "power1.out" }, 0.72);
+      tl.to(".w-slow", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.90);
+
+      // -----------------------------------------------------------------
+      // PROBLEM CARD STRIKE-THROUGH (0.4s to 0.9s)
+      // Red strike-through (6px stroke, red #D7372C) draws across the card
+      // -----------------------------------------------------------------
+      tl.to(strikePath, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 0.4);
+
+      // -----------------------------------------------------------------
+      // TRANSITION AT 1.68s:
+      // 1. Caption Line 1 exits, Line 2 enters
+      // 2. Problem card exits upward (50px up, fade out in 0.22s)
+      // -----------------------------------------------------------------
+      tl.to("#caption-line-1", { opacity: 0, duration: 0.15, ease: "power2.in" }, 1.53);
+      tl.to("#caption-line-2", { opacity: 1, duration: 0.15, ease: "power2.out" }, 1.68);
+
+      tl.to("#problem-card-wrapper", { y: -50, opacity: 0, duration: 0.22, ease: "power2.in" }, 1.68);
+
+      // -----------------------------------------------------------------
+      // LINE 2 PAYOFF CARDS POP IN (0.16s apart, scale 0.55 -> 1 in 0.34s, back.out(2.2))
+      // Card A: 1.90s
+      // Card B: 2.06s
+      // Card C: 2.22s (Main Payoff Card)
+      // -----------------------------------------------------------------
+      tl.fromTo(
+        "#card-a-wrap",
+        { scale: 0.55, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(2.2)" },
+        1.90
+      );
+
+      tl.fromTo(
+        "#card-b-wrap",
+        { scale: 0.55, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(2.2)" },
+        2.06
+      );
+
+      tl.fromTo(
+        "#card-c-wrap",
+        { scale: 0.55, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(2.2)" },
+        2.22
+      );
+
+      // -----------------------------------------------------------------
+      // LINE 2 CAPTIONS WORD SYNC (1.68s to 7.18s)
+      // "New" 1.68s, "leaks" 1.9s, "suggest" 2.2s, "Google's" 2.6s,
+      // "Gemini" 3.0s, "Flash" 3.4s, "4" 3.8s, "is" 4.1s, "about" 4.3s,
+      // "to" 4.6s, "rewrite" 4.8s, "the" 5.1s,
+      // "rules" 5.36s (KEY WORD: red #D7372C), "of" 5.7s, "AI" 6.0s, "speed" 6.3s
+      // -----------------------------------------------------------------
+      tl.to(".w-new", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 1.68);
+      tl.to(".w-leaks", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 1.90);
+      tl.to(".w-suggest", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 2.20);
+      tl.to(".w-googles", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 2.60);
+      tl.to(".w-gemini", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 3.00);
+      tl.to(".w-flash", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 3.40);
+      tl.to(".w-4", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 3.80);
+      tl.to(".w-is", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.10);
+      tl.to(".w-about", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.30);
+      tl.to(".w-to", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.60);
+      tl.to(".w-rewrite", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.80);
+      tl.to(".w-the", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 5.10);
+      tl.to(".w-rules", { color: "#D7372C", duration: 0.2, ease: "power1.out" }, 5.36);
+      tl.to(".w-of", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 5.70);
+      tl.to(".w-ai", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 6.00);
+      tl.to(".w-speed", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 6.30);
+
+      // -----------------------------------------------------------------
+      // AT 3.4s: HAND-DRAWN RED RING DRAWS AROUND CARD C
+      // Spoken word "Flash" triggers the ring
+      // -----------------------------------------------------------------
+      tl.set("#card-c-ring-svg", { opacity: 1 }, 3.4);
+      tl.fromTo(
+        ringPath,
+        { strokeDashoffset: ringLen },
+        { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" },
+        3.4
+      );
+
+      // Seek to 0 initially (or respect URL ?t= query parameter for inspection)
+      const urlParams = new URLSearchParams(window.location.search);
+      const seekTime = parseFloat(urlParams.get("t") || "0");
+      tl.seek(seekTime);
+    </script>
+  </body>
+</html>

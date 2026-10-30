@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Presenter Sub-Composition</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: transparent;
+      }
+      #root {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      #presenter-container {
+        position: absolute;
+        left: 430px;
+        top: 1170px;
+        width: 650px;
+        height: 770px;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="presenter"
+      data-start="0"
+      data-duration="37.5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="presenter-container" class="clip" data-start="0" data-duration="37.5" data-track-index="1" data-layout-allow-overflow="true">
+        <!-- Presenter SVG Inlined -->
+        <svg id="presenter-svg" viewBox="0 0 650 770" width="650" height="770" xmlns="http://www.w3.org/2000/svg" data-layout-allow-overflow="true">
+          <defs>
+            <style>
+              .p-stroke { stroke: #241914; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+              .p-skin { fill: #E8BA9B; }
+              .p-hoodie { fill: #D7372C; }
+              .p-hoodie-inner { fill: #B82B21; }
+              .p-ink { fill: #241914; }
+              .p-white { fill: #FBFAF8; }
+              .p-teeth { fill: #FBFAF8; }
+              .p-mouth-bg { fill: #381513; }
+              .p-tongue { fill: #D7554C; }
+              .mouth-shape { display: none; }
+              .mouth-0 { display: block; }
+            </style>
+          </defs>
+          <g id="presenter-rig">
+            <g id="presenter-body">
+              <path class="p-hoodie p-stroke" d="M 50 770 C 50 630 140 540 260 520 L 390 520 C 510 540 600 630 600 770 Z" />
+              <path class="p-hoodie-inner p-stroke" d="M 230 520 C 230 620 420 620 420 520 Z" />
+              <path class="p-stroke" stroke="#FBFAF8" fill="none" stroke-width="5" d="M 270 560 L 270 650" />
+              <path class="p-stroke" stroke="#FBFAF8" fill="none" stroke-width="5" d="M 380 560 L 380 640" />
+              <circle cx="270" cy="655" r="5" class="p-stroke p-white" />
+              <circle cx="380" cy="645" r="5" class="p-stroke p-white" />
+            </g>
+            <g id="presenter-head" style="transform-origin: 325px 480px;">
+              <path class="p-skin p-stroke" d="M 275 440 L 275 530 C 310 540 340 540 375 530 L 375 440 Z" />
+              <path class="p-skin p-stroke" d="M 180 320 C 160 320 160 370 185 375 Z" />
+              <path class="p-skin p-stroke" d="M 470 320 C 490 320 490 370 465 375 Z" />
+              <path class="p-skin p-stroke" d="M 190 280 C 190 150 460 150 460 280 C 460 410 400 460 325 460 C 250 460 190 410 190 280 Z" />
+              <path class="p-ink p-stroke" d="M 185 270 C 175 220 210 140 280 130 C 330 120 420 125 460 180 C 475 200 470 250 465 270 C 455 240 435 220 405 215 C 385 210 365 225 335 215 C 305 205 290 220 265 225 C 235 230 215 250 185 270 Z" />
+              <g id="presenter-brows">
+                <path class="p-stroke" fill="none" stroke-width="8" stroke="#241914" d="M 225 275 Q 260 265 285 275" />
+                <path class="p-stroke" fill="none" stroke-width="8" stroke="#241914" d="M 365 275 Q 390 265 425 275" />
+              </g>
+              <g id="presenter-eyes-open">
+                <circle cx="255" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
+                <circle cx="257" cy="305" r="9" class="p-ink" />
+                <circle cx="254" cy="302" r="3" fill="#FBFAF8" />
+                <circle cx="395" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
+                <circle cx="397" cy="305" r="9" class="p-ink" />
+                <circle cx="394" cy="302" r="3" fill="#FBFAF8" />
+              </g>
+              <g id="presenter-eyes-closed" style="display: none;">
+                <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 240 308 Q 255 318 270 308" />
+                <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 380 308 Q 395 318 410 308" />
+              </g>
+              <g id="presenter-glasses">
+                <rect x="220" y="278" width="72" height="54" rx="14" fill="none" stroke="#241914" stroke-width="8" />
+                <rect x="358" y="278" width="72" height="54" rx="14" fill="none" stroke="#241914" stroke-width="8" />
+                <path d="M 292 298 Q 325 290 358 298" fill="none" stroke="#241914" stroke-width="8" stroke-linecap="round" />
+                <path d="M 220 295 L 182 305" fill="none" stroke="#241914" stroke-width="7" stroke-linecap="round" />
+                <path d="M 430 295 L 468 305" fill="none" stroke="#241914" stroke-width="7" stroke-linecap="round" />
+                <path d="M 230 290 L 250 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+                <path d="M 368 290 L 388 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+              </g>
+              <path class="p-stroke" fill="none" stroke-width="5" stroke="#241914" d="M 320 325 Q 328 348 320 355 C 326 357 334 354 336 348" />
+              <g id="presenter-mouths">
+                <g id="mouth-0" class="mouth-shape mouth-0">
+                  <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 298 396 Q 325 402 352 396" />
+                </g>
+                <g id="mouth-1" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 298 395 Q 325 402 352 395 Q 325 407 298 395 Z" />
+                </g>
+                <g id="mouth-2" class="mouth-shape">
+                  <ellipse cx="325" cy="398" rx="14" ry="12" class="p-mouth-bg p-stroke" />
+                </g>
+                <g id="mouth-3" class="mouth-shape">
+                  <ellipse cx="325" cy="400" rx="20" ry="17" class="p-mouth-bg p-stroke" />
+                  <path d="M 312 408 Q 325 400 338 408 Q 325 417 312 408 Z" class="p-tongue" />
+                </g>
+                <g id="mouth-4" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 292 396 Q 325 393 358 396 Q 355 409 325 410 Q 295 409 292 396 Z" />
+                  <path d="M 296 397 Q 325 395 354 397 L 352 403 Q 325 402 298 403 Z" class="p-teeth" />
+                </g>
+                <g id="mouth-5" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 290 395 Q 325 390 360 395 C 360 418 345 425 325 425 C 305 425 290 418 290 395 Z" />
+                  <path d="M 294 395 Q 325 392 356 395 L 354 402 Q 325 400 296 402 Z" class="p-teeth" />
+                  <path d="M 306 416 Q 325 407 344 416 Q 325 425 306 416 Z" class="p-tongue" />
+                </g>
+                <g id="mouth-6" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 295 395 Q 325 392 355 395 C 355 425 342 432 325 432 C 308 432 295 425 295 395 Z" />
+                  <path d="M 298 395 Q 325 393 352 395 L 350 401 Q 325 400 300 401 Z" class="p-teeth" />
+                  <path d="M 308 422 Q 325 413 342 422 Q 325 432 308 422 Z" class="p-tongue" />
+                </g>
+                <g id="mouth-7" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 288 394 Q 325 388 362 394 C 362 428 348 438 325 438 C 302 438 288 428 288 394 Z" />
+                  <path d="M 292 394 Q 325 390 358 394 L 355 403 Q 325 401 295 403 Z" class="p-teeth" />
+                  <path d="M 304 425 Q 325 414 346 425 Q 325 438 304 425 Z" class="p-tongue" />
+                </g>
+                <g id="mouth-8" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 285 393 Q 325 386 365 393 C 365 435 348 444 325 444 C 302 444 285 435 285 393 Z" />
+                  <path d="M 290 393 Q 325 388 360 393 L 357 404 Q 325 402 293 404 Z" class="p-teeth" />
+                  <path d="M 300 430 Q 325 416 350 430 Q 325 444 300 430 Z" class="p-tongue" />
+                </g>
+                <g id="mouth-9" class="mouth-shape">
+                  <path class="p-mouth-bg p-stroke" d="M 280 392 Q 325 384 370 392 C 370 442 350 452 325 452 C 300 452 280 442 280 392 Z" />
+                  <path d="M 286 392 Q 325 386 364 392 L 361 405 Q 325 403 289 405 Z" class="p-teeth" />
+                  <path d="M 295 436 Q 325 420 355 436 Q 325 452 295 436 Z" class="p-tongue" />
+                </g>
+              </g>
+            </g>
+            <g id="hand-pointing" style="transform-origin: 180px 770px; opacity: 0;">
+              <path class="p-hoodie p-stroke" d="M 120 770 L 150 560 L 210 575 L 180 770 Z" />
+              <path class="p-skin p-stroke" d="M 155 565 C 150 535 155 460 170 450 C 182 442 195 452 190 480 L 188 535 C 198 535 215 545 210 565 C 205 580 185 585 155 565 Z" />
+              <path class="p-stroke" fill="none" stroke-width="4" stroke="#241914" d="M 172 490 L 185 494" />
+            </g>
+            <g id="hand-palm" style="transform-origin: 470px 770px; opacity: 0;">
+              <path class="p-hoodie p-stroke" d="M 440 770 L 460 570 L 525 555 L 500 770 Z" />
+              <path class="p-skin p-stroke" d="M 465 570 C 455 530 460 470 480 465 C 495 460 505 480 500 515 C 510 485 525 480 535 495 C 540 515 530 540 525 555 C 515 575 490 580 465 570 Z" />
+            </g>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    
+    <script>
+      (function() {
+        window.__timelines = window.__timelines || {};
+        const tl = gsap.timeline({ paused: true });
+        window.__timelines["presenter"] = tl;
+
+        const mouthShapes = [0, 2, 9, 9, 9, 6, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 9, 9, 6, 6, 9, 9, 5, 3, 6, 5, 9, 9, 8, 7, 6, 7, 7, 4, 8, 9, 9, 9, 8, 6, 6, 5, 3, 2, 1, 1, 0, 0, 0, 0, 7, 9, 9, 9, 9, 9, 9, 6, 3, 5, 7, 7, 7, 9, 6, 5, 6, 9, 9, 9, 8, 5, 6, 3, 2, 1, 4, 9, 9, 9, 5, 6, 9, 9, 7, 6, 4, 2, 3, 7, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 4, 2, 1, 1, 9, 9, 9, 9, 8, 6, 5, 5, 5, 3, 1, 1, 9, 9, 7, 7, 6, 4, 2, 1, 1, 0, 0, 0, 0, 4, 9, 7, 9, 9, 6, 9, 9, 9, 7, 4, 2, 6, 9, 8, 8, 9, 9, 9, 8, 9, 9, 9, 9, 8, 5, 3, 1, 1, 9, 9, 7, 6, 8, 9, 9, 9, 9, 8, 8, 7, 7, 6, 5, 8, 9, 5, 5, 3, 7, 9, 9, 9, 8, 9, 9, 9, 9, 8, 8, 8, 7, 5, 7, 6, 3, 2, 7, 8, 6, 4, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 9, 9, 9, 9, 9, 7, 5, 6, 3, 2, 1, 1, 4, 8, 9, 9, 9, 5, 3, 1, 3, 2, 3, 9, 9, 9, 8, 5, 6, 4, 6, 9, 9, 9, 8, 8, 4, 2, 5, 4, 4, 9, 9, 7, 7, 9, 9, 9, 9, 8, 5, 6, 6, 6, 9, 9, 9, 5, 4, 3, 6, 9, 9, 8, 5, 8, 8, 8, 9, 9, 9, 9, 9, 8, 6, 7, 9, 9, 5, 5, 8, 8, 7, 9, 8, 5, 5, 3, 3, 9, 9, 9, 8, 8, 5, 6, 5, 3, 5, 9, 9, 8, 7, 6, 6, 5, 4, 4, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 1, 9, 9, 9, 5, 6, 9, 9, 8, 6, 7, 5, 3, 9, 9, 9, 9, 9, 9, 9, 9, 9, 6, 3, 2, 9, 9, 9, 9, 6, 3, 5, 8, 9, 7, 4, 2, 3, 9, 9, 8, 4, 2, 5, 9, 9, 7, 4, 7, 9, 9, 8, 5, 7, 6, 3, 5, 7, 5, 3, 1, 1, 0, 0, 0, 0, 0, 0, 5, 9, 9, 8, 5, 3, 9, 8, 7, 4, 2, 1, 1, 3, 6, 9, 6, 3, 7, 9, 9, 9, 9, 9, 6, 3, 7, 7, 9, 9, 8, 8, 8, 8, 8, 6, 5, 4, 8, 9, 8, 6, 3, 2, 1, 8, 9, 9, 7, 8, 9, 9, 7, 8, 6, 6, 7, 7, 4, 9, 9, 9, 9, 8, 4, 8, 9, 9, 8, 8, 5, 3, 5, 3, 9, 9, 9, 8, 9, 9, 9, 9, 9, 8, 9, 8, 9, 9, 8, 8, 7, 4, 4, 5, 3, 9, 9, 8, 5, 3, 3, 8, 9, 7, 8, 8, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 5, 9, 9, 8, 8, 8, 7, 8, 7, 6, 4, 2, 1, 1, 0, 0, 0, 0, 0, 9, 9, 5, 9, 9, 9, 9, 9, 9, 8, 6, 9, 9, 9, 7, 5, 8, 9, 8, 8, 5, 4, 4, 4, 8, 9, 9, 8, 8, 9, 7, 4, 2, 4, 5, 9, 9, 8, 7, 5, 2, 7, 9, 6, 5, 3, 6, 6, 4, 3, 2, 1, 3, 5, 3, 1, 1, 0, 0, 0, 0, 0, 1, 9, 9, 9, 9, 9, 9, 9, 6, 3, 2, 1, 1, 0, 0, 6, 9, 9, 9, 9, 9, 9, 6, 3, 6, 5, 9, 9, 9, 9, 9, 8, 8, 9, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 7, 5, 8, 9, 9, 9, 5, 8, 8, 4, 6, 9, 9, 8, 7, 6, 7, 6, 7, 6, 6, 5, 3, 2, 4, 9, 9, 6, 3, 2, 9, 9, 8, 5, 3, 2, 1, 0, 6, 9, 9, 7, 8, 9, 9, 6, 3, 2, 1, 5, 8, 7, 8, 9, 8, 6, 5, 6, 6, 9, 8, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 6, 7, 9, 9, 8, 5, 3, 1, 6, 7, 6, 3, 2, 1, 1, 8, 6, 9, 9, 9, 8, 4, 2, 5, 7, 7, 7, 5, 7, 8, 9, 9, 9, 9, 8, 5, 3, 2, 7, 8, 9, 8, 7, 4, 2, 4, 4, 8, 9, 9, 8, 6, 5, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 8, 5, 3, 1, 1, 1, 9, 9, 9, 9, 9, 6, 8, 9, 9, 5, 5, 5, 3, 6, 8, 6, 4, 2, 9, 9, 8, 9, 9, 9, 9, 7, 6, 6, 8, 9, 7, 8, 8, 8, 9, 7, 4, 2, 1, 9, 9, 9, 9, 9, 9, 6, 6, 8, 9, 7, 6, 8, 7, 4, 9, 9, 9, 9, 7, 5, 6, 7, 8, 7, 5, 6, 6, 9, 9, 9, 9, 8, 5, 4, 5, 6, 5, 4, 2, 1, 1, 0, 0, 0, 0, 0, 8, 9, 8, 5, 7, 9, 9, 9, 5, 4, 9, 8, 8, 4, 4, 5, 8, 9, 9, 9, 7, 4, 5, 3, 2, 4, 2, 1, 8, 9, 9, 8, 8, 9, 9, 9, 9, 9, 7, 4, 7, 8, 4, 2, 5, 8, 5, 6, 6, 9, 9, 8, 7, 7, 4, 2, 6, 9, 8, 7, 4, 6, 3, 2, 8, 7, 5, 5, 9, 9, 8, 7, 6, 4, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0, 7, 4, 2, 1, 9, 9, 9, 9, 7, 7, 6, 9, 9, 9, 7, 4, 3, 7, 7, 4, 3, 9, 9, 8, 9, 9, 9, 6, 5, 7, 6, 3, 2, 1, 1, 0, 0, 0, 0, 0, 9, 9, 7, 9, 9, 9, 9, 9, 9, 5, 3, 8, 9, 9, 6, 5, 3, 8, 9, 8, 4, 2, 1, 8, 9, 9, 9, 9, 9, 8, 8, 9, 8, 9, 9, 8, 8, 9, 9, 9, 5, 8, 9, 7, 5, 7, 9, 9, 7, 4, 2, 4, 7, 9, 7, 7, 9, 9, 9, 9, 8, 8, 8, 6, 3, 9, 8, 5, 3, 3, 8, 9, 7, 7, 9, 8, 9, 9, 9, 9, 9, 9, 8, 5, 6, 7, 6, 4, 5, 7, 8, 4, 2, 5, 6, 6, 8, 7, 6, 5, 7, 7, 5, 7, 9, 9, 9, 7, 5, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0];
+        const blinkFrames = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+        const fps = 30;
+
+        // 1. Mouth shapes setup
+        if (mouthShapes && mouthShapes.length > 0) {
+          const initialShape = mouthShapes[0];
+          for (let m = 0; m < 10; m++) {
+            tl.set("#mouth-" + m, { display: m === initialShape ? "block" : "none" }, 0);
+          }
+          let currentShape = initialShape;
+          for (let i = 1; i < mouthShapes.length; i++) {
+            const nextShape = mouthShapes[i];
+            if (nextShape !== currentShape) {
+              const time = i / fps;
+              tl.set("#mouth-" + currentShape, { display: "none" }, time);
+              tl.set("#mouth-" + nextShape, { display: "block" }, time);
+              currentShape = nextShape;
+            }
+          }
+        }
+
+        // 2. Eye blinking setup (0.14s duration)
+        if (blinkFrames && blinkFrames.length > 0) {
+          tl.set("#presenter-eyes-open", { display: "block" }, 0);
+          tl.set("#presenter-eyes-closed", { display: "none" }, 0);
+          let inBlink = false;
+          let blinkStartFrame = 0;
+          for (let i = 0; i < blinkFrames.length; i++) {
+            if (blinkFrames[i] && !inBlink) {
+              inBlink = true;
+              blinkStartFrame = i;
+            } else if (!blinkFrames[i] && inBlink) {
+              inBlink = false;
+              const startTime = blinkStartFrame / fps;
+              const endTime = i / fps;
+              tl.set("#presenter-eyes-open", { display: "none" }, startTime);
+              tl.set("#presenter-eyes-closed", { display: "block" }, startTime);
+              tl.set("#presenter-eyes-open", { display: "block" }, endTime);
+              tl.set("#presenter-eyes-closed", { display: "none" }, endTime);
+            }
+          }
+          if (inBlink) {
+            const startTime = blinkStartFrame / fps;
+            const endTime = blinkFrames.length / fps;
+            tl.set("#presenter-eyes-open", { display: "none" }, startTime);
+            tl.set("#presenter-eyes-closed", { display: "block" }, startTime);
+            tl.set("#presenter-eyes-open", { display: "block" }, endTime);
+            tl.set("#presenter-eyes-closed", { display: "none" }, endTime);
+          }
+        }
+
+        // 3. Head sway and nods
+        const headSelector = "#presenter-head";
+        tl.set(headSelector, { transformOrigin: "325px 480px", y: 0, rotation: -1.8 }, 0);
+        // Continuous head sway (-1.8 to +1.8 deg) repeated 22 times (~39.6s)
+        tl.to(headSelector, { rotation: 1.8, duration: 1.8, yoyo: true, repeat: 22, ease: "sine.inOut" }, 0);
+
+        // Head nods on key words (0.5s duration)
+        const nodTimestamps = [
+          0.72, 5.36, 12.40, 15.46, 23.40, 30.18, 36.34
+        ];
+        for (const t of nodTimestamps) {
+          tl.to(headSelector, { y: "+=12px", rotation: 3, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
+        }
+
+        // 4. Hand gestures
+        const pointingSelector = "#hand-pointing";
+        const palmSelector = "#hand-palm";
+        tl.set(pointingSelector, { y: 220, opacity: 0, transformOrigin: "180px 770px" }, 0);
+        tl.set(palmSelector, { y: 220, opacity: 0, transformOrigin: "470px 770px" }, 0);
+
+        const gestures = [
+          { target: pointingSelector, start: 7.18, end: 8.88 },
+          { target: palmSelector, start: 13.54, end: 15.24 },
+          { target: palmSelector, start: 20.08, end: 21.78 },
+          { target: pointingSelector, start: 25.40, end: 27.10 }
+        ];
+
+        for (const g of gestures) {
+          const enterDuration = 0.3;
+          const exitDuration = 0.3;
+          const exitStartTime = g.end - exitDuration;
+          tl.fromTo(g.target,
+            { y: 220, opacity: 0 },
+            { y: 0, opacity: 1, duration: enterDuration, ease: "back.out(1.4)" },
+            g.start
+          );
+          tl.to(g.target,
+            { y: 220, opacity: 0, duration: exitDuration, ease: "power2.in" },
+            exitStartTime
+          );
+        }
+
+        tl.seek(0);
+      })();
+    </script>
+  </body>
+</html>

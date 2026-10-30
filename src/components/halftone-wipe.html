@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Halftone Dot Wipe Transition</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: transparent;
+      }
+      #root {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+      }
+      #halftone-wipe-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1080px;
+        height: 1920px;
+        pointer-events: none;
+      }
+      .halftone-dot {
+        transform-origin: center center;
+        will-change: transform;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="halftone-wipe"
+      data-start="0"
+      data-duration="0.9"
+      data-width="1080"
+      data-height="1920"
+    >
+      <svg
+        id="halftone-wipe-svg"
+        data-start="0"
+        data-duration="0.9"
+        data-track-index="5"
+        viewBox="0 0 1080 1920"
+        width="1080"
+        height="1920"
+        xmlns="http://www.w3.org/2000/svg"
+      ></svg>
+    </div>
+
+    <script type="module">
+      import { createHalftoneDots, animateHalftoneWipe, HALFTONE_DEFAULTS } from "./wipe.js";
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const dots = createHalftoneDots("#halftone-wipe-svg", HALFTONE_DEFAULTS);
+      animateHalftoneWipe(tl, dots, 0, HALFTONE_DEFAULTS);
+
+      window.__timelines["halftone-wipe"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

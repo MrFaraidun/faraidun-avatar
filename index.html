@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Gemini Flash 4 Explainer Reel</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link rel="stylesheet" href="src/styles/main.css" />
+    <style>
+      :root {
+        --paper: #EBE7E1;
+        --ink: #1E1C1A;
+        --red: #D7372C;
+        --grey: #8A857E;
+        --card-bg: #FBFAF8;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--paper);
+        color: var(--ink);
+        font-family: 'Instrument Sans', sans-serif;
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background-color: var(--paper);
+      }
+      .clip {
+        position: absolute;
+        box-sizing: border-box;
+      }
+      /* Track 1: Paper Background */
+      #track-paper {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        z-index: 1;
+        pointer-events: none;
+        background-color: #EBE7E1;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+      }
+      /* Track 3: Presenter Frame */
+      #scene-presenter,
+      #presenter-frame,
+      #presenter-track {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        z-index: 35;
+        pointer-events: none;
+      }
+      /* Track 5: Wipes Overlay */
+      #wipe-overlay {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        z-index: 50;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="37.5"
+      data-width="1080"
+      data-height="1920"
+    >
+      <!-- Track 1: Paper Background (Bottom) -->
+      <div id="track-paper" class="clip" data-start="0" data-duration="37.5" data-track-index="1"></div>
+
+      <!-- Track 2: Sub-Compositions (Scenes) -->
+      <div
+        id="scene-hook"
+        class="clip"
+        data-composition-id="hook"
+        data-start="0.0"
+        data-duration="7.18"
+        data-track-index="2"
+        data-composition-src="src/compositions/hook.html"
+      ></div>
+
+      <div
+        id="scene-point1"
+        class="clip"
+        data-composition-id="point1"
+        data-start="7.18"
+        data-duration="6.36"
+        data-track-index="3"
+        data-composition-src="src/compositions/point1.html"
+      ></div>
+
+      <div
+        id="scene-point2"
+        class="clip"
+        data-composition-id="point2"
+        data-start="13.54"
+        data-duration="6.54"
+        data-track-index="4"
+        data-composition-src="src/compositions/point2.html"
+      ></div>
+
+      <div
+        id="scene-point3"
+        class="clip"
+        data-composition-id="point3"
+        data-start="20.08"
+        data-duration="5.32"
+        data-track-index="5"
+        data-composition-src="src/compositions/point3.html"
+      ></div>
+
+      <div
+        id="scene-point4"
+        class="clip"
+        data-composition-id="point4"
+        data-start="25.40"
+        data-duration="6.60"
+        data-track-index="6"
+        data-composition-src="src/compositions/point4.html"
+      ></div>
+
+      <div
+        id="scene-closing"
+        class="clip"
+        data-composition-id="closing"
+        data-start="32.00"
+        data-duration="5.50"
+        data-track-index="7"
+        data-composition-src="src/compositions/closing.html"
+      ></div>
+
+      <!-- Track 3: Cartoon Presenter Character Sub-Composition -->
+      <div
+        id="scene-presenter"
+        class="clip"
+        data-composition-id="presenter"
+        data-start="0.0"
+        data-duration="37.5"
+        data-track-index="8"
+        data-composition-src="src/compositions/presenter.html"
+      ></div>
+
+      <!-- Track 5: Halftone Wipe Overlay (Top) -->
+      <svg id="wipe-overlay" class="clip" data-start="0" data-duration="37.5" data-track-index="9" viewBox="0 0 1080 1920"></svg>
+
+      <!-- Track Audio: Master 21 Synchronized Audio Tracks -->
+      <audio id="audio-voice" src="src/audio/voice.wav" data-start="0.0" data-duration="37.31" data-volume="1.0" data-track-index="10" preload="auto"></audio>
+      <audio id="audio-music" src="src/audio/music.wav" data-start="0.0" data-duration="37.5" data-volume="0.16" data-fade-out="0.8" data-track-index="11" preload="auto"></audio>
+      <audio id="sfx-1-hook-pop" src="src/audio/sfx_pop.wav" data-start="0.0" data-duration="0.14" data-volume="0.75" data-track-index="12" preload="auto"></audio>
+      <audio id="sfx-2-hook-payoff-a" src="src/audio/sfx_pop.wav" data-start="1.90" data-duration="0.14" data-volume="0.75" data-track-index="13" preload="auto"></audio>
+      <audio id="sfx-3-hook-payoff-b" src="src/audio/sfx_pop.wav" data-start="2.06" data-duration="0.14" data-volume="0.75" data-track-index="14" preload="auto"></audio>
+      <audio id="sfx-4-hook-payoff-c" src="src/audio/sfx_pop.wav" data-start="2.22" data-duration="0.14" data-volume="0.75" data-track-index="15" preload="auto"></audio>
+      <audio id="sfx-5-wipe-1-whoosh" src="src/audio/sfx_whoosh.wav" data-start="6.88" data-duration="0.5" data-volume="0.75" data-track-index="16" preload="auto"></audio>
+      <audio id="sfx-6-point-1-tick" src="src/audio/sfx_tick.wav" data-start="7.36" data-duration="1.15" data-volume="0.75" data-track-index="17" preload="auto"></audio>
+      <audio id="sfx-7-point-1-type" src="src/audio/sfx_type.wav" data-start="8.50" data-duration="0.85" data-volume="0.75" data-track-index="18" preload="auto"></audio>
+      <audio id="sfx-8-point-1-thud" src="src/audio/sfx_thud.wav" data-start="12.40" data-duration="0.25" data-volume="0.75" data-track-index="19" preload="auto"></audio>
+      <audio id="sfx-9-point-2-tick" src="src/audio/sfx_tick.wav" data-start="13.72" data-duration="1.15" data-volume="0.75" data-track-index="20" preload="auto"></audio>
+      <audio id="sfx-10-point-2-type" src="src/audio/sfx_type.wav" data-start="14.80" data-duration="0.85" data-volume="0.75" data-track-index="21" preload="auto"></audio>
+      <audio id="sfx-11-point-2-thud" src="src/audio/sfx_thud.wav" data-start="15.46" data-duration="0.25" data-volume="0.75" data-track-index="22" preload="auto"></audio>
+      <audio id="sfx-12-point-3-tick" src="src/audio/sfx_tick.wav" data-start="20.26" data-duration="1.15" data-volume="0.75" data-track-index="23" preload="auto"></audio>
+      <audio id="sfx-13-point-3-type" src="src/audio/sfx_type.wav" data-start="21.40" data-duration="0.85" data-volume="0.75" data-track-index="24" preload="auto"></audio>
+      <audio id="sfx-14-point-3-thud" src="src/audio/sfx_thud.wav" data-start="23.40" data-duration="0.25" data-volume="0.75" data-track-index="25" preload="auto"></audio>
+      <audio id="sfx-15-wipe-2-whoosh" src="src/audio/sfx_whoosh.wav" data-start="25.10" data-duration="0.5" data-volume="0.75" data-track-index="26" preload="auto"></audio>
+      <audio id="sfx-16-point-4-tick" src="src/audio/sfx_tick.wav" data-start="25.58" data-duration="1.15" data-volume="0.75" data-track-index="27" preload="auto"></audio>
+      <audio id="sfx-17-point-4-type" src="src/audio/sfx_type.wav" data-start="26.70" data-duration="0.85" data-volume="0.75" data-track-index="28" preload="auto"></audio>
+      <audio id="sfx-18-point-4-thud" src="src/audio/sfx_thud.wav" data-start="30.18" data-duration="0.25" data-volume="0.75" data-track-index="29" preload="auto"></audio>
+      <audio id="sfx-19-closing-pop" src="src/audio/sfx_pop.wav" data-start="32.00" data-duration="0.14" data-volume="0.75" data-track-index="30" preload="auto"></audio>
+    </div>
+
+    <script type="module">
+      import { setupReelWipes } from "./src/components/wipe.js";
+
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines["main"] = tl;
+
+      // Setup halftone dot wipes at 6.88s (before Point 1) and 25.10s (before Point 4)
+      setupReelWipes(tl, "#wipe-overlay");
+
+      tl.seek(0);
+    </script>
+  </body>
+</html>

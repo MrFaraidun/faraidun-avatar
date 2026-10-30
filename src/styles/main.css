@@ -1,0 +1,289 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --ink: #1E1C1A;
+  --red: #D7372C;
+  --grey: #8A857E;
+  --paper: #EBE7E1;
+  --card-bg: #FBFAF8;
+  --font-anton: 'Anton', sans-serif;
+  --font-sans: 'Instrument Sans', sans-serif;
+  --font-serif: 'Instrument Serif', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 1080px;
+  height: 1920px;
+  overflow: hidden;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Track 1: Paper Background with fine noise grain */
+#bg-track {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  background-color: #EBE7E1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3Ccolor-profile name='sRGB'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Shared Clip Container */
+.clip {
+  position: absolute;
+  box-sizing: border-box;
+}
+
+/* Track 2: Scene container & Sub-compositions */
+#scenes-track {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  z-index: 20;
+}
+
+.scene-container {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Card Styles: #FBFAF8 with 3px ink border (#1E1C1A), 20px corners, halftone dot shadow (1.7px ink dots on 8px grid, offset 13px left, 12px down) */
+.card {
+  position: relative;
+  isolation: isolate;
+  background-color: #FBFAF8;
+  border: 3px solid #1E1C1A;
+  border-radius: 20px;
+  padding: 36px 40px;
+  box-sizing: border-box;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='0.85' fill='%231E1C1A'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  transform: translate(-13px, 12px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Small labels at y 132px: JetBrains Mono 25px grey (NO //!) */
+.section-label {
+  position: absolute;
+  left: 120px;
+  top: 132px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 25px;
+  font-weight: 500;
+  color: #8A857E;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+/* Captions: x 120px, y 196px, width 850px in Instrument Sans 500 at 62px */
+.captions-box {
+  position: absolute;
+  left: 120px;
+  top: 196px;
+  width: 850px;
+  min-height: 180px;
+  font-family: 'Instrument Sans', sans-serif;
+  font-weight: 500;
+  font-size: 62px;
+  line-height: 1.15;
+  color: #1E1C1A;
+  letter-spacing: -0.02em;
+  pointer-events: none;
+  z-index: 40;
+}
+
+/* Titles: Anton up to 176px */
+.hero-title {
+  font-family: 'Anton', sans-serif;
+  font-size: 156px;
+  line-height: 0.92;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: #1E1C1A;
+}
+
+.title-large {
+  font-family: 'Anton', sans-serif;
+  font-size: 132px;
+  line-height: 0.95;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: #1E1C1A;
+}
+
+.title-medium {
+  font-family: 'Anton', sans-serif;
+  font-size: 96px;
+  line-height: 1.0;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: #1E1C1A;
+}
+
+/* Stamps: Anton 52px red text in 5px red box, tilted -6° */
+.stamp {
+  font-family: 'Anton', sans-serif;
+  font-size: 52px;
+  color: #D7372C;
+  border: 5px solid #D7372C;
+  border-radius: 8px;
+  padding: 8px 22px;
+  transform: rotate(-6deg);
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height: 1;
+  background-color: transparent;
+}
+
+/* Track 3: Presenter container at x 430px, y 1170px, 650x770px */
+#scene-presenter,
+#presenter-track,
+#presenter-frame {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  z-index: 35;
+  pointer-events: none;
+}
+
+#presenter-svg {
+  width: 650px;
+  height: 770px;
+  display: block;
+}
+
+/* Track 4: Captions & Titles layer */
+#captions-track {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/* Track 5: Wipes (Halftone dot wipe overlay) */
+#wipe-track {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.wipe-curtain {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  background-color: #EBE7E1;
+  border-left: 6px solid #1E1C1A;
+  border-right: 6px solid #1E1C1A;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='0.85' fill='%231E1C1A'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  transform: translateX(100%);
+}
+
+/* Utility UI components */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 2px solid #1E1C1A;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #1E1C1A;
+}
+
+.badge-pill.red {
+  border-color: #D7372C;
+  color: #D7372C;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 2px dashed #8A857E;
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+.spec-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 24px;
+  color: #8A857E;
+  text-transform: uppercase;
+}
+
+.spec-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 32px;
+  font-weight: 700;
+  color: #1E1C1A;
+}
+
+.spec-val.red {
+  color: #D7372C;
+}
+
+.bar-container {
+  width: 100%;
+  height: 38px;
+  border: 2px solid #1E1C1A;
+  border-radius: 8px;
+  background-color: #FBFAF8;
+  position: relative;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.bar-fill {
+  height: 100%;
+  background-color: #1E1C1A;
+  transform-origin: left center;
+}
+
+.bar-fill.red {
+  background-color: #D7372C;
+}
