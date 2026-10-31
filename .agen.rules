@@ -1,0 +1,16 @@
+# Project Agent Rules & Execution Constraints
+
+## 1. 🚫 Prohibited Execution Commands (STRICT ENFORCEMENT)
+The AI agent is **strictly prohibited** from automatically running:
+- `npm run dev` (or any foreground dev server / preview server)
+- `npm run render` (or any full MP4 rendering commands)
+- `npx hyperframes render`
+- Any command that performs long, blocking video encoding or starts foreground dev servers.
+
+## 2. Allowed Verification Commands
+When verifying changes or validating compositions, the agent may ONLY run:
+- `npm run check` (static, layout, motion, contrast, and audio linting)
+- `npx hyperframes snapshot --at <seconds>` (capturing specific preview frames)
+- `npx hyperframes lint`
+
+Rendering (`npm run render`) or running dev servers (`npm run dev`) may ONLY be executed when the human user explicitly asks for a render or dev preview in their prompt.

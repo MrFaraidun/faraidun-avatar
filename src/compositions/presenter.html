@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Presenter Sub-Composition</title>
+    <title>Presenter Sub-Composition (Realistic Upgrade)</title>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -32,7 +32,7 @@
     </style>
   </head>
   <body>
-    <div
+    <div data-hf-id="hf-g73i"
       id="root"
       data-composition-id="presenter"
       data-start="0"
@@ -40,125 +40,590 @@
       data-width="1080"
       data-height="1920"
     >
-      <div id="presenter-container" class="clip" data-start="0" data-duration="37.5" data-track-index="1" data-layout-allow-overflow="true">
-        <!-- Presenter SVG Inlined -->
-        <svg id="presenter-svg" viewBox="0 0 650 770" width="650" height="770" xmlns="http://www.w3.org/2000/svg" data-layout-allow-overflow="true">
-          <defs>
+      <div data-hf-id="hf-na19" id="presenter-container" class="clip" data-start="0" data-duration="37.5" data-track-index="1" data-layout-allow-overflow="true">
+        <!-- Realistic 3D-Shaded Presenter SVG -->
+        <svg data-hf-id="hf-mw40" id="presenter-svg" viewBox="0 0 650 770" width="650" height="770" xmlns="http://www.w3.org/2000/svg" data-layout-allow-overflow="true">
+          <defs data-hf-id="hf-mh0t">
+            <!-- Soft Studio Drop Shadows & Blur Filters -->
+            <filter id="dropShadowHead" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#1A0D08" flood-opacity="0.38" />
+            </filter>
+            <filter id="dropShadowGlasses" x="-15%" y="-15%" width="130%" height="140%">
+              <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#2A120A" flood-opacity="0.32" />
+            </filter>
+            <filter id="dropShadowSoft" x="-15%" y="-15%" width="130%" height="130%">
+              <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#140805" flood-opacity="0.28" />
+            </filter>
+            <filter id="softBlur4" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="4" />
+            </filter>
+            <filter id="softBlur8" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="8" />
+            </filter>
+            <filter id="softBlur14" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="14" />
+            </filter>
+
+            <!-- Realistic Skin Gradients (Subsurface Scattering & 3D Key Light) -->
+            <radialGradient id="skinBaseGrad" cx="42%" cy="32%" r="62%" fx="38%" fy="25%">
+              <stop offset="0%" stop-color="#FFE6D6" />
+              <stop offset="35%" stop-color="#F6C8AD" />
+              <stop offset="72%" stop-color="#E09E79" />
+              <stop offset="92%" stop-color="#C77E58" />
+              <stop offset="100%" stop-color="#AD6542" />
+            </radialGradient>
+
+            <linearGradient id="neckSkinGrad" x1="15%" y1="0%" x2="85%" y2="100%">
+              <stop offset="0%" stop-color="#D99470" />
+              <stop offset="45%" stop-color="#CE8660" />
+              <stop offset="100%" stop-color="#A65E3B" />
+            </linearGradient>
+
+            <linearGradient id="neckAOShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#6E3219" stop-opacity="0.78" />
+              <stop offset="55%" stop-color="#8C4527" stop-opacity="0.35" />
+              <stop offset="100%" stop-color="#C9825E" stop-opacity="0" />
+            </linearGradient>
+
+            <linearGradient id="earGradL" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#F0B899" />
+              <stop offset="60%" stop-color="#DC926C" />
+              <stop offset="100%" stop-color="#B86A45" />
+            </linearGradient>
+
+            <linearGradient id="earInnerShadow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#8F3F23" />
+              <stop offset="100%" stop-color="#C97350" />
+            </linearGradient>
+
+            <radialGradient id="cheekBlush" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#E05A4E" stop-opacity="0.28" />
+              <stop offset="60%" stop-color="#E05A4E" stop-opacity="0.1" />
+              <stop offset="100%" stop-color="#E05A4E" stop-opacity="0" />
+            </radialGradient>
+
+            <radialGradient id="skinHighlight" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.35" />
+              <stop offset="60%" stop-color="#FFEFE6" stop-opacity="0.12" />
+              <stop offset="100%" stop-color="#FFEFE6" stop-opacity="0" />
+            </radialGradient>
+
+            <linearGradient id="noseBridgeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#B86B47" stop-opacity="0.35" />
+              <stop offset="45%" stop-color="#FFF3EB" stop-opacity="0.45" />
+              <stop offset="85%" stop-color="#9E5130" stop-opacity="0.45" />
+              <stop offset="100%" stop-color="#9E5130" stop-opacity="0" />
+            </linearGradient>
+
+            <!-- Realistic Fabric / Hoodie Gradients -->
+            <radialGradient id="hoodieMainGrad" cx="45%" cy="25%" r="70%">
+              <stop offset="0%" stop-color="#EE483B" />
+              <stop offset="45%" stop-color="#CC291E" />
+              <stop offset="80%" stop-color="#9E1910" />
+              <stop offset="100%" stop-color="#700E08" />
+            </radialGradient>
+
+            <linearGradient id="hoodieFoldDark" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#5E0B06" stop-opacity="0.65" />
+              <stop offset="100%" stop-color="#8F160E" stop-opacity="0" />
+            </linearGradient>
+
+            <linearGradient id="hoodieInnerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#3D0704" />
+              <stop offset="55%" stop-color="#5E0D08" />
+              <stop offset="100%" stop-color="#7A130D" />
+            </linearGradient>
+
+            <linearGradient id="shirtNeckGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#D4D0CC" />
+              <stop offset="40%" stop-color="#F7F5F2" />
+              <stop offset="100%" stop-color="#B8B2AC" />
+            </linearGradient>
+
+            <linearGradient id="drawstringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#CFC9C2" />
+              <stop offset="50%" stop-color="#FFFDFB" />
+              <stop offset="100%" stop-color="#ABA39B" />
+            </linearGradient>
+
+            <linearGradient id="metalAglet" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#757A80" />
+              <stop offset="45%" stop-color="#E8EEF5" />
+              <stop offset="75%" stop-color="#5B6066" />
+              <stop offset="100%" stop-color="#9BA1A8" />
+            </linearGradient>
+
+            <!-- Volumetric Hair Gradients -->
+            <linearGradient id="hairBaseGrad" x1="15%" y1="0%" x2="85%" y2="100%">
+              <stop offset="0%" stop-color="#3D271D" />
+              <stop offset="40%" stop-color="#24150E" />
+              <stop offset="80%" stop-color="#140B07" />
+              <stop offset="100%" stop-color="#0B0604" />
+            </linearGradient>
+
+            <linearGradient id="hairHighlightGrad" x1="0%" y1="0%" x2="100%" y2="50%">
+              <stop offset="0%" stop-color="#6E4836" stop-opacity="0" />
+              <stop offset="50%" stop-color="#8A5C46" stop-opacity="0.55" />
+              <stop offset="100%" stop-color="#4A2E20" stop-opacity="0" />
+            </linearGradient>
+
+            <linearGradient id="browGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#291811" stop-opacity="0.7" />
+              <stop offset="30%" stop-color="#1C100B" stop-opacity="0.95" />
+              <stop offset="80%" stop-color="#1C100B" stop-opacity="0.95" />
+              <stop offset="100%" stop-color="#291811" stop-opacity="0.5" />
+            </linearGradient>
+
+            <!-- Realistic Eye Gradients -->
+            <radialGradient id="scleraGrad" cx="50%" cy="48%" r="52%">
+              <stop offset="0%" stop-color="#FFFFFF" />
+              <stop offset="70%" stop-color="#F2ECE9" />
+              <stop offset="90%" stop-color="#D9C8C3" />
+              <stop offset="100%" stop-color="#B89B93" />
+            </radialGradient>
+
+            <radialGradient id="irisGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#120904" />
+              <stop offset="32%" stop-color="#3B2112" />
+              <stop offset="65%" stop-color="#693C22" />
+              <stop offset="88%" stop-color="#3D2111" />
+              <stop offset="100%" stop-color="#170B05" />
+            </radialGradient>
+
+            <!-- Glasses Frame & Lens Gradients -->
+            <linearGradient id="frameGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#3B2921" />
+              <stop offset="25%" stop-color="#1E1410" />
+              <stop offset="55%" stop-color="#2E1F18" />
+              <stop offset="85%" stop-color="#120B09" />
+              <stop offset="100%" stop-color="#291C16" />
+            </linearGradient>
+
+            <linearGradient id="lensGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.28" />
+              <stop offset="32%" stop-color="#E6F4FF" stop-opacity="0.12" />
+              <stop offset="35%" stop-color="#FFFFFF" stop-opacity="0" />
+              <stop offset="65%" stop-color="#FFFFFF" stop-opacity="0" />
+              <stop offset="68%" stop-color="#FFFFFF" stop-opacity="0.1" />
+              <stop offset="80%" stop-color="#FFFFFF" stop-opacity="0" />
+            </linearGradient>
+
+            <!-- Realistic Mouth, Lips, Teeth & Tongue Gradients -->
+            <linearGradient id="upperLipGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#B86056" />
+              <stop offset="60%" stop-color="#9E483F" />
+              <stop offset="100%" stop-color="#7D322B" />
+            </linearGradient>
+
+            <linearGradient id="lowerLipGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#B5584E" />
+              <stop offset="40%" stop-color="#DB7A6E" />
+              <stop offset="85%" stop-color="#BA5B50" />
+              <stop offset="100%" stop-color="#964238" />
+            </linearGradient>
+
+            <radialGradient id="mouthCavityGrad" cx="50%" cy="40%" r="60%">
+              <stop offset="0%" stop-color="#240707" />
+              <stop offset="65%" stop-color="#3D0E0E" />
+              <stop offset="100%" stop-color="#591818" />
+            </radialGradient>
+
+            <linearGradient id="teethGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#CFC8C0" />
+              <stop offset="25%" stop-color="#FFFDFB" />
+              <stop offset="85%" stop-color="#F5F0EB" />
+              <stop offset="100%" stop-color="#DED6CE" />
+            </linearGradient>
+
+            <linearGradient id="lowerTeethGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#EBE5DF" />
+              <stop offset="100%" stop-color="#BFB5AC" />
+            </linearGradient>
+
+            <radialGradient id="tongueGrad" cx="50%" cy="65%" r="55%">
+              <stop offset="0%" stop-color="#E36862" />
+              <stop offset="65%" stop-color="#C44943" />
+              <stop offset="100%" stop-color="#8C2823" />
+            </radialGradient>
+
             <style>
-              .p-stroke { stroke: #241914; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
-              .p-skin { fill: #E8BA9B; }
-              .p-hoodie { fill: #D7372C; }
-              .p-hoodie-inner { fill: #B82B21; }
-              .p-ink { fill: #241914; }
-              .p-white { fill: #FBFAF8; }
-              .p-teeth { fill: #FBFAF8; }
-              .p-mouth-bg { fill: #381513; }
-              .p-tongue { fill: #D7554C; }
               .mouth-shape { display: none; }
               .mouth-0 { display: block; }
             </style>
           </defs>
-          <g id="presenter-rig">
-            <g id="presenter-body">
-              <path class="p-hoodie p-stroke" d="M 50 770 C 50 630 140 540 260 520 L 390 520 C 510 540 600 630 600 770 Z" />
-              <path class="p-hoodie-inner p-stroke" d="M 230 520 C 230 620 420 620 420 520 Z" />
-              <path class="p-stroke" stroke="#FBFAF8" fill="none" stroke-width="5" d="M 270 560 L 270 650" />
-              <path class="p-stroke" stroke="#FBFAF8" fill="none" stroke-width="5" d="M 380 560 L 380 640" />
-              <circle cx="270" cy="655" r="5" class="p-stroke p-white" />
-              <circle cx="380" cy="645" r="5" class="p-stroke p-white" />
-            </g>
-            <g id="presenter-head" style="transform-origin: 325px 480px;">
-              <path class="p-skin p-stroke" d="M 275 440 L 275 530 C 310 540 340 540 375 530 L 375 440 Z" />
-              <path class="p-skin p-stroke" d="M 180 320 C 160 320 160 370 185 375 Z" />
-              <path class="p-skin p-stroke" d="M 470 320 C 490 320 490 370 465 375 Z" />
-              <path class="p-skin p-stroke" d="M 190 280 C 190 150 460 150 460 280 C 460 410 400 460 325 460 C 250 460 190 410 190 280 Z" />
-              <path class="p-ink p-stroke" d="M 185 270 C 175 220 210 140 280 130 C 330 120 420 125 460 180 C 475 200 470 250 465 270 C 455 240 435 220 405 215 C 385 210 365 225 335 215 C 305 205 290 220 265 225 C 235 230 215 250 185 270 Z" />
-              <g id="presenter-brows">
-                <path class="p-stroke" fill="none" stroke-width="8" stroke="#241914" d="M 225 275 Q 260 265 285 275" />
-                <path class="p-stroke" fill="none" stroke-width="8" stroke="#241914" d="M 365 275 Q 390 265 425 275" />
-              </g>
-              <g id="presenter-eyes-open">
-                <circle cx="255" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
-                <circle cx="257" cy="305" r="9" class="p-ink" />
-                <circle cx="254" cy="302" r="3" fill="#FBFAF8" />
-                <circle cx="395" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
-                <circle cx="397" cy="305" r="9" class="p-ink" />
-                <circle cx="394" cy="302" r="3" fill="#FBFAF8" />
-              </g>
-              <g id="presenter-eyes-closed" style="display: none;">
-                <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 240 308 Q 255 318 270 308" />
-                <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 380 308 Q 395 318 410 308" />
-              </g>
-              <g id="presenter-glasses">
-                <rect x="220" y="278" width="72" height="54" rx="14" fill="none" stroke="#241914" stroke-width="8" />
-                <rect x="358" y="278" width="72" height="54" rx="14" fill="none" stroke="#241914" stroke-width="8" />
-                <path d="M 292 298 Q 325 290 358 298" fill="none" stroke="#241914" stroke-width="8" stroke-linecap="round" />
-                <path d="M 220 295 L 182 305" fill="none" stroke="#241914" stroke-width="7" stroke-linecap="round" />
-                <path d="M 430 295 L 468 305" fill="none" stroke="#241914" stroke-width="7" stroke-linecap="round" />
-                <path d="M 230 290 L 250 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
-                <path d="M 368 290 L 388 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
-              </g>
-              <path class="p-stroke" fill="none" stroke-width="5" stroke="#241914" d="M 320 325 Q 328 348 320 355 C 326 357 334 354 336 348" />
-              <g id="presenter-mouths">
-                <g id="mouth-0" class="mouth-shape mouth-0">
-                  <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 298 396 Q 325 402 352 396" />
-                </g>
-                <g id="mouth-1" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 298 395 Q 325 402 352 395 Q 325 407 298 395 Z" />
-                </g>
-                <g id="mouth-2" class="mouth-shape">
-                  <ellipse cx="325" cy="398" rx="14" ry="12" class="p-mouth-bg p-stroke" />
-                </g>
-                <g id="mouth-3" class="mouth-shape">
-                  <ellipse cx="325" cy="400" rx="20" ry="17" class="p-mouth-bg p-stroke" />
-                  <path d="M 312 408 Q 325 400 338 408 Q 325 417 312 408 Z" class="p-tongue" />
-                </g>
-                <g id="mouth-4" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 292 396 Q 325 393 358 396 Q 355 409 325 410 Q 295 409 292 396 Z" />
-                  <path d="M 296 397 Q 325 395 354 397 L 352 403 Q 325 402 298 403 Z" class="p-teeth" />
-                </g>
-                <g id="mouth-5" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 290 395 Q 325 390 360 395 C 360 418 345 425 325 425 C 305 425 290 418 290 395 Z" />
-                  <path d="M 294 395 Q 325 392 356 395 L 354 402 Q 325 400 296 402 Z" class="p-teeth" />
-                  <path d="M 306 416 Q 325 407 344 416 Q 325 425 306 416 Z" class="p-tongue" />
-                </g>
-                <g id="mouth-6" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 295 395 Q 325 392 355 395 C 355 425 342 432 325 432 C 308 432 295 425 295 395 Z" />
-                  <path d="M 298 395 Q 325 393 352 395 L 350 401 Q 325 400 300 401 Z" class="p-teeth" />
-                  <path d="M 308 422 Q 325 413 342 422 Q 325 432 308 422 Z" class="p-tongue" />
-                </g>
-                <g id="mouth-7" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 288 394 Q 325 388 362 394 C 362 428 348 438 325 438 C 302 438 288 428 288 394 Z" />
-                  <path d="M 292 394 Q 325 390 358 394 L 355 403 Q 325 401 295 403 Z" class="p-teeth" />
-                  <path d="M 304 425 Q 325 414 346 425 Q 325 438 304 425 Z" class="p-tongue" />
-                </g>
-                <g id="mouth-8" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 285 393 Q 325 386 365 393 C 365 435 348 444 325 444 C 302 444 285 435 285 393 Z" />
-                  <path d="M 290 393 Q 325 388 360 393 L 357 404 Q 325 402 293 404 Z" class="p-teeth" />
-                  <path d="M 300 430 Q 325 416 350 430 Q 325 444 300 430 Z" class="p-tongue" />
-                </g>
-                <g id="mouth-9" class="mouth-shape">
-                  <path class="p-mouth-bg p-stroke" d="M 280 392 Q 325 384 370 392 C 370 442 350 452 325 452 C 300 452 280 442 280 392 Z" />
-                  <path d="M 286 392 Q 325 386 364 392 L 361 405 Q 325 403 289 405 Z" class="p-teeth" />
-                  <path d="M 295 436 Q 325 420 355 436 Q 325 452 295 436 Z" class="p-tongue" />
-                </g>
+
+          <g data-hf-id="hf-dv3g" id="presenter-rig">
+            <!-- ==================== TORSO / HOODIE ==================== -->
+            <g data-hf-id="hf-0puq" id="presenter-body" style="transform-origin: 325px 770px;">
+              <!-- Back Hood Outer Cushion -->
+              <path d="M 190 525 C 180 465 235 445 325 445 C 415 445 470 465 460 525 Z" fill="#80120B" filter="url(#dropShadowSoft)" />
+              <!-- Inner Hood Depth -->
+              <path data-hf-id="hf-xa2m" d="M 212 522 C 212 630 438 630 438 522 C 425 480 225 480 212 522 Z" fill="url(#hoodieInnerGrad)" />
+              <!-- Crewneck Undershirt Visible at Collar -->
+              <path d="M 262 525 C 295 572 355 572 388 525 L 375 505 L 275 505 Z" fill="url(#shirtNeckGrad)" />
+              <path d="M 268 532 C 300 568 350 568 382 532" fill="none" stroke="#B5AFA9" stroke-width="3" opacity="0.7" />
+
+              <!-- Main Hoodie Torso & Shoulders -->
+              <path data-hf-id="hf-xffv" d="M 45 770 C 45 620 135 535 252 515 C 285 568 365 568 398 515 C 515 535 605 620 605 770 Z" fill="url(#hoodieMainGrad)" filter="url(#dropShadowSoft)" />
+
+              <!-- Realistic Drapery Folds & Creases -->
+              <path d="M 165 565 C 145 635 125 710 115 770 L 160 770 C 165 700 175 620 165 565 Z" fill="url(#hoodieFoldDark)" opacity="0.55" />
+              <path d="M 485 565 C 505 635 525 710 535 770 L 490 770 C 485 700 475 620 485 565 Z" fill="url(#hoodieFoldDark)" opacity="0.65" />
+              <path d="M 240 580 Q 325 625 410 580" fill="none" stroke="#6E0E08" stroke-width="6" stroke-linecap="round" opacity="0.25" filter="url(#softBlur4)" />
+              
+              <!-- Shoulder Seam Stitching -->
+              <path d="M 218 524 C 155 555 110 620 92 770" fill="none" stroke="#750E08" stroke-width="2.5" stroke-dasharray="4 3" opacity="0.55" />
+              <path d="M 432 524 C 495 555 540 620 558 770" fill="none" stroke="#750E08" stroke-width="2.5" stroke-dasharray="4 3" opacity="0.55" />
+
+              <!-- Sculpted Overlapping Hood Lapels -->
+              <path d="M 205 495 C 195 545 245 605 328 605 C 275 585 248 545 255 512 Z" fill="#D93226" filter="url(#dropShadowSoft)" />
+              <path d="M 445 495 C 455 545 405 605 322 605 C 375 585 402 545 395 512 Z" fill="#C2251B" filter="url(#dropShadowSoft)" />
+
+              <!-- Grommets (Metal Eyelets) -->
+              <circle cx="270" cy="562" r="6.5" fill="#4A4E52" stroke="#1F0604" stroke-width="1.5" />
+              <circle cx="270" cy="562" r="3.5" fill="#2B0705" />
+              <circle cx="380" cy="562" r="6.5" fill="#4A4E52" stroke="#1F0604" stroke-width="1.5" />
+              <circle cx="380" cy="562" r="3.5" fill="#2B0705" />
+
+              <!-- Drawstrings with Shadows & Metal Aglets -->
+              <g id="hoodie-strings">
+                <!-- Drop Shadows -->
+                <path d="M 272 565 C 266 605 268 630 272 662" fill="none" stroke="#3D0603" stroke-width="7" stroke-linecap="round" opacity="0.45" filter="url(#softBlur4)" />
+                <path d="M 382 565 C 386 600 384 625 380 652" fill="none" stroke="#3D0603" stroke-width="7" stroke-linecap="round" opacity="0.45" filter="url(#softBlur4)" />
+                <!-- Cord -->
+                <path data-hf-id="hf-0p9l" d="M 270 562 C 265 602 267 628 270 655" fill="none" stroke="url(#drawstringGrad)" stroke-width="6.5" stroke-linecap="round" />
+                <path data-hf-id="hf-38lm" d="M 380 562 C 384 598 382 622 379 645" fill="none" stroke="url(#drawstringGrad)" stroke-width="6.5" stroke-linecap="round" />
+                <!-- Metal Aglets -->
+                <rect data-hf-id="hf-mew8" x="266.5" y="650" width="7" height="16" rx="2.5" fill="url(#metalAglet)" />
+                <rect data-hf-id="hf-d2xz" x="375.5" y="640" width="7" height="16" rx="2.5" fill="url(#metalAglet)" />
               </g>
             </g>
-            <g id="hand-pointing" style="transform-origin: 180px 770px; opacity: 0;">
-              <path class="p-hoodie p-stroke" d="M 120 770 L 150 560 L 210 575 L 180 770 Z" />
-              <path class="p-skin p-stroke" d="M 155 565 C 150 535 155 460 170 450 C 182 442 195 452 190 480 L 188 535 C 198 535 215 545 210 565 C 205 580 185 585 155 565 Z" />
-              <path class="p-stroke" fill="none" stroke-width="4" stroke="#241914" d="M 172 490 L 185 494" />
+
+            <!-- ==================== HEAD & NECK ==================== -->
+            <g data-hf-id="hf-kmei" id="presenter-head" style="transform-origin: 325px 480px;">
+              <!-- Neck Base -->
+              <path data-hf-id="hf-1ze9" d="M 272 430 C 274 468 272 505 266 535 C 305 552 345 552 384 535 C 378 505 376 468 378 430 Z" fill="url(#neckSkinGrad)" />
+              <!-- Sternocleidomastoid Neck Muscle Highlights & Shadows -->
+              <path d="M 282 455 C 292 490 302 520 312 542" fill="none" stroke="#B0633F" stroke-width="8" stroke-linecap="round" opacity="0.35" filter="url(#softBlur4)" />
+              <path d="M 368 455 C 358 490 348 520 338 542" fill="none" stroke="#B0633F" stroke-width="8" stroke-linecap="round" opacity="0.35" filter="url(#softBlur4)" />
+              <!-- Deep Under-Chin Ambient Occlusion Cast Shadow -->
+              <path data-hf-id="hf-ryh2" d="M 272 435 L 271 495 C 308 518 342 518 379 495 L 378 435 Z" fill="url(#neckAOShadow)" />
+
+              <!-- Left Ear (Viewer's Left) -->
+              <g id="ear-left">
+                <path data-hf-id="hf-wj0a" d="M 192 308 C 166 298 156 328 164 358 C 170 382 184 392 198 384 Z" fill="url(#earGradL)" filter="url(#dropShadowSoft)" />
+                <!-- Helix & Concha Bowl -->
+                <path d="M 188 318 C 172 315 166 335 172 356 C 176 370 185 376 193 372" fill="none" stroke="#B56542" stroke-width="3.5" stroke-linecap="round" opacity="0.7" />
+                <path d="M 178 332 C 173 342 176 358 186 362 C 190 354 188 338 178 332 Z" fill="url(#earInnerShadow)" opacity="0.55" />
+                <path d="M 186 346 C 181 348 181 356 187 358" fill="none" stroke="#6E2E16" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
+              </g>
+
+              <!-- Right Ear (Viewer's Right) -->
+              <g id="ear-right">
+                <path data-hf-id="hf-edfx" d="M 458 308 C 484 298 494 328 486 358 C 480 382 466 392 452 384 Z" fill="url(#earGradL)" filter="url(#dropShadowSoft)" />
+                <!-- Helix & Concha Bowl -->
+                <path d="M 462 318 C 478 315 484 335 478 356 C 474 370 465 376 457 372" fill="none" stroke="#B56542" stroke-width="3.5" stroke-linecap="round" opacity="0.7" />
+                <path d="M 472 332 C 477 342 474 358 464 362 C 460 354 462 338 472 332 Z" fill="url(#earInnerShadow)" opacity="0.55" />
+                <path d="M 464 346 C 469 348 469 356 463 358" fill="none" stroke="#6E2E16" stroke-width="2.5" stroke-linecap="round" opacity="0.6" />
+              </g>
+
+              <!-- Anatomical Cranium, Cheekbones & Jawline -->
+              <path data-hf-id="hf-8sah" d="M 190 275 C 188 152 462 152 460 275 C 460 325 456 362 442 392 C 425 426 372 464 325 464 C 278 464 225 426 208 392 C 194 362 190 325 190 275 Z" fill="url(#skinBaseGrad)" filter="url(#dropShadowHead)" />
+
+              <!-- 3D Facial Contouring, Subsurface Blush & Specular Skin Highlights -->
+              <!-- Forehead Key Highlight -->
+              <ellipse cx="305" cy="225" rx="75" ry="38" fill="url(#skinHighlight)" filter="url(#softBlur8)" />
+              <!-- Cheekbone Highlights -->
+              <ellipse cx="242" cy="342" rx="28" ry="14" transform="rotate(-12 242 342)" fill="url(#skinHighlight)" filter="url(#softBlur4)" />
+              <ellipse cx="408" cy="342" rx="28" ry="14" transform="rotate(12 408 342)" fill="url(#skinHighlight)" filter="url(#softBlur4)" />
+              <!-- Subsurface Cheek Warmth -->
+              <ellipse data-hf-id="hf-7ksf" cx="236" cy="358" rx="34" ry="22" fill="url(#cheekBlush)" filter="url(#softBlur4)" />
+              <ellipse data-hf-id="hf-qkvx" cx="414" cy="358" rx="34" ry="22" fill="url(#cheekBlush)" filter="url(#softBlur4)" />
+              <!-- Chin & Jaw Rim Definition -->
+              <ellipse cx="325" cy="444" rx="22" ry="10" fill="url(#skinHighlight)" opacity="0.7" filter="url(#softBlur4)" />
+              <path d="M 205 375 C 228 422 278 458 325 458 C 372 458 422 422 445 375" fill="none" stroke="#995131" stroke-width="4" opacity="0.35" filter="url(#softBlur4)" />
+
+              <!-- Hairline Soft Forehead Cast Shadow -->
+              <path d="M 188 278 C 215 245 240 232 270 228 C 300 222 315 212 340 220 C 370 228 390 215 412 220 C 438 226 452 248 462 278 C 445 235 415 210 325 210 C 235 210 205 235 188 278 Z" fill="#592914" opacity="0.38" filter="url(#softBlur4)" />
+
+              <!-- ==================== 2.5D PARALLAX FACIAL FEATURES ==================== -->
+              <g data-hf-id="hf-8kvj" id="presenter-face-parallax">
+                
+                <!-- Eye Socket Depth Shading -->
+                <ellipse cx="255" cy="304" rx="32" ry="22" fill="#8C4326" opacity="0.24" filter="url(#softBlur4)" />
+                <ellipse cx="395" cy="304" rx="32" ry="22" fill="#8C4326" opacity="0.24" filter="url(#softBlur4)" />
+
+                <!-- 3D Sculpted Nose -->
+                <g id="presenter-nose">
+                  <!-- Cast Shadow Under Nose -->
+                  <ellipse cx="325" cy="364" rx="19" ry="7" fill="#7D381D" opacity="0.48" filter="url(#softBlur4)" />
+                  <!-- Nose Bridge Soft Shading & Highlight -->
+                  <path d="M 314 295 C 312 318 306 342 304 352 C 314 362 336 362 346 352 C 344 342 338 318 336 295 Z" fill="url(#noseBridgeGrad)" filter="url(#softBlur4)" />
+                  <!-- Nose Bridge Specular Line -->
+                  <path d="M 323 296 L 321 344" fill="none" stroke="#FFF7F2" stroke-width="3.5" stroke-linecap="round" opacity="0.65" filter="url(#softBlur4)" />
+                  <!-- Nose Tip Bulb Highlight -->
+                  <circle cx="323" cy="349" r="7.5" fill="#FFF2E8" opacity="0.55" filter="url(#softBlur4)" />
+                  <!-- Nostrils & Alar Wings -->
+                  <ellipse cx="315" cy="356" rx="4.5" ry="2.2" transform="rotate(18 315 356)" fill="#521F0E" opacity="0.75" />
+                  <ellipse cx="335" cy="356" rx="4.5" ry="2.2" transform="rotate(-18 335 356)" fill="#521F0E" opacity="0.75" />
+                  <path data-hf-id="hf-3uuh" d="M 304 349 C 302 355 307 359 314 359 M 319 358 Q 325 362 331 358 M 346 349 C 348 355 343 359 336 359" fill="none" stroke="#8C4427" stroke-width="2.5" stroke-linecap="round" opacity="0.75" />
+                  <!-- Philtrum Dimple (Above Upper Lip) -->
+                  <path d="M 321 364 C 321 372 320 380 318 386 M 329 364 C 329 372 330 380 332 386" fill="none" stroke="#A85B3B" stroke-width="2" stroke-linecap="round" opacity="0.3" filter="url(#softBlur4)" />
+                </g>
+
+                <!-- Nasolabial Smile Creases (Subtle Realism) -->
+                <path d="M 294 352 Q 280 375 276 402" fill="none" stroke="#A65838" stroke-width="2.5" stroke-linecap="round" opacity="0.22" filter="url(#softBlur4)" />
+                <path d="M 356 352 Q 370 375 374 402" fill="none" stroke="#A65838" stroke-width="2.5" stroke-linecap="round" opacity="0.22" filter="url(#softBlur4)" />
+
+                <!-- Expressive Sculpted Eyebrows -->
+                <g data-hf-id="hf-y6mf" id="presenter-brows">
+                  <!-- Left Brow -->
+                  <path data-hf-id="hf-loou" d="M 222 276 C 232 264 262 260 288 271 C 291 273 290 278 285 277 C 262 270 236 272 224 279 C 221 280 220 278 222 276 Z" fill="url(#browGrad)" />
+                  <!-- Right Brow -->
+                  <path data-hf-id="hf-o9v3" d="M 428 276 C 418 264 388 260 362 271 C 359 273 360 278 365 277 C 388 270 414 272 426 279 C 429 280 430 278 428 276 Z" fill="url(#browGrad)" />
+                </g>
+
+                <!-- Realistic Open Eyes -->
+                <g data-hf-id="hf-bw5t" id="presenter-eyes-open">
+                  <!-- Upper Eyelid Crease Folds -->
+                  <path d="M 230 293 Q 255 280 280 294" fill="none" stroke="#7A3920" stroke-width="2.2" stroke-linecap="round" opacity="0.55" />
+                  <path d="M 370 294 Q 395 280 420 293" fill="none" stroke="#7A3920" stroke-width="2.2" stroke-linecap="round" opacity="0.55" />
+
+                  <!-- Sclera (Almond Eye Shape) -->
+                  <path data-hf-id="hf-o2vl" d="M 231 306 C 239 291 271 291 279 306 C 271 319 239 319 231 306 Z" fill="url(#scleraGrad)" />
+                  <path data-hf-id="hf-0fz6" d="M 371 306 C 379 291 411 291 419 306 C 411 319 379 319 371 306 Z" fill="url(#scleraGrad)" />
+
+                  <!-- Pink Tear Ducts (Caruncle) -->
+                  <path d="M 274 306 C 277 304 279 306 276 308 Z" fill="#D96B62" opacity="0.8" />
+                  <path d="M 376 306 C 373 304 371 306 374 308 Z" fill="#D96B62" opacity="0.8" />
+
+                  <!-- Animated Iris & Pupil Group (Supports Realistic Eye Saccades) -->
+                  <g id="presenter-irises">
+                    <!-- Left Iris & Pupil -->
+                    <circle data-hf-id="hf-9zmp" cx="256" cy="305" r="10.5" fill="url(#irisGrad)" />
+                    <circle cx="256" cy="305" r="4.8" fill="#0A0503" />
+                    <!-- Dual Catchlights -->
+                    <circle data-hf-id="hf-q3wz" cx="252.5" cy="301.5" r="3.2" fill="#FFFFFF" opacity="0.95" />
+                    <circle cx="259.5" cy="308.5" r="1.4" fill="#FFFFFF" opacity="0.7" />
+
+                    <!-- Right Iris & Pupil -->
+                    <circle data-hf-id="hf-r66q" cx="396" cy="305" r="10.5" fill="url(#irisGrad)" />
+                    <circle cx="396" cy="305" r="4.8" fill="#0A0503" />
+                    <!-- Dual Catchlights -->
+                    <circle data-hf-id="hf-fquy" cx="392.5" cy="301.5" r="3.2" fill="#FFFFFF" opacity="0.95" />
+                    <circle cx="399.5" cy="308.5" r="1.4" fill="#FFFFFF" opacity="0.7" />
+                  </g>
+
+                  <!-- Upper Eyelid Rim Shadow & Lashes -->
+                  <path d="M 229 306 C 238 289 272 289 281 306" fill="none" stroke="#1C0E09" stroke-width="4" stroke-linecap="round" />
+                  <path d="M 369 306 C 378 289 412 289 421 306" fill="none" stroke="#1C0E09" stroke-width="4" stroke-linecap="round" />
+                  <!-- Lower Lid Waterline -->
+                  <path d="M 232 307 C 242 319 268 319 278 307" fill="none" stroke="#9E5236" stroke-width="1.8" stroke-linecap="round" opacity="0.7" />
+                  <path d="M 372 307 C 382 319 408 319 418 307" fill="none" stroke="#9E5236" stroke-width="1.8" stroke-linecap="round" opacity="0.7" />
+                </g>
+
+                <!-- Realistic Closed Eyes (Blink State) -->
+                <g data-hf-id="hf-o5zq" id="presenter-eyes-closed" style="display: none;">
+                  <!-- Eyelid Skin Coverage -->
+                  <path d="M 230 304 C 238 290 272 290 280 304 C 272 316 238 316 230 304 Z" fill="#E39D78" />
+                  <path d="M 370 304 C 378 290 412 290 420 304 C 412 316 378 316 370 304 Z" fill="#E39D78" />
+                  <path d="M 232 295 Q 255 286 278 295" fill="none" stroke="#8C462A" stroke-width="1.8" opacity="0.45" />
+                  <path d="M 372 295 Q 395 286 418 295" fill="none" stroke="#8C462A" stroke-width="1.8" opacity="0.45" />
+                  <!-- Closed Lash Line -->
+                  <path data-hf-id="hf-zoh6" d="M 230 306 Q 255 318 280 306" fill="none" stroke="#1C0E09" stroke-width="4.2" stroke-linecap="round" />
+                  <path data-hf-id="hf-559e" d="M 370 306 Q 395 318 420 306" fill="none" stroke="#1C0E09" stroke-width="4.2" stroke-linecap="round" />
+                </g>
+
+                <!-- ==================== 3D REALISTIC GLASSES ==================== -->
+                <g data-hf-id="hf-xp9m" id="presenter-glasses" filter="url(#dropShadowGlasses)">
+                  <!-- Subtle Lens Tint & Specular Reflections -->
+                  <rect data-hf-id="hf-quui" x="218" y="278" width="76" height="54" rx="15" fill="url(#lensGloss)" pointer-events="none" />
+                  <rect data-hf-id="hf-avkh" x="356" y="278" width="76" height="54" rx="15" fill="url(#lensGloss)" pointer-events="none" />
+                  <!-- Diagonal Crisp Reflection Streaks -->
+                  <path d="M 230 282 L 246 282 L 228 326 L 220 326 Z" fill="#FFFFFF" opacity="0.16" />
+                  <path d="M 368 282 L 384 282 L 366 326 L 358 326 Z" fill="#FFFFFF" opacity="0.16" />
+
+                  <!-- Temple Arms -->
+                  <path data-hf-id="hf-kane" d="M 216 293 L 186 303" fill="none" stroke="url(#frameGrad)" stroke-width="6.5" stroke-linecap="round" />
+                  <path data-hf-id="hf-zoo2" d="M 434 293 L 464 303" fill="none" stroke="url(#frameGrad)" stroke-width="6.5" stroke-linecap="round" />
+
+                  <!-- Sculpted Acetate Frames -->
+                  <rect data-hf-id="hf-m3mm" x="217" y="277" width="78" height="56" rx="16" fill="none" stroke="url(#frameGrad)" stroke-width="7.5" />
+                  <rect data-hf-id="hf-7k4i" x="355" y="277" width="78" height="56" rx="16" fill="none" stroke="url(#frameGrad)" stroke-width="7.5" />
+                  
+                  <!-- Keyhole Bridge -->
+                  <path data-hf-id="hf-z92n" d="M 295 296 Q 325 287 355 296" fill="none" stroke="url(#frameGrad)" stroke-width="7" stroke-linecap="round" />
+
+                  <!-- Metallic Corner Hinges (Silver Rivets) -->
+                  <rect x="214" y="287" width="6" height="3" rx="1.5" fill="#D4DBE0" />
+                  <rect x="430" y="287" width="6" height="3" rx="1.5" fill="#D4DBE0" />
+
+                  <!-- Frame Rim Specular Highlights -->
+                  <path data-hf-id="hf-6lsu" d="M 228 277 L 278 277" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.45" />
+                  <path data-hf-id="hf-f4hy" d="M 366 277 L 416 277" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" opacity="0.45" />
+                </g>
+
+                <!-- ==================== ANATOMICAL 3D MOUTH SHAPES (0-9) ==================== -->
+                <g data-hf-id="hf-wzie" id="presenter-mouths">
+                  <!-- Under-Lip Mentolabial Shadow (Moves subtly with jaw) -->
+                  <ellipse cx="325" cy="422" rx="22" ry="6" fill="#8A4225" opacity="0.28" filter="url(#softBlur4)" />
+
+                  <!-- MOUTH 0: Closed Natural Relaxed Smile -->
+                  <g data-hf-id="hf-0dcj" id="mouth-0" class="mouth-shape mouth-0">
+                    <!-- Upper Lip -->
+                    <path d="M 292 396 C 304 389 316 388 325 391 C 334 388 346 389 358 396 C 344 401 306 401 292 396 Z" fill="url(#upperLipGrad)" />
+                    <!-- Lower Lip Cushion -->
+                    <path d="M 294 396 C 308 401 342 401 356 396 C 348 410 302 410 294 396 Z" fill="url(#lowerLipGrad)" />
+                    <!-- Lip Parting Line & Corner Dimples -->
+                    <path data-hf-id="hf-zmj2" d="M 290 395 Q 325 402 360 395" fill="none" stroke="#591C17" stroke-width="2.6" stroke-linecap="round" />
+                    <circle cx="290" cy="395" r="2.2" fill="#6E2820" opacity="0.6" />
+                    <circle cx="360" cy="395" r="2.2" fill="#6E2820" opacity="0.6" />
+                    <!-- Lower Lip Specular Gloss -->
+                    <path d="M 312 403 Q 325 406 338 403" fill="none" stroke="#FFF0EB" stroke-width="2.2" stroke-linecap="round" opacity="0.55" />
+                  </g>
+
+                  <!-- MOUTH 1: Slightly Parted Lips (Breathing / Soft Consonant) -->
+                  <g data-hf-id="hf-4tio" id="mouth-1" class="mouth-shape">
+                    <path data-hf-id="hf-9hbr" d="M 294 395 Q 325 391 356 395 Q 325 406 294 395 Z" fill="url(#mouthCavityGrad)" />
+                    <path d="M 302 394 Q 325 392 348 394 L 346 397 Q 325 396 304 397 Z" fill="url(#teethGrad)" />
+                    <!-- Upper & Lower Lips -->
+                    <path d="M 291 395 C 304 387 316 387 325 390 C 334 387 346 387 359 395 C 345 393 305 393 291 395 Z" fill="url(#upperLipGrad)" />
+                    <path d="M 292 395 Q 325 405 358 395 C 349 412 301 412 292 395 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 312 405 Q 325 408 338 405" fill="none" stroke="#FFF0EB" stroke-width="2.2" stroke-linecap="round" opacity="0.55" />
+                  </g>
+
+                  <!-- MOUTH 2: Small 'OO' / 'W' Rounded Vowel -->
+                  <g data-hf-id="hf-dhej" id="mouth-2" class="mouth-shape">
+                    <!-- Outer Pursed Lip Cushion -->
+                    <ellipse cx="325" cy="399" rx="20" ry="15" fill="url(#lowerLipGrad)" />
+                    <path d="M 305 398 C 308 384 342 384 345 398 Z" fill="url(#upperLipGrad)" />
+                    <!-- Inner Oral Cavity -->
+                    <ellipse data-hf-id="hf-dc5o" cx="325" cy="399" rx="13" ry="9.5" fill="url(#mouthCavityGrad)" />
+                    <path d="M 315 392 Q 325 390 335 392 L 334 395 Q 325 394 316 395 Z" fill="url(#teethGrad)" />
+                    <path d="M 316 403 Q 325 400 334 403 Q 325 408 316 403 Z" fill="url(#tongueGrad)" />
+                    <path d="M 317 410 Q 325 412 333 410" fill="none" stroke="#FFF0EB" stroke-width="2" stroke-linecap="round" opacity="0.55" />
+                  </g>
+
+                  <!-- MOUTH 3: Medium 'OH' Rounded Open Vowel -->
+                  <g data-hf-id="hf-9jai" id="mouth-3" class="mouth-shape">
+                    <ellipse cx="325" cy="402" rx="25" ry="20" fill="url(#lowerLipGrad)" />
+                    <path d="M 300 400 C 304 382 346 382 350 400 Z" fill="url(#upperLipGrad)" />
+                    <ellipse data-hf-id="hf-ilzw" cx="325" cy="402" rx="18" ry="14" fill="url(#mouthCavityGrad)" />
+                    <!-- Upper Teeth -->
+                    <path d="M 311 390 Q 325 388 339 390 L 338 395 Q 325 394 312 395 Z" fill="url(#teethGrad)" />
+                    <!-- Tongue -->
+                    <path data-hf-id="hf-q2dp" d="M 311 409 Q 325 401 339 409 Q 325 416 311 409 Z" fill="url(#tongueGrad)" />
+                    <path d="M 315 418 Q 325 420 335 418" fill="none" stroke="#FFF0EB" stroke-width="2.2" stroke-linecap="round" opacity="0.55" />
+                  </g>
+
+                  <!-- MOUTH 4: 'EE' / 'S' / 'T' Teeth-Together Smile -->
+                  <g data-hf-id="hf-qrkt" id="mouth-4" class="mouth-shape">
+                    <path d="M 288 396 C 302 387 348 387 362 396 C 358 416 292 416 288 396 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 288 396 C 302 386 316 386 325 389 C 334 386 348 386 362 396 Z" fill="url(#upperLipGrad)" />
+                    <path data-hf-id="hf-xrl3" d="M 293 396 Q 325 392 357 396 Q 353 409 325 410 Q 297 409 293 396 Z" fill="url(#mouthCavityGrad)" />
+                    <path data-hf-id="hf-y1ag" d="M 296 396 Q 325 393 354 396 L 351 404 Q 325 402 299 404 Z" fill="url(#teethGrad)" />
+                    <path d="M 304 405 Q 325 404 346 405 L 344 408 Q 325 409 306 408 Z" fill="url(#lowerTeethGrad)" opacity="0.85" />
+                    <path d="M 312 412 Q 325 415 338 412" fill="none" stroke="#FFF0EB" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+                  </g>
+
+                  <!-- MOUTH 5: 'EH' / 'AE' Conversational Open -->
+                  <g data-hf-id="hf-pzx0" id="mouth-5" class="mouth-shape">
+                    <path d="M 286 395 C 300 385 350 385 364 395 C 362 423 346 431 325 431 C 304 431 288 423 286 395 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 286 395 C 300 385 316 385 325 388 C 334 385 350 385 364 395 Z" fill="url(#upperLipGrad)" />
+                    <path data-hf-id="hf-o3t3" d="M 291 395 Q 325 390 359 395 C 358 417 344 424 325 424 C 306 424 292 417 291 395 Z" fill="url(#mouthCavityGrad)" />
+                    <path data-hf-id="hf-jisp" d="M 295 395 Q 325 391 355 395 L 353 402 Q 325 399 297 402 Z" fill="url(#teethGrad)" />
+                    <path data-hf-id="hf-7emt" d="M 305 415 Q 325 406 345 415 Q 325 424 305 415 Z" fill="url(#tongueGrad)" />
+                    <path d="M 312 427 Q 325 429 338 427" fill="none" stroke="#FFF0EB" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+                  </g>
+
+                  <!-- MOUTH 6: 'ER' / 'L' Mid-Narrow Open -->
+                  <g data-hf-id="hf-0ven" id="mouth-6" class="mouth-shape">
+                    <path d="M 290 395 C 304 386 346 386 360 395 C 358 430 344 438 325 438 C 306 438 292 430 290 395 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 290 395 C 304 386 316 386 325 389 C 334 386 346 386 360 395 Z" fill="url(#upperLipGrad)" />
+                    <path data-hf-id="hf-sfay" d="M 295 395 Q 325 391 355 395 C 354 424 341 431 325 431 C 309 431 296 424 295 395 Z" fill="url(#mouthCavityGrad)" />
+                    <path data-hf-id="hf-etvo" d="M 298 395 Q 325 392 352 395 L 350 402 Q 325 400 300 402 Z" fill="url(#teethGrad)" />
+                    <path data-hf-id="hf-hcs1" d="M 307 420 Q 325 410 343 420 Q 325 431 307 420 Z" fill="url(#tongueGrad)" />
+                    <path d="M 313 434 Q 325 436 337 434" fill="none" stroke="#FFF0EB" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+                  </g>
+
+                  <!-- MOUTH 7: 'AH' Open Vowel -->
+                  <g data-hf-id="hf-wxam" id="mouth-7" class="mouth-shape">
+                    <path d="M 284 394 C 298 383 352 383 366 394 C 365 433 349 444 325 444 C 301 444 285 433 284 394 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 284 394 C 298 383 316 383 325 386 C 334 383 352 383 366 394 Z" fill="url(#upperLipGrad)" />
+                    <path data-hf-id="hf-194q" d="M 289 394 Q 325 388 361 394 C 360 427 346 437 325 437 C 304 437 290 427 289 394 Z" fill="url(#mouthCavityGrad)" />
+                    <path data-hf-id="hf-8m68" d="M 293 394 Q 325 389 357 394 L 354 403 Q 325 400 296 403 Z" fill="url(#teethGrad)" />
+                    <path data-hf-id="hf-ul8v" d="M 304 424 Q 325 412 346 424 Q 325 437 304 424 Z" fill="url(#tongueGrad)" />
+                    <path d="M 308 432 Q 325 435 342 432 L 340 435 Q 325 437 310 435 Z" fill="url(#lowerTeethGrad)" opacity="0.65" />
+                    <path d="M 312 440 Q 325 442 338 440" fill="none" stroke="#FFF0EB" stroke-width="2" stroke-linecap="round" opacity="0.5" />
+                  </g>
+
+                  <!-- MOUTH 8: Wide 'AA' / 'AW' Vowel -->
+                  <g data-hf-id="hf-x0s1" id="mouth-8" class="mouth-shape">
+                    <path d="M 281 393 C 296 381 354 381 369 393 C 368 440 350 450 325 450 C 300 450 282 440 281 393 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 281 393 C 296 381 315 381 325 385 C 335 381 354 381 369 393 Z" fill="url(#upperLipGrad)" />
+                    <path data-hf-id="hf-bzxj" d="M 286 393 Q 325 386 364 393 C 363 434 347 443 325 443 C 303 443 287 434 286 393 Z" fill="url(#mouthCavityGrad)" />
+                    <path data-hf-id="hf-4qdn" d="M 290 393 Q 325 388 360 393 L 357 404 Q 325 401 293 404 Z" fill="url(#teethGrad)" />
+                    <path data-hf-id="hf-6x3v" d="M 300 429 Q 325 415 350 429 Q 325 443 300 429 Z" fill="url(#tongueGrad)" />
+                    <path d="M 306 437 Q 325 440 344 437 L 341 441 Q 325 443 309 441 Z" fill="url(#lowerTeethGrad)" opacity="0.7" />
+                    <path d="M 312 446 Q 325 448 338 446" fill="none" stroke="#FFF0EB" stroke-width="2.2" stroke-linecap="round" opacity="0.5" />
+                  </g>
+
+                  <!-- MOUTH 9: Full Energetic Open 'AAH' / Exclamation -->
+                  <g data-hf-id="hf-w948" id="mouth-9" class="mouth-shape">
+                    <path d="M 276 392 C 292 379 358 379 374 392 C 373 446 352 458 325 458 C 298 458 277 446 276 392 Z" fill="url(#lowerLipGrad)" />
+                    <path d="M 276 392 C 292 379 315 379 325 383 C 335 379 358 379 374 392 Z" fill="url(#upperLipGrad)" />
+                    <path data-hf-id="hf-krhl" d="M 281 392 Q 325 384 369 392 C 368 440 349 451 325 451 C 301 451 282 440 281 392 Z" fill="url(#mouthCavityGrad)" />
+                    <path data-hf-id="hf-qqcj" d="M 286 392 Q 325 386 364 392 L 361 405 Q 325 402 289 405 Z" fill="url(#teethGrad)" />
+                    <path data-hf-id="hf-c6qm" d="M 295 435 Q 325 418 355 435 Q 325 451 295 435 Z" fill="url(#tongueGrad)" />
+                    <path d="M 304 444 Q 325 447 346 444 L 343 448 Q 325 451 307 448 Z" fill="url(#lowerTeethGrad)" opacity="0.75" />
+                    <path d="M 311 454 Q 325 456 339 454" fill="none" stroke="#FFF0EB" stroke-width="2.4" stroke-linecap="round" opacity="0.55" />
+                  </g>
+                </g>
+              </g>
+
+              <!-- ==================== VOLUMETRIC LAYERED HAIR ==================== -->
+              <g id="presenter-hair" filter="url(#dropShadowSoft)">
+                <!-- Main Hair Volume & Sideburns -->
+                <path data-hf-id="hf-r0vu" d="M 192 315 C 184 290 180 260 182 235 C 184 185 218 135 282 124 C 335 114 422 120 462 176 C 476 196 474 245 466 285 C 463 300 460 312 456 315 C 455 285 452 260 446 245 C 436 224 420 216 402 213 C 382 209 364 222 335 213 C 305 203 288 218 264 223 C 236 228 214 245 200 272 C 195 285 194 300 192 315 Z" fill="url(#hairBaseGrad)" />
+                
+                <!-- Sculpted Crown Locks & Textured Strands -->
+                <path d="M 205 215 C 235 155 310 135 385 150 C 335 152 255 170 218 228 Z" fill="url(#hairHighlightGrad)" />
+                <path d="M 245 185 C 285 158 355 155 415 182 C 365 172 295 175 255 202 Z" fill="url(#hairHighlightGrad)" opacity="0.8" />
+                <path d="M 210 242 C 238 205 280 195 328 204 M 275 162 C 325 145 385 152 432 185 M 345 198 C 382 192 418 198 448 225" fill="none" stroke="#4F3426" stroke-width="3.5" stroke-linecap="round" opacity="0.55" />
+                <!-- Top Rim Light -->
+                <path d="M 245 135 C 305 118 385 122 435 152" fill="none" stroke="#7A5440" stroke-width="3" stroke-linecap="round" opacity="0.45" />
+              </g>
             </g>
-            <g id="hand-palm" style="transform-origin: 470px 770px; opacity: 0;">
-              <path class="p-hoodie p-stroke" d="M 440 770 L 460 570 L 525 555 L 500 770 Z" />
-              <path class="p-skin p-stroke" d="M 465 570 C 455 530 460 470 480 465 C 495 460 505 480 500 515 C 510 485 525 480 535 495 C 540 515 530 540 525 555 C 515 575 490 580 465 570 Z" />
+
+            <!-- ==================== REALISTIC HANDS & SLEEVES ==================== -->
+            <!-- Left Hand: Pointing Upward Gesture -->
+            <g data-hf-id="hf-pb0w" id="hand-pointing" style="transform-origin: 180px 770px; opacity: 0;" filter="url(#dropShadowSoft)">
+              <!-- Hoodie Sleeve & Ribbed Cuff -->
+              <path data-hf-id="hf-apvr" d="M 112 770 C 122 690 136 620 146 562 L 214 576 C 204 635 192 700 184 770 Z" fill="url(#hoodieMainGrad)" />
+              <path d="M 146 562 L 214 576 L 218 556 L 150 542 Z" fill="#9E1910" />
+              <!-- Sculpted Pointing Hand -->
+              <path data-hf-id="hf-fkt3" d="M 154 550 C 148 525 152 495 160 478 C 162 452 164 434 173 432 C 182 430 186 446 184 478 C 194 475 202 482 201 494 C 210 494 216 502 214 514 C 220 516 223 526 218 538 C 214 554 198 566 178 564 C 162 562 156 556 154 550 Z" fill="url(#skinBaseGrad)" />
+              <!-- Thumb Fold, Fingernail & Knuckle Creases -->
+              <path d="M 169 435 C 173 433 178 434 179 440 L 178 446 C 174 447 170 446 169 441 Z" fill="#FFEFE6" opacity="0.65" />
+              <path data-hf-id="hf-52da" d="M 158 504 C 168 492 184 494 188 508 C 190 520 180 534 166 534" fill="none" stroke="#9E5332" stroke-width="2.8" stroke-linecap="round" opacity="0.75" />
+              <path d="M 184 478 L 182 512 M 200 492 L 196 520 M 213 512 L 208 532" fill="none" stroke="#9E5332" stroke-width="2.5" stroke-linecap="round" opacity="0.65" />
+            </g>
+
+            <!-- Right Hand: Open Palm Gesture -->
+            <g data-hf-id="hf-7g46" id="hand-palm" style="transform-origin: 470px 770px; opacity: 0;" filter="url(#dropShadowSoft)">
+              <!-- Hoodie Sleeve & Ribbed Cuff -->
+              <path data-hf-id="hf-23i2" d="M 436 770 C 446 695 454 630 460 572 L 528 558 C 518 625 510 695 504 770 Z" fill="url(#hoodieMainGrad)" />
+              <path d="M 460 572 L 528 558 L 524 538 L 456 552 Z" fill="#9E1910" />
+              <!-- Sculpted Open Palm Hand with 5 Distinct Digits -->
+              <path data-hf-id="hf-qhji" d="M 464 552 C 452 532 442 512 436 496 C 432 486 440 478 448 486 C 456 494 462 504 466 502 C 464 472 468 446 476 445 C 484 444 486 468 485 492 C 489 462 495 438 503 439 C 511 440 511 466 507 494 C 513 468 520 448 527 450 C 534 452 532 476 525 502 C 531 484 538 470 544 474 C 550 478 544 504 535 526 C 528 546 514 558 494 560 C 478 562 468 558 464 552 Z" fill="url(#skinBaseGrad)" />
+              <!-- Palm Life-Line & Finger Shading -->
+              <path d="M 472 512 C 484 518 494 530 492 546 M 478 504 C 496 502 514 508 524 520" fill="none" stroke="#A65836" stroke-width="2.4" stroke-linecap="round" opacity="0.55" />
             </g>
           </g>
         </svg>
       </div>
     </div>
 
-    
     <script>
       (function() {
         window.__timelines = window.__timelines || {};
@@ -166,10 +631,10 @@
         window.__timelines["presenter"] = tl;
 
         const mouthShapes = [0, 2, 9, 9, 9, 6, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 9, 9, 6, 6, 9, 9, 5, 3, 6, 5, 9, 9, 8, 7, 6, 7, 7, 4, 8, 9, 9, 9, 8, 6, 6, 5, 3, 2, 1, 1, 0, 0, 0, 0, 7, 9, 9, 9, 9, 9, 9, 6, 3, 5, 7, 7, 7, 9, 6, 5, 6, 9, 9, 9, 8, 5, 6, 3, 2, 1, 4, 9, 9, 9, 5, 6, 9, 9, 7, 6, 4, 2, 3, 7, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 8, 8, 4, 2, 1, 1, 9, 9, 9, 9, 8, 6, 5, 5, 5, 3, 1, 1, 9, 9, 7, 7, 6, 4, 2, 1, 1, 0, 0, 0, 0, 4, 9, 7, 9, 9, 6, 9, 9, 9, 7, 4, 2, 6, 9, 8, 8, 9, 9, 9, 8, 9, 9, 9, 9, 8, 5, 3, 1, 1, 9, 9, 7, 6, 8, 9, 9, 9, 9, 8, 8, 7, 7, 6, 5, 8, 9, 5, 5, 3, 7, 9, 9, 9, 8, 9, 9, 9, 9, 8, 8, 8, 7, 5, 7, 6, 3, 2, 7, 8, 6, 4, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 8, 9, 9, 9, 9, 9, 7, 5, 6, 3, 2, 1, 1, 4, 8, 9, 9, 9, 5, 3, 1, 3, 2, 3, 9, 9, 9, 8, 5, 6, 4, 6, 9, 9, 9, 8, 8, 4, 2, 5, 4, 4, 9, 9, 7, 7, 9, 9, 9, 9, 8, 5, 6, 6, 6, 9, 9, 9, 5, 4, 3, 6, 9, 9, 8, 5, 8, 8, 8, 9, 9, 9, 9, 9, 8, 6, 7, 9, 9, 5, 5, 8, 8, 7, 9, 8, 5, 5, 3, 3, 9, 9, 9, 8, 8, 5, 6, 5, 3, 5, 9, 9, 8, 7, 6, 6, 5, 4, 4, 3, 3, 3, 1, 1, 0, 0, 0, 0, 0, 1, 9, 9, 9, 5, 6, 9, 9, 8, 6, 7, 5, 3, 9, 9, 9, 9, 9, 9, 9, 9, 9, 6, 3, 2, 9, 9, 9, 9, 6, 3, 5, 8, 9, 7, 4, 2, 3, 9, 9, 8, 4, 2, 5, 9, 9, 7, 4, 7, 9, 9, 8, 5, 7, 6, 3, 5, 7, 5, 3, 1, 1, 0, 0, 0, 0, 0, 0, 5, 9, 9, 8, 5, 3, 9, 8, 7, 4, 2, 1, 1, 3, 6, 9, 6, 3, 7, 9, 9, 9, 9, 9, 6, 3, 7, 7, 9, 9, 8, 8, 8, 8, 8, 6, 5, 4, 8, 9, 8, 6, 3, 2, 1, 8, 9, 9, 7, 8, 9, 9, 7, 8, 6, 6, 7, 7, 4, 9, 9, 9, 9, 8, 4, 8, 9, 9, 8, 8, 5, 3, 5, 3, 9, 9, 9, 8, 9, 9, 9, 9, 9, 8, 9, 8, 9, 9, 8, 8, 7, 4, 4, 5, 3, 9, 9, 8, 5, 3, 3, 8, 9, 7, 8, 8, 9, 9, 9, 9, 8, 8, 8, 8, 8, 8, 7, 5, 9, 9, 8, 8, 8, 7, 8, 7, 6, 4, 2, 1, 1, 0, 0, 0, 0, 0, 9, 9, 5, 9, 9, 9, 9, 9, 9, 8, 6, 9, 9, 9, 7, 5, 8, 9, 8, 8, 5, 4, 4, 4, 8, 9, 9, 8, 8, 9, 7, 4, 2, 4, 5, 9, 9, 8, 7, 5, 2, 7, 9, 6, 5, 3, 6, 6, 4, 3, 2, 1, 3, 5, 3, 1, 1, 0, 0, 0, 0, 0, 1, 9, 9, 9, 9, 9, 9, 9, 6, 3, 2, 1, 1, 0, 0, 6, 9, 9, 9, 9, 9, 9, 6, 3, 6, 5, 9, 9, 9, 9, 9, 8, 8, 9, 7, 7, 7, 8, 8, 8, 8, 8, 9, 9, 9, 7, 5, 8, 9, 9, 9, 5, 8, 8, 4, 6, 9, 9, 8, 7, 6, 7, 6, 7, 6, 6, 5, 3, 2, 4, 9, 9, 6, 3, 2, 9, 9, 8, 5, 3, 2, 1, 0, 6, 9, 9, 7, 8, 9, 9, 6, 3, 2, 1, 5, 8, 7, 8, 9, 8, 6, 5, 6, 6, 9, 8, 9, 9, 9, 9, 9, 9, 9, 9, 8, 8, 6, 7, 9, 9, 8, 5, 3, 1, 6, 7, 6, 3, 2, 1, 1, 8, 6, 9, 9, 9, 8, 4, 2, 5, 7, 7, 7, 5, 7, 8, 9, 9, 9, 9, 8, 5, 3, 2, 7, 8, 9, 8, 7, 4, 2, 4, 4, 8, 9, 9, 8, 6, 5, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 9, 9, 9, 9, 9, 9, 8, 5, 3, 1, 1, 1, 9, 9, 9, 9, 9, 6, 8, 9, 9, 5, 5, 5, 3, 6, 8, 6, 4, 2, 9, 9, 8, 9, 9, 9, 9, 7, 6, 6, 8, 9, 7, 8, 8, 8, 9, 7, 4, 2, 1, 9, 9, 9, 9, 9, 9, 6, 6, 8, 9, 7, 6, 8, 7, 4, 9, 9, 9, 9, 7, 5, 6, 7, 8, 7, 5, 6, 6, 9, 9, 9, 9, 8, 5, 4, 5, 6, 5, 4, 2, 1, 1, 0, 0, 0, 0, 0, 8, 9, 8, 5, 7, 9, 9, 9, 5, 4, 9, 8, 8, 4, 4, 5, 8, 9, 9, 9, 7, 4, 5, 3, 2, 4, 2, 1, 8, 9, 9, 8, 8, 9, 9, 9, 9, 9, 7, 4, 7, 8, 4, 2, 5, 8, 5, 6, 6, 9, 9, 8, 7, 7, 4, 2, 6, 9, 8, 7, 4, 6, 3, 2, 8, 7, 5, 5, 9, 9, 8, 7, 6, 4, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0, 7, 4, 2, 1, 9, 9, 9, 9, 7, 7, 6, 9, 9, 9, 7, 4, 3, 7, 7, 4, 3, 9, 9, 8, 9, 9, 9, 6, 5, 7, 6, 3, 2, 1, 1, 0, 0, 0, 0, 0, 9, 9, 7, 9, 9, 9, 9, 9, 9, 5, 3, 8, 9, 9, 6, 5, 3, 8, 9, 8, 4, 2, 1, 8, 9, 9, 9, 9, 9, 8, 8, 9, 8, 9, 9, 8, 8, 9, 9, 9, 5, 8, 9, 7, 5, 7, 9, 9, 7, 4, 2, 4, 7, 9, 7, 7, 9, 9, 9, 9, 8, 8, 8, 6, 3, 9, 8, 5, 3, 3, 8, 9, 7, 7, 9, 8, 9, 9, 9, 9, 9, 9, 8, 5, 6, 7, 6, 4, 5, 7, 8, 4, 2, 5, 6, 6, 8, 7, 6, 5, 7, 7, 5, 7, 9, 9, 9, 7, 5, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0];
-        const blinkFrames = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+        const blinkFrames = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
         const fps = 30;
 
-        // 1. Mouth shapes setup
+        // 1. Mouth shapes setup + Subtle Jaw/Brows Micro-expression sync
         if (mouthShapes && mouthShapes.length > 0) {
           const initialShape = mouthShapes[0];
           for (let m = 0; m < 10; m++) {
@@ -217,25 +682,59 @@
           }
         }
 
-        // 3. Head sway and nods
+        // 3. Torso breathing, secondary drawstring motion, head sway & 2.5D facial parallax
+        tl.to("#presenter-body", { scaleY: 1.018, scaleX: 1.006, transformOrigin: "325px 770px", duration: 2.2, yoyo: true, repeat: 16, ease: "sine.inOut" }, 0);
+        tl.to("#hoodie-strings", { rotation: 1.2, transformOrigin: "325px 560px", duration: 1.8, yoyo: true, repeat: 22, ease: "sine.inOut" }, 0);
+
         const headSelector = "#presenter-head";
         tl.set(headSelector, { transformOrigin: "325px 480px", y: 0, rotation: -1.8 }, 0);
-        // Continuous head sway (-1.8 to +1.8 deg) repeated 22 times (~39.6s)
         tl.to(headSelector, { rotation: 1.8, duration: 1.8, yoyo: true, repeat: 22, ease: "sine.inOut" }, 0);
 
-        // Head nods on key words (0.5s duration)
+        // 2.5D Parallax for facial features + opposing ear depth
+        tl.fromTo("#presenter-face-parallax",
+          { x: -5 },
+          { x: 5, duration: 1.8, yoyo: true, repeat: 22, ease: "sine.inOut" },
+          0
+        );
+        tl.fromTo("#ear-left, #ear-right",
+          { x: 2.5 },
+          { x: -2.5, duration: 1.8, yoyo: true, repeat: 22, ease: "sine.inOut" },
+          0
+        );
+
+        // Realistic Eye Micro-Saccades (Natural Eye Darting)
+        const saccades = [
+          { t: 1.5, x: 2.2, y: -0.8 },
+          { t: 3.8, x: -2.0, y: 0.5 },
+          { t: 6.2, x: 0, y: 0 },
+          { t: 9.4, x: 2.5, y: 0.8 },
+          { t: 12.0, x: -1.8, y: -1.0 },
+          { t: 15.1, x: 0, y: 0 },
+          { t: 18.5, x: -2.4, y: 0.6 },
+          { t: 21.2, x: 1.8, y: -0.6 },
+          { t: 24.8, x: 0, y: 0 },
+          { t: 28.0, x: 2.2, y: 0.5 },
+          { t: 31.5, x: -1.5, y: -0.8 },
+          { t: 34.2, x: 0, y: 0 }
+        ];
+        for (const s of saccades) {
+          tl.to("#presenter-irises", { x: s.x, y: s.y, duration: 0.12, ease: "power2.out" }, s.t);
+        }
+
+        // Head nods + Expressive Eyebrow Lifts on key words
         const nodTimestamps = [
           0.72, 5.36, 12.40, 15.46, 23.40, 30.18, 36.34
         ];
         for (const t of nodTimestamps) {
           tl.to(headSelector, { y: "+=12px", rotation: 3, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, t);
+          tl.to("#presenter-brows", { y: -5, duration: 0.22, yoyo: true, repeat: 1, ease: "sine.out" }, t);
         }
 
-        // 4. Hand gestures
+        // 4. Hand gestures with natural wrist rotation
         const pointingSelector = "#hand-pointing";
         const palmSelector = "#hand-palm";
-        tl.set(pointingSelector, { y: 220, opacity: 0, transformOrigin: "180px 770px" }, 0);
-        tl.set(palmSelector, { y: 220, opacity: 0, transformOrigin: "470px 770px" }, 0);
+        tl.set(pointingSelector, { y: 220, rotation: -8, opacity: 0, transformOrigin: "180px 770px" }, 0);
+        tl.set(palmSelector, { y: 220, rotation: 8, opacity: 0, transformOrigin: "470px 770px" }, 0);
 
         const gestures = [
           { target: pointingSelector, start: 7.18, end: 8.88 },
@@ -245,16 +744,20 @@
         ];
 
         for (const g of gestures) {
-          const enterDuration = 0.3;
-          const exitDuration = 0.3;
+          const enterDuration = 0.32;
+          const exitDuration = 0.32;
           const exitStartTime = g.end - exitDuration;
           tl.fromTo(g.target,
-            { y: 220, opacity: 0 },
-            { y: 0, opacity: 1, duration: enterDuration, ease: "back.out(1.4)" },
+            { y: 220, rotation: g.target === pointingSelector ? -10 : 10, opacity: 0 },
+            { y: 0, rotation: 0, opacity: 1, duration: enterDuration, ease: "back.out(1.4)" },
             g.start
           );
           tl.to(g.target,
-            { y: 220, opacity: 0, duration: exitDuration, ease: "power2.in" },
+            { y: -8, rotation: g.target === pointingSelector ? 2.5 : -2.5, duration: 0.35, yoyo: true, repeat: 2, ease: "sine.inOut" },
+            g.start + enterDuration
+          );
+          tl.to(g.target,
+            { y: 220, rotation: g.target === pointingSelector ? -8 : 8, opacity: 0, duration: exitDuration, ease: "power2.in" },
             exitStartTime
           );
         }

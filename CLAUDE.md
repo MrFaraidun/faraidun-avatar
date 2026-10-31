@@ -33,6 +33,9 @@ MP4.
 
 ## Commands
 
+> [!CAUTION]
+> **STRICT USER RULE**: Never run `npm run dev` or `npm run render` (or any commands that start foreground servers or full MP4 rendering) automatically. Only run verification commands (`npm run check`, `npx hyperframes snapshot`, `npx hyperframes lint`). Rendering or running dev servers is strictly reserved for when the human user explicitly requests it.
+
 ```bash
 npm run dev          # human-operated foreground preview (blocks until stopped)
 npx hyperframes preview --background  # agent-safe persistent Studio preview
