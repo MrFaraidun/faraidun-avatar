@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Closing - Gemini Flash 4</title>
-    <!-- Fonts -->
+    <title>Closing - Google AI Studio Explainer Reel</title>
+    <!-- Google Fonts: Anton, Instrument Sans, Instrument Serif, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,12 +14,21 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       :root {
-        --cream: #EBE7E1;
-        --ink: #1E1C1A;
-        --red: #C83329;
-        --grey: #716D67;
-        --card: #FBFAF8;
-        --caption-inactive: #B5AFA7;
+        --obsidian: #0C0D10;
+        --polar-glass: #171920;
+        --card-surface: #111319;
+        --border-glass: #2B2F3E;
+        --cyan-gemini: #4285F4;
+        --violet-hyper: #9B51E0;
+        --coral-neon: #FF5722;
+        --green-accent: #38EF7D;
+        --white-pure: #FFFFFF;
+        --caption-inactive: #8E95A5;
+        --paper-cream: #EBE7E1;
+        --ink-dark: #1E1C1A;
+        --hook-grey: #595550;
+        --hook-card: #FBFAF8;
+        --hook-red: #D7372C;
       }
 
       * {
@@ -35,9 +44,9 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
-        color: var(--ink);
-        font-family: 'Instrument Sans', sans-serif;
+        background-color: var(--obsidian);
+        color: var(--white-pure);
+        font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         -webkit-font-smoothing: antialiased;
       }
 
@@ -46,55 +55,171 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
+        background-color: var(--obsidian);
+        perspective: 1400px;
+        transform-style: preserve-3d;
       }
 
-      /* 1. Top Status Tag (JetBrains Mono 25px, y: 132px) */
-      .top-tag {
+      .clip {
         position: absolute;
-        left: 120px;
-        top: 132px;
+        box-sizing: border-box;
+      }
+
+      /* ----------------------------------------------------
+         CANVAS BACKGROUNDS
+         ---------------------------------------------------- */
+      #bg-obsidian {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        background-color: var(--obsidian);
+        background-image: 
+          radial-gradient(circle at 50% 18%, rgba(66, 133, 244, 0.08) 0%, transparent 60%),
+          radial-gradient(circle at 80% 50%, rgba(155, 81, 224, 0.06) 0%, transparent 50%),
+          url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+        z-index: 1;
+      }
+
+      #bg-cream {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        background-color: var(--paper-cream);
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+        opacity: 0;
+        z-index: 2;
+        pointer-events: none;
+      }
+
+      /* ----------------------------------------------------
+         HALFTONE SHADOW UTILITY
+         Halftone dot matrix for tactile print depth
+         ---------------------------------------------------- */
+      .halftone-shadow-dark {
+        position: absolute;
+        left: -14px;
+        top: 14px;
+        width: 100%;
+        height: 100%;
+        border-radius: 24px;
+        background-image: radial-gradient(circle, rgba(0, 0, 0, 0.85) 1.8px, transparent 1.9px);
+        background-size: 8px 8px;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .halftone-shadow-cream {
+        position: absolute;
+        left: -13px;
+        top: 12px;
         width: 840px;
-        display: flex;
-        justify-content: space-between;
+        height: 380px;
+        border-radius: 20px;
+        background-image: radial-gradient(circle, var(--ink-dark) 1.7px, transparent 1.8px);
+        background-size: 8px 8px;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* ----------------------------------------------------
+         CAMERA / PERSPECTIVE WRAPPER
+         Controls 2.5D camera moves and match-cut loop
+         ---------------------------------------------------- */
+      #camera-wrapper {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        z-index: 10;
+        transform-origin: 540px 760px;
+      }
+
+      /* ----------------------------------------------------
+         HEADER SECTION (Badge & Headline)
+         ---------------------------------------------------- */
+      #header-container {
+        position: absolute;
+        left: 100px;
+        top: 90px;
+        width: 880px;
+        z-index: 30;
+      }
+
+      .header-badge-pill {
+        display: inline-flex;
         align-items: center;
+        gap: 12px;
+        padding: 6px 18px;
+        border-radius: 100px;
+        background: rgba(66, 133, 244, 0.12);
+        border: 1.5px solid var(--cyan-gemini);
+        backdrop-filter: blur(10px);
+      }
+
+      .pulse-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--cyan-gemini);
+        box-shadow: 0 0 10px var(--cyan-gemini);
+      }
+
+      .header-badge-text {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 25px;
+        font-size: 20px;
         font-weight: 700;
-        color: var(--grey);
+        color: var(--cyan-gemini);
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        z-index: 10;
-        opacity: 0;
       }
 
-      .top-tag .status-red {
-        color: var(--red);
-        font-weight: 700;
+      .header-headline {
+        font-family: 'Anton', sans-serif;
+        font-size: 68px;
+        letter-spacing: 0.02em;
+        line-height: 1.05;
+        color: var(--white-pure);
+        margin-top: 14px;
+        text-transform: uppercase;
       }
 
-      /* 2. Captions Container at x: 120px, y: 196px, width: 850px */
+      .header-headline span {
+        color: var(--cyan-gemini);
+        text-shadow: 0 0 20px rgba(66, 133, 244, 0.4);
+      }
+
+      /* ----------------------------------------------------
+         CAPTIONS SECTION
+         x: 100px, y: 240px, width: 880px
+         Instrument Sans 54px, word sync, serif italics in coral
+         ---------------------------------------------------- */
       #captions {
         position: absolute;
-        left: 120px;
-        top: 196px;
-        width: 850px;
-        display: block;
-        z-index: 50;
+        left: 100px;
+        top: 240px;
+        width: 880px;
+        z-index: 40;
       }
 
       .caption-line {
         position: absolute;
         left: 0;
         top: 0;
-        width: 850px;
-        display: block;
+        width: 880px;
         font-family: 'Instrument Sans', sans-serif;
-        font-weight: 500;
-        font-size: 62px;
+        font-weight: 600;
+        font-size: 54px;
         line-height: 1.25;
-        letter-spacing: -0.025em;
-        word-spacing: 0.04em;
+        letter-spacing: -0.02em;
+      }
+
+      #phrase-1 {
+        opacity: 0;
+      }
+
+      #phrase-2 {
         opacity: 0;
       }
 
@@ -107,242 +232,386 @@
         font-family: 'Instrument Serif', Georgia, serif;
         font-style: italic;
         font-weight: 400;
-        font-size: 72px;
+        font-size: 64px;
         line-height: 1.1;
         letter-spacing: -0.01em;
         vertical-align: -2px;
       }
 
-      /* 3. Card Stage (x: 120px, y: 560px, width: 840px, height: 380px) */
-      #card-stage {
+      /* ----------------------------------------------------
+         GIANT BENTO COCKPIT SUMMARY CARD
+         Center stage: x: 100px, y: 440px, w: 880px, h: 680px
+         ---------------------------------------------------- */
+      #cockpit-card-wrap {
+        position: absolute;
+        left: 100px;
+        top: 440px;
+        width: 880px;
+        height: 680px;
+        z-index: 20;
+      }
+
+      #cockpit-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 880px;
+        height: 680px;
+        border-radius: 24px;
+        border: 2px solid var(--border-glass);
+        background-color: var(--polar-glass);
+        padding: 30px 34px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 2;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(16px);
+      }
+
+      .cockpit-top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-bottom: 16px;
+        border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .cockpit-live-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green-accent);
+        letter-spacing: 0.05em;
+      }
+
+      .live-indicator-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--green-accent);
+        box-shadow: 0 0 10px var(--green-accent);
+      }
+
+      .cockpit-spec-pill {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--cyan-gemini);
+        background: rgba(66, 133, 244, 0.12);
+        border: 1px solid rgba(66, 133, 244, 0.4);
+        padding: 4px 12px;
+        border-radius: 6px;
+        letter-spacing: 0.04em;
+      }
+
+      /* 2x2 Bento Grid */
+      .bento-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 14px;
+        margin-bottom: 14px;
+      }
+
+      .bento-card {
+        background-color: var(--card-surface);
+        border: 1.5px solid var(--border-glass);
+        border-radius: 18px;
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 220px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .bento-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+      }
+
+      .bento-card.card-1::before {
+        background: linear-gradient(90deg, var(--cyan-gemini), transparent);
+      }
+      .bento-card.card-2::before {
+        background: linear-gradient(90deg, var(--violet-hyper), transparent);
+      }
+      .bento-card.card-3::before {
+        background: linear-gradient(90deg, var(--cyan-gemini), var(--green-accent));
+      }
+      .bento-card.card-4::before {
+        background: linear-gradient(90deg, var(--coral-neon), transparent);
+      }
+
+      .bento-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .bento-num-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+      }
+
+      .card-1 .bento-num-label { color: var(--cyan-gemini); }
+      .card-2 .bento-num-label { color: var(--violet-hyper); }
+      .card-3 .bento-num-label { color: var(--cyan-gemini); }
+      .card-4 .bento-num-label { color: var(--coral-neon); }
+
+      .bento-chip {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 2px 8px;
+        border-radius: 4px;
+        letter-spacing: 0.04em;
+      }
+
+      .card-1 .bento-chip { background: rgba(66, 133, 244, 0.15); color: var(--cyan-gemini); }
+      .card-2 .bento-chip { background: rgba(155, 81, 224, 0.15); color: var(--violet-hyper); }
+      .card-3 .bento-chip { background: rgba(56, 239, 125, 0.15); color: var(--green-accent); }
+      .card-4 .bento-chip { background: rgba(255, 87, 34, 0.15); color: var(--coral-neon); }
+
+      .bento-main-stat {
+        font-family: 'Anton', sans-serif;
+        font-size: 40px;
+        color: var(--white-pure);
+        letter-spacing: 0.01em;
+        line-height: 1.05;
+        margin-top: 4px;
+      }
+
+      .card-1 .bento-main-stat { color: var(--white-pure); }
+      .card-2 .bento-main-stat { color: var(--white-pure); }
+      .card-3 .bento-main-stat { color: var(--white-pure); }
+      .card-4 .bento-main-stat { color: var(--coral-neon); }
+
+      .bento-desc {
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: #A0A5B5;
+        line-height: 1.2;
+      }
+
+      .bento-mini-meter {
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+        margin-top: 6px;
+      }
+
+      .meter-fill {
+        height: 100%;
+        width: 100%;
+        background: linear-gradient(90deg, var(--cyan-gemini), var(--violet-hyper));
+        box-shadow: 0 0 8px var(--cyan-gemini);
+      }
+
+      /* Cockpit Footer Bar */
+      .cockpit-footer-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1.5px dashed rgba(255, 255, 255, 0.1);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 16px;
+        color: #8E95A5;
+      }
+
+      .cockpit-footer-item strong {
+        color: var(--white-pure);
+        font-weight: 700;
+      }
+
+      .cockpit-footer-item.highlight-cyan strong {
+        color: var(--cyan-gemini);
+      }
+
+      .cockpit-footer-item.highlight-coral strong {
+        color: var(--coral-neon);
+      }
+
+      /* ----------------------------------------------------
+         STAMP BADGE: "SHIP EVERYWHERE"
+         Anton 52px in 5px Neon Coral box stamped at -6°
+         ---------------------------------------------------- */
+      #stamp-container {
+        position: absolute;
+        left: 210px;
+        top: 1160px;
+        width: 660px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 50;
+        transform-origin: center center;
+        transform: rotate(-6deg);
+        pointer-events: none;
+      }
+
+      .ship-stamp-box {
+        border: 5px solid var(--coral-neon);
+        border-radius: 16px;
+        padding: 16px 36px;
+        background: rgba(255, 87, 34, 0.15);
+        backdrop-filter: blur(12px);
+        box-shadow: 
+          0 0 40px rgba(255, 87, 34, 0.45),
+          inset 0 0 20px rgba(255, 87, 34, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .stamp-text-main {
+        font-family: 'Anton', sans-serif;
+        font-size: 52px;
+        color: var(--coral-neon);
+        letter-spacing: 0.06em;
+        line-height: 1;
+        text-transform: uppercase;
+        text-shadow: 0 0 15px rgba(255, 87, 34, 0.6);
+      }
+
+      .stamp-sub-tag {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--white-pure);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ----------------------------------------------------
+         MATCH-CUT LOOP TARGET: HOOK FRAME 0 PROBLEM CARD
+         Transitions into exact geometry of hook.html frame 0
+         Left: 120px, Top: 560px, Width: 840px, Height: 380px
+         ---------------------------------------------------- */
+      #hook-card-stage {
         position: absolute;
         left: 120px;
         top: 560px;
         width: 840px;
         height: 380px;
-        z-index: 20;
+        z-index: 25;
         opacity: 0;
-      }
-
-      /* Halftone dot shadow: 1.7px dots on 8px grid, offset 13px left, 12px down */
-      .halftone-shadow {
-        position: absolute;
-        left: -13px;
-        top: 12px;
-        width: 840px;
-        height: 380px;
-        border-radius: 20px;
-        background-image: radial-gradient(circle, var(--ink) 1.7px, transparent 1.8px);
-        background-size: 8px 8px;
-        z-index: 1;
         pointer-events: none;
       }
 
-      /* A. Clean 4-Pillars Summary Card (0.0s to 3.8s) */
-      #summary-card {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 840px;
-        height: 380px;
-        background-color: var(--card);
-        border: 3px solid var(--ink);
-        border-radius: 20px;
-        padding: 24px 30px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 2;
-        opacity: 1;
-      }
-
-      .summary-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .summary-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--grey);
-        letter-spacing: 0.08em;
-      }
-
-      .summary-badge {
-        font-family: 'Anton', sans-serif;
-        font-size: 26px;
-        color: var(--red);
-        letter-spacing: 0.04em;
-      }
-
-      .pillars-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px;
-        margin-top: 10px;
-      }
-
-      .pillar-item {
-        background: #F4F1EC;
-        border: 2px solid var(--ink);
-        border-radius: 14px;
-        padding: 12px 18px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        height: 128px;
-      }
-
-      .pillar-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .pillar-num {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--red);
-      }
-
-      .pillar-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--ink);
-        background: #E4DFD7;
-        padding: 2px 7px;
-        border-radius: 4px;
-      }
-
-      .pillar-tag.slashed {
-        color: var(--red);
-        background: #FDE8E7;
-      }
-
-      .pillar-stat {
-        font-family: 'Anton', sans-serif;
-        font-size: 42px;
-        color: var(--ink);
-        line-height: 1;
-      }
-
-      .pillar-stat.red {
-        color: var(--red);
-      }
-
-      .pillar-desc {
-        font-family: 'Instrument Sans', sans-serif;
-        font-size: 17px;
-        font-weight: 600;
-        color: var(--grey);
-      }
-
-      /* B. Exact Hook Frame 0 Problem Card (transitions in at 3.8s) */
-      #problem-card {
+      #hook-problem-card {
         position: absolute;
         left: 0;
         top: 0;
         width: 840px;
         height: 380px;
         border-radius: 20px;
-        border: 3px solid var(--ink);
-        background-color: var(--card);
+        border: 3px solid var(--ink-dark);
+        background-color: var(--hook-card);
         padding: 34px 38px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        z-index: 3;
+        z-index: 2;
         overflow: hidden;
-        opacity: 0;
       }
 
-      .card-header-row {
+      .hook-card-header-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
 
-      .status-pill {
+      .hook-status-pill {
         display: inline-flex;
         align-items: center;
         gap: 8px;
         padding: 6px 14px;
         border-radius: 100px;
         background: #F8ECEB;
-        border: 1.5px solid var(--red);
+        border: 1.5px solid var(--hook-red);
       }
 
-      .status-dot {
+      .hook-status-dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: var(--red);
+        background-color: var(--hook-red);
       }
 
-      .status-pill-text {
+      .hook-status-pill-text {
         font-family: 'JetBrains Mono', monospace;
         font-size: 14px;
         font-weight: 700;
-        color: var(--red);
+        color: var(--hook-red);
         letter-spacing: 0.04em;
+        text-transform: uppercase;
       }
 
-      .server-cluster-tag {
+      .hook-server-tag {
         font-family: 'JetBrains Mono', monospace;
         font-size: 14px;
         font-weight: 500;
-        color: var(--grey);
+        color: var(--hook-grey);
         letter-spacing: 0.05em;
       }
 
-      .problem-headline-block {
+      .hook-headline-block {
         margin-top: 4px;
       }
 
-      .problem-headline {
+      .hook-headline {
         font-family: 'Instrument Sans', sans-serif;
         font-weight: 700;
         font-size: 32px;
         line-height: 1.2;
         letter-spacing: -0.02em;
-        color: var(--ink);
+        color: var(--ink-dark);
       }
 
-      .problem-subheadline {
+      .hook-subheadline {
         font-size: 17px;
         font-weight: 500;
-        color: var(--grey);
+        color: var(--hook-grey);
         margin-top: 6px;
         letter-spacing: -0.01em;
       }
 
-      .progress-bar-wrap {
-        width: 100%;
-        margin-top: 2px;
-      }
-
-      .progress-track {
+      .hook-progress-track {
         width: 100%;
         height: 44px;
-        background: var(--cream);
-        border: 2.5px solid var(--ink);
+        background: var(--paper-cream);
+        border: 2.5px solid var(--ink-dark);
         border-radius: 12px;
         position: relative;
         overflow: hidden;
+        margin-top: 2px;
       }
 
-      .progress-fill {
+      .hook-progress-fill {
         width: 14%;
         height: 100%;
-        background: var(--red);
-        border-right: 2px solid var(--ink);
+        background: var(--hook-red);
+        border-right: 2px solid var(--ink-dark);
       }
 
-      .progress-bar-legend {
+      .hook-progress-legend {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -352,15 +621,10 @@
         font-weight: 700;
       }
 
-      .legend-left {
-        color: var(--red);
-      }
+      .hook-legend-left { color: var(--hook-red); }
+      .hook-legend-right { color: var(--hook-grey); }
 
-      .legend-right {
-        color: var(--grey);
-      }
-
-      .problem-card-footer {
+      .hook-card-footer {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -370,206 +634,406 @@
         font-size: 14px;
       }
 
-      .footer-item {
-        color: var(--grey);
+      .hook-footer-item { color: var(--hook-grey); }
+      .hook-footer-item strong { color: var(--ink-dark); font-weight: 700; }
+
+      /* Hook Frame 0 Captions for seamless match loop */
+      #hook-captions {
+        position: absolute;
+        left: 120px;
+        top: 196px;
+        width: 850px;
+        display: block;
+        z-index: 55;
+        opacity: 0;
+        pointer-events: none;
       }
 
-      .footer-item strong {
-        color: var(--ink);
-        font-weight: 700;
+      .hook-caption-line {
+        font-family: 'Instrument Sans', sans-serif;
+        font-weight: 500;
+        font-size: 62px;
+        line-height: 1.25;
+        letter-spacing: -0.025em;
+        word-spacing: 0.04em;
+        color: #78736D;
+      }
+
+      .hook-word-keyword {
+        font-family: 'Instrument Serif', Georgia, serif;
+        font-style: italic;
+        font-weight: 400;
+        font-size: 72px;
+        line-height: 1.1;
+        letter-spacing: -0.01em;
+        color: #78736D;
       }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-ujop"
+    <div
       id="root"
+      class="clip"
       data-composition-id="closing"
       data-start="0"
-      data-duration="5.31"
+      data-duration="5.5"
       data-width="1080"
       data-height="1920"
     >
-      <!-- Top Tag (JetBrains Mono 25px, y: 132px) -->
-      <div data-hf-id="hf-ops2" id="top-tag" class="top-tag">
-        <span data-hf-id="hf-9q8c">SUMMARY · FLASH 4</span>
-        <span data-hf-id="hf-3blv">LEAKS: <span data-hf-id="hf-ew6q" class="status-red">CONFIRMED</span></span>
+      <!-- Background Layers -->
+      <div id="bg-obsidian" class="clip" data-start="0" data-duration="5.5"></div>
+      <div id="bg-cream" class="clip" data-start="4.2" data-duration="1.3"></div>
+
+      <!-- Camera & 2.5D Perspective Wrapper -->
+      <div id="camera-wrapper" class="clip" data-start="0" data-duration="5.5">
+        
+        <!-- Header Badge & Headline -->
+        <div id="header-container" class="clip" data-start="0" data-duration="5.5">
+          <div class="header-badge-pill" data-layout-ignore="true">
+            <span class="pulse-dot"></span>
+            <span class="header-badge-text">GOOGLE AI STUDIO · SUMMARY</span>
+          </div>
+          <div class="header-headline">
+            PROTOTYPE <span>TO SHIP</span>
+          </div>
+        </div>
+
+        <!-- Spoken Captions Container -->
+        <div id="captions" class="clip" data-start="0" data-duration="4.6">
+          <!-- Phrase 1 (0.0s – 2.2s): "Prototype here. Ship everywhere." -->
+          <div id="phrase-1" class="caption-line">
+            <span id="w-proto" class="word">Prototype</span>
+            <span id="w-here" class="word">here.</span>
+            <span id="w-ship" class="word">Ship</span>
+            <span id="w-everywhere" class="word keyword">everywhere.</span>
+          </div>
+
+          <!-- Phrase 2 (2.2s – 4.5s): "Zero boilerplate, pure production velocity." -->
+          <div id="phrase-2" class="caption-line">
+            <span id="w-zero" class="word">Zero</span>
+            <span id="w-boilerplate" class="word">boilerplate,</span>
+            <span id="w-pure" class="word">pure</span>
+            <span id="w-production" class="word">production</span>
+            <span id="w-velocity" class="word keyword">velocity.</span>
+          </div>
+        </div>
+
+        <!-- Giant Bento Cockpit Summary Card -->
+        <div id="cockpit-card-wrap" class="clip" data-start="0" data-duration="5.0">
+          <div class="halftone-shadow-dark"></div>
+
+          <div id="cockpit-card">
+            <!-- Cockpit Top Bar -->
+            <div class="cockpit-top-bar" data-layout-ignore="true">
+              <div class="cockpit-live-tag">
+                <span class="live-indicator-dot"></span>
+                <span>PRODUCTION PLATFORM // VERIFIED</span>
+              </div>
+              <div class="cockpit-spec-pill">GEMINI 2.0 FLASH</div>
+            </div>
+
+            <!-- 2x2 Bento Grid -->
+            <div class="bento-grid" data-layout-ignore="true">
+              <!-- Card 1: 2,097,152 Tokens Multimodal -->
+              <div id="bento-1" class="bento-card card-1">
+                <div class="bento-card-header">
+                  <span class="bento-num-label">01 · CONTEXT</span>
+                  <span class="bento-chip">2M TOKENS</span>
+                </div>
+                <div>
+                  <div class="bento-main-stat">2,097,152</div>
+                  <div class="bento-desc">Tokens Multimodal Canvas</div>
+                </div>
+                <div class="bento-mini-meter">
+                  <div class="meter-fill"></div>
+                </div>
+              </div>
+
+              <!-- Card 2: Strict Schema JSON Output -->
+              <div id="bento-2" class="bento-card card-2">
+                <div class="bento-card-header">
+                  <span class="bento-num-label">02 · SCHEMA</span>
+                  <span class="bento-chip">STRICT JSON</span>
+                </div>
+                <div>
+                  <div class="bento-main-stat">STRICT SCHEMA</div>
+                  <div class="bento-desc">Zero Hallucination Output</div>
+                </div>
+                <div class="bento-mini-meter">
+                  <div class="meter-fill" style="background: linear-gradient(90deg, var(--violet-hyper), #D8B4FE);"></div>
+                </div>
+              </div>
+
+              <!-- Card 3: Google Search Grounded -->
+              <div id="bento-3" class="bento-card card-3">
+                <div class="bento-card-header">
+                  <span class="bento-num-label">03 · GROUNDING</span>
+                  <span class="bento-chip">REAL-TIME</span>
+                </div>
+                <div>
+                  <div class="bento-main-stat">LIVE SEARCH</div>
+                  <div class="bento-desc">Google Search Grounded</div>
+                </div>
+                <div class="bento-mini-meter">
+                  <div class="meter-fill" style="background: linear-gradient(90deg, var(--cyan-gemini), var(--green-accent));"></div>
+                </div>
+              </div>
+
+              <!-- Card 4: 1-Click Python / TS / cURL -->
+              <div id="bento-4" class="bento-card card-4">
+                <div class="bento-card-header">
+                  <span class="bento-num-label">04 · EXPORT</span>
+                  <span class="bento-chip">1-CLICK</span>
+                </div>
+                <div>
+                  <div class="bento-main-stat">SHIP TO PROD</div>
+                  <div class="bento-desc">Python · TS · cURL SDKs</div>
+                </div>
+                <div class="bento-mini-meter">
+                  <div class="meter-fill" style="background: linear-gradient(90deg, var(--coral-neon), #FFB74D);"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Cockpit Footer Bar -->
+            <div class="cockpit-footer-bar" data-layout-ignore="true">
+              <div class="cockpit-footer-item highlight-cyan">SPEED: <strong>SUB-20MS TTFT</strong></div>
+              <div class="cockpit-footer-item">TIER: <strong>FREE TIER INCLUDED</strong></div>
+              <div class="cockpit-footer-item highlight-coral">DEV SPEED: <strong>100X VELOCITY</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stamp Badge: "SHIP EVERYWHERE" -->
+        <div id="stamp-container" class="clip" data-start="1.2" data-duration="3.6" data-layout-ignore="true">
+          <div class="ship-stamp-box">
+            <div class="stamp-text-main">SHIP EVERYWHERE</div>
+            <div class="stamp-sub-tag">ZERO BOILERPLATE · INSTANT DEPLOY</div>
+          </div>
+        </div>
+
       </div>
 
-      <!-- Spoken Captions Container (x: 120px, y: 196px, width: 850px) -->
-      <div data-hf-id="hf-iuvo" id="captions">
-        <!-- Phrase 1 (0.0s to 3.42s): "If these leaks deliver developers will finally never have to worry that" -->
-        <div data-hf-id="hf-qh1q" id="phrase-1" class="caption-line">
-          <span data-hf-id="hf-ietp" id="w-if" class="word">If</span>
-          <span data-hf-id="hf-iw3b" id="w-these" class="word">these</span>
-          <span data-hf-id="hf-s7zz" id="w-leaks" class="word">leaks</span>
-          <span data-hf-id="hf-2vtr" id="w-deliver" class="word">deliver</span>
-          <span data-hf-id="hf-l1nt" id="w-developers" class="word">developers</span>
-          <span data-hf-id="hf-ep1v" id="w-will" class="word">will</span>
-          <span data-hf-id="hf-q9qv" id="w-finally" class="word">finally</span>
-          <span data-hf-id="hf-3qan" id="w-never" class="word">never</span>
-          <span data-hf-id="hf-4633" id="w-have" class="word">have</span>
-          <span data-hf-id="hf-9v45" id="w-to" class="word">to</span>
-          <span data-hf-id="hf-wpjr" id="w-worry" class="word">worry</span>
-          <span data-hf-id="hf-2z6l" id="w-that" class="word">that</span>
-        </div>
-
-        <!-- Phrase 2 (3.48s to 5.31s): "Heavy models are too slow" (Exact match for Hook Frame 0) -->
-        <div data-hf-id="hf-mixp" id="phrase-2" class="caption-line">
-          <span data-hf-id="hf-6a4y" id="w-heavy" class="word w-heavy">Heavy</span>
-          <span data-hf-id="hf-60tj" id="w-models" class="word w-models">models</span>
-          <span data-hf-id="hf-fsdl" id="w-are" class="word w-are">are</span>
-          <span data-hf-id="hf-69dk" id="w-too" class="word keyword w-too">too</span>
-          <span data-hf-id="hf-t3r4" id="w-slow" class="word w-slow">slow</span>
-        </div>
-      </div>
-
-      <!-- Card Stage (x: 120px, y: 560px, width: 840px, height: 380px) -->
-      <div data-hf-id="hf-1l5q" id="card-stage">
-        <!-- Halftone Dot Shadow: offset 13px left, 12px down -->
-        <div data-hf-id="hf-4qgk" class="halftone-shadow"></div>
-
-        <!-- 4 Pillars Summary Card (0.0s - 3.8s) -->
-        <div data-hf-id="hf-1nva" id="summary-card">
-          <div data-hf-id="hf-b5hu" class="summary-header">
-            <span data-hf-id="hf-evtw" class="summary-tag">GEMINI FLASH 4 SPECIFICATION</span>
-            <span data-hf-id="hf-9h6y" class="summary-badge">4 PILLARS</span>
+      <!-- Match-Cut Loop: Hook Frame 0 Problem Card and Captions -->
+      <div id="hook-card-stage" class="clip" data-start="4.3" data-duration="1.2" data-layout-ignore="true">
+        <div class="halftone-shadow-cream"></div>
+        <div id="hook-problem-card">
+          <div class="hook-card-header-row">
+            <div class="hook-status-pill">
+              <span class="hook-status-dot"></span>
+              <span class="hook-status-pill-text">LATENCY BOTTLENECK</span>
+            </div>
+            <div class="hook-server-tag">CLUSTER // US-EAST-NODE-04</div>
           </div>
 
-          <div data-hf-id="hf-8oz9" class="pillars-grid" data-layout-ignore="true">
-            <div data-hf-id="hf-wspw" class="pillar-item">
-              <div data-hf-id="hf-mipe" class="pillar-meta">
-                <span data-hf-id="hf-ul6a" class="pillar-num">01 · LATENCY</span>
-                <span data-hf-id="hf-dsk2" class="pillar-tag">STREAM</span>
-              </div>
-              <div data-hf-id="hf-yzbk" class="pillar-stat">SUB-20MS</div>
-              <div data-hf-id="hf-0atc" class="pillar-desc">Instant interactive speed</div>
-            </div>
-
-            <div data-hf-id="hf-hrmk" class="pillar-item">
-              <div data-hf-id="hf-7h12" class="pillar-meta">
-                <span data-hf-id="hf-0sfu" class="pillar-num">02 · CONTEXT</span>
-                <span data-hf-id="hf-6yt1" class="pillar-tag">MEMORY</span>
-              </div>
-              <div data-hf-id="hf-vjzh" class="pillar-stat">10M TOKENS</div>
-              <div data-hf-id="hf-24eb" class="pillar-desc">Full repo in-memory context</div>
-            </div>
-
-            <div data-hf-id="hf-gkph" class="pillar-item">
-              <div data-hf-id="hf-7vc3" class="pillar-meta">
-                <span data-hf-id="hf-ctai" class="pillar-num">03 · RUNTIME</span>
-                <span data-hf-id="hf-wn80" class="pillar-tag">BAKED IN</span>
-              </div>
-              <div data-hf-id="hf-llhn" class="pillar-stat">NATIVE TOOLS</div>
-              <div data-hf-id="hf-imm6" class="pillar-desc">Zero middleware glue code</div>
-            </div>
-
-            <div data-hf-id="hf-gz0i" class="pillar-item">
-              <div data-hf-id="hf-89n4" class="pillar-meta">
-                <span data-hf-id="hf-ahwd" class="pillar-num">04 · PRICING</span>
-                <span data-hf-id="hf-c206" class="pillar-tag slashed">SLASHED</span>
-              </div>
-              <div data-hf-id="hf-aajc" class="pillar-stat red">-90% COST</div>
-              <div data-hf-id="hf-mkky" class="pillar-desc">Edge distillation efficiency</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Exact Problem Card from Hook Frame 0 (transitions in at 3.8s) -->
-        <div data-hf-id="hf-b2ug" id="problem-card" data-layout-ignore="true">
-          <div data-hf-id="hf-x10j" class="card-header-row">
-            <div data-hf-id="hf-rp3q" class="status-pill">
-              <span data-hf-id="hf-i0ip" class="status-dot"></span>
-              <span data-hf-id="hf-9uwe" class="status-pill-text">LATENCY BOTTLENECK</span>
-            </div>
-            <div data-hf-id="hf-k1rr" class="server-cluster-tag">CLUSTER US-EAST-NODE-04</div>
+          <div class="hook-headline-block">
+            <div class="hook-headline">LAGGING SERVER COMPUTE - 4,820ms</div>
+            <div class="hook-subheadline">Time to First Token (TTFT) • Critical Model Stalling</div>
           </div>
 
-          <div data-hf-id="hf-u6h2" class="problem-headline-block">
-            <div data-hf-id="hf-ewr4" class="problem-headline">LAGGING SERVER COMPUTE - 4,820ms</div>
-            <div data-hf-id="hf-lfk6" class="problem-subheadline">Time to First Token (TTFT) • Critical Model Stalling</div>
+          <div class="hook-progress-track">
+            <div class="hook-progress-fill"></div>
+          </div>
+          <div class="hook-progress-legend">
+            <span class="hook-legend-left">STUCK AT 14% COMPUTATION</span>
+            <span class="hook-legend-right">TIMEOUT CEILING: 5,000ms</span>
           </div>
 
-          <div data-hf-id="hf-uvo2" class="progress-bar-wrap">
-            <div data-hf-id="hf-lxwj" class="progress-track">
-              <div data-hf-id="hf-b9gd" class="progress-fill"></div>
-            </div>
-            <div data-hf-id="hf-mc1d" class="progress-bar-legend">
-              <span data-hf-id="hf-604m" class="legend-left">STUCK AT 14% COMPUTATION</span>
-              <span data-hf-id="hf-jzcu" class="legend-right">TIMEOUT CEILING: 5,000ms</span>
-            </div>
-          </div>
-
-          <div data-hf-id="hf-yg4g" class="problem-card-footer">
-            <div data-hf-id="hf-eygh" class="footer-item">THROUGHPUT: <strong data-hf-id="hf-7lf2">2.8 tok/s</strong></div>
-            <div data-hf-id="hf-4jeq" class="footer-item">MEMORY: <strong data-hf-id="hf-e33g">98.4% (OOM)</strong></div>
-            <div data-hf-id="hf-1rja" class="footer-item">THREADS: <strong data-hf-id="hf-ax2k">100% BLOCKED</strong></div>
+          <div class="hook-card-footer">
+            <div class="hook-footer-item">THROUGHPUT: <strong>2.8 tok/s</strong></div>
+            <div class="hook-footer-item">MEMORY: <strong>98.4% (OOM)</strong></div>
+            <div class="hook-footer-item">THREADS: <strong>100% BLOCKED</strong></div>
           </div>
         </div>
       </div>
+
+      <!-- Hook Frame 0 Spoken Caption Match -->
+      <div id="hook-captions" class="clip" data-start="4.8" data-duration="0.7">
+        <div class="hook-caption-line">
+          Heavy models are <span class="hook-word-keyword">too</span> slow
+        </div>
+      </div>
+
     </div>
 
     <script>
-      // Initialize GSAP Root Timeline
+      // Register paused root timeline
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["closing"] = tl;
 
-      // Initial State
-      gsap.set("#top-tag", { opacity: 0 });
+      // ----------------------------------------------------
+      // INITIAL SETUP
+      // ----------------------------------------------------
+      gsap.set("#header-container", { opacity: 0, y: -30 });
       gsap.set("#phrase-1", { opacity: 0, y: 0 });
       gsap.set("#phrase-2", { opacity: 0, y: 15 });
-      gsap.set("#card-stage", { opacity: 0, y: 70 });
-      gsap.set("#summary-card", { opacity: 1, scale: 1 });
-      gsap.set("#problem-card", { opacity: 0, scale: 0.96 });
+      gsap.set("#cockpit-card-wrap", { opacity: 0, y: 80, scale: 0.94 });
+      gsap.set("#stamp-container", { opacity: 0, scale: 2.8, rotate: -25 });
+      gsap.set("#hook-card-stage", { opacity: 0, scale: 0.94 });
+      gsap.set("#hook-captions", { opacity: 0 });
+      gsap.set("#bg-cream", { opacity: 0 });
 
-      // Scene Entrance at 0.0s
-      tl.to("#top-tag", { opacity: 1, duration: 0.25, ease: "power2.out" }, 0.0);
-      tl.fromTo("#card-stage", { y: 70, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 0.0);
-      tl.to("#phrase-1", { opacity: 1, duration: 0.15, ease: "power2.out" }, 0.0);
+      // ----------------------------------------------------
+      // ENTRANCE CHOREOGRAPHY (0.0s – 0.6s)
+      // ----------------------------------------------------
+      // Header badge & title entrance
+      tl.to("#header-container", {
+        opacity: 1,
+        y: 0,
+        duration: 0.45,
+        ease: "power3.out"
+      }, 0.0);
 
-      // Caption Phrase 1 Word Sync: Starts #B5AFA7, turns ink #1E1C1A in 0.2s
-      const p1 = [
-        { id: "#w-if", t: 0.0 },
-        { id: "#w-these", t: 0.2 },
-        { id: "#w-leaks", t: 0.4 },
-        { id: "#w-deliver", t: 0.8 },
-        { id: "#w-developers", t: 1.3 },
-        { id: "#w-will", t: 1.7 },
-        { id: "#w-finally", t: 2.0 },
-        { id: "#w-never", t: 2.3 },
-        { id: "#w-have", t: 2.6 },
-        { id: "#w-to", t: 2.8 },
-        { id: "#w-worry", t: 3.1 },
-        { id: "#w-that", t: 3.3 }
-      ];
-      p1.forEach(function (w) {
-        tl.to(w.id, { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, w.t);
-      });
+      // Cockpit bento card slams in with punchy physics
+      tl.to("#cockpit-card-wrap", {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.55,
+        ease: "back.out(1.8)"
+      }, 0.05);
 
-      // Caption Phrase 1 Exits, Phrase 2 Enters
-      tl.to("#phrase-1", { opacity: 0, y: -18, duration: 0.16, ease: "power2.in" }, 3.15);
-      tl.to("#phrase-2", { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" }, 3.22);
+      // Stagger subtle pop on inner bento items
+      tl.fromTo([".bento-card"], {
+        opacity: 0,
+        y: 20
+      }, {
+        opacity: 1,
+        y: 0,
+        stagger: 0.08,
+        duration: 0.4,
+        ease: "power2.out"
+      }, 0.15);
 
-      // Caption Phrase 2 Word Sync
-      tl.to("#w-heavy", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 3.52);
-      tl.to("#w-models", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 3.68);
-      tl.to("#w-are", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 4.04);
-      // Key word "too": Instrument Serif italic, red #D7372C
-      tl.to("#w-too", { color: "#C83329", duration: 0.2, ease: "power2.out" }, 4.34);
-      tl.to("#w-slow", { color: "#1E1C1A", duration: 0.2, ease: "power2.out" }, 4.50);
+      // Captions Phrase 1 Enters
+      tl.to("#phrase-1", {
+        opacity: 1,
+        duration: 0.15,
+        ease: "power2.out"
+      }, 0.05);
 
-      // Card Transition at 3.8s into Hook Frame 0 Problem Card
-      tl.to("#top-tag", { opacity: 0, duration: 0.25, ease: "power2.in" }, 3.8);
-      tl.to("#summary-card", { opacity: 0, scale: 0.96, duration: 0.28, ease: "power2.in" }, 3.8);
-      tl.fromTo("#problem-card", { scale: 0.96, opacity: 0 }, { opacity: 1, scale: 1, duration: 0.32, ease: "power2.out" }, 3.86);
+      // Word-level color activation for Phrase 1:
+      // "Prototype here. Ship everywhere."
+      tl.to("#w-proto", { color: "#FFFFFF", duration: 0.18, ease: "power2.out" }, 0.08);
+      tl.to("#w-here", { color: "#FFFFFF", duration: 0.18, ease: "power2.out" }, 0.42);
+      tl.to("#w-ship", { color: "#FFFFFF", duration: 0.18, ease: "power2.out" }, 0.85);
+      tl.to("#w-everywhere", { color: "#FF5722", duration: 0.22, ease: "power2.out" }, 1.25);
 
-      // Frame 0 Match for Infinite Seamless Loop
-      // Transition words back to #B5AFA7 so that the final frame at 5.31s
-      // matches Frame 0.0s of Hook 1 identically
-      tl.to(["#w-heavy", "#w-models", "#w-are", "#w-too", "#w-slow"], {
-        color: "#B5AFA7",
-        duration: 0.14,
+      // ----------------------------------------------------
+      // STAMP SLAM: "SHIP EVERYWHERE" (1.30s)
+      // ----------------------------------------------------
+      tl.to("#stamp-container", {
+        opacity: 1,
+        scale: 1.0,
+        rotate: -6,
+        duration: 0.38,
+        ease: "back.out(2.4)"
+      }, 1.30);
+
+      // Camera impulse on stamp slam
+      tl.to("#camera-wrapper", {
+        y: 6,
+        duration: 0.08,
+        yoyo: true,
+        repeat: 1,
+        ease: "power1.inOut"
+      }, 1.45);
+
+      // ----------------------------------------------------
+      // CAPTION TRANSITION: Phrase 1 Exit -> Phrase 2 Entry (2.1s – 2.3s)
+      // ----------------------------------------------------
+      tl.to("#phrase-1", {
+        opacity: 0,
+        y: -18,
+        duration: 0.18,
+        ease: "power2.in"
+      }, 2.10);
+
+      tl.to("#phrase-2", {
+        opacity: 1,
+        y: 0,
+        duration: 0.22,
+        ease: "power2.out"
+      }, 2.22);
+
+      // Word-level color activation for Phrase 2:
+      // "Zero boilerplate, pure production velocity."
+      tl.to("#w-zero", { color: "#FFFFFF", duration: 0.18, ease: "power2.out" }, 2.25);
+      tl.to("#w-boilerplate", { color: "#FFFFFF", duration: 0.22, ease: "power2.out" }, 2.55);
+      tl.to("#w-pure", { color: "#FFFFFF", duration: 0.18, ease: "power2.out" }, 3.00);
+      tl.to("#w-production", { color: "#FFFFFF", duration: 0.22, ease: "power2.out" }, 3.35);
+      tl.to("#w-velocity", { color: "#FF5722", duration: 0.22, ease: "power2.out" }, 3.75);
+
+      // ----------------------------------------------------
+      // SEAMLESS MATCH-CUT CAMERA MOVE (4.5s – 5.5s)
+      // Connects back into Hook Frame 0 seamlessly!
+      // ----------------------------------------------------
+      // 1. Fade out stamp and header elements
+      tl.to("#stamp-container", {
+        opacity: 0,
+        scale: 0.85,
+        duration: 0.35,
+        ease: "power2.in"
+      }, 4.40);
+
+      tl.to("#header-container", {
+        opacity: 0,
+        y: -25,
+        duration: 0.35,
+        ease: "power2.in"
+      }, 4.45);
+
+      tl.to("#phrase-2", {
+        opacity: 0,
+        y: -15,
+        duration: 0.25,
+        ease: "power2.in"
+      }, 4.50);
+
+      // 2. Camera zooms forward into the central cockpit frame
+      tl.to("#camera-wrapper", {
+        scale: 1.03,
+        y: -10,
+        duration: 0.55,
         ease: "power2.inOut"
+      }, 4.50);
+
+      // 3. Cockpit card morphs / transitions out, hook problem card transitions in
+      tl.to("#cockpit-card-wrap", {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.38,
+        ease: "power2.in"
+      }, 4.65);
+
+      tl.to("#hook-card-stage", {
+        opacity: 1,
+        scale: 1.0,
+        duration: 0.42,
+        ease: "power2.out"
+      }, 4.75);
+
+      // 4. Background crossfades to paper cream matching hook frame 0
+      tl.to("#bg-cream", {
+        opacity: 1,
+        duration: 0.45,
+        ease: "power2.inOut"
+      }, 4.70);
+
+      // 5. Hook Frame 0 captions fade in to complete the match cut
+      tl.to("#hook-captions", {
+        opacity: 1,
+        duration: 0.35,
+        ease: "power2.out"
+      }, 4.95);
+
+      // 6. Camera returns to exact normal position and scale
+      tl.to("#camera-wrapper", {
+        scale: 1.0,
+        y: 0,
+        duration: 0.35,
+        ease: "power2.out"
       }, 5.15);
 
       tl.seek(0);

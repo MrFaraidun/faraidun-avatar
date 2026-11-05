@@ -1,11 +1,14 @@
 /**
- * Halftone Dot Wipe Transition
+ * Halftone Dot Wave Wipe Transition
  *
- * Screen transition component creating an organic halftone iris wipe using a 13x23 grid
- * of ink dots (#1E1C1A) expanding from center (cx: 6, cy: 11) to completely cover the screen,
- * then shrinking away from the center to reveal the underlying scene.
+ * Broadcast-grade screen transition component creating an organic halftone iris wave
+ * using a 13x23 grid of dots on a 1080x1920 canvas. Dots expand outward from the center
+ * (cx: 6, cy: 11) with vibrant Google Gemini Cyan and Hyper Violet neon accents,
+ * merging into solid Deep Obsidian Ink (#0C0D10) to completely blanket the frame.
+ * Dots then shrink away in a controlled wave, revealing the subsequent scene.
  *
- * Designed for HyperFrames compositions and 1080x1920 vertical video reels.
+ * Designed for HyperFrames compositions and vertical video reels (9:16).
+ * Fully deterministic, seek-safe forward and backward in GSAP 3.
  */
 
 /* global gsap */
@@ -17,24 +20,30 @@ export const HALFTONE_DEFAULTS = Object.freeze({
   height: 1920,
   centerX: 6,
   centerY: 11,
-  radius: 62, // px: base SVG circle radius (diagonal cell coverage = sqrt(41.5^2 + 41.7^2) = 58.9px < 62px)
-  fill: "#1E1C1A",
+  radius: 64, // px: base SVG circle radius (diagonal cell coverage = sqrt(41.54^2 + 41.74^2) = 58.89px < 64px)
+  fill: "#0C0D10", // Deep Obsidian Ink
+  accentCyan: "#4285F4", // Google Gemini Cyan-Blue
+  accentViolet: "#9B51E0", // Google Gemini Hyper Violet
+  accentElectric: "#00E5FF", // Spark Cyan Accent
+  strokeWidth: 2, // px: subtle accent rim on expanding/contracting dots
   duration: 0.9,
-  halfDuration: 0.45,
+  halfDuration: 0.44,
   dotDuration: 0.22,
+  holdDuration: 0.04, // Brief plateau at peak coverage ensuring rock-solid blackout during scene swaps
   easeIn: "power2.out",
   easeOut: "power2.in",
   trackIndex: 5,
-  // Standard wipe trigger points in the reel (0.3s before points 1 and 4)
-  reelWipe1Start: 6.88,
-  reelWipe2Start: 25.10
+  mode: "center", // "center" (iris wave), "sweep" (directional sweep), or "reverse"
+  // Standard wipe trigger points in the reel (around 6.3s - 6.8s for Wipe 1, and 25.8s - 26.3s for Wipe 2)
+  reelWipe1Start: 6.6,
+  reelWipe2Start: 25.8
 });
 
 /**
- * Computes deterministic grid positions and Euclidean distances for all dots.
+ * Computes deterministic grid positions, Euclidean distances, and chromatic accent colors for all dots.
  *
- * @param {typeof HALFTONE_DEFAULTS} [config]
- * @returns {Array<{ col: number, row: number, x: number, y: number, dist: number, normDist: number }>}
+ * @param {Partial<typeof HALFTONE_DEFAULTS>} [config]
+ * @returns {Array<{ col: number, row: number, x: number, y: number, dist: number, normDist: number, accent: string }>}
  */
 export function computeDotGrid(config = {}) {
   const cfg = { ...HALFTONE_DEFAULTS, ...config };
@@ -51,13 +60,33 @@ export function computeDotGrid(config = {}) {
       const x = (c + 0.5) * stepX;
       const y = (r + 0.5) * stepY;
       const dist = Math.hypot(c - cfg.centerX, r - cfg.centerY);
+      const normDist = maxDist > 0 ? dist / maxDist : 0;
+
+      // Deterministic chromatic accent distribution:
+      // Combines angular swirl, radial wave, and alternating lattice
+      const angle = Math.atan2(r - cfg.centerY, c - cfg.centerX);
+      const wave = Math.sin(angle * 2 + normDist * Math.PI * 2.5);
+      const isChecker = (c + r) % 2 === 0;
+
+      let accent = cfg.accentCyan;
+      if (wave > 0.25) {
+        accent = cfg.accentCyan;
+      } else if (wave < -0.25) {
+        accent = cfg.accentViolet;
+      } else if (isChecker) {
+        accent = cfg.accentElectric;
+      } else {
+        accent = cfg.accentViolet;
+      }
+
       dots.push({
         col: c,
         row: r,
         x,
         y,
         dist,
-        normDist: maxDist > 0 ? dist / maxDist : 0
+        normDist,
+        accent
       });
     }
   }
@@ -84,7 +113,7 @@ export function createHalftoneDots(targetSvg, options = {}) {
   if (!svg.getAttribute("width")) svg.setAttribute("width", `${cfg.width}`);
   if (!svg.getAttribute("height")) svg.setAttribute("height", `${cfg.height}`);
 
-  // Return existing dots if already populated
+  // Return existing dots if already populated with the exact required count
   const existingDots = Array.from(svg.querySelectorAll(".halftone-dot"));
   if (existingDots.length === cfg.cols * cfg.rows) {
     return existingDots;
@@ -94,6 +123,16 @@ export function createHalftoneDots(targetSvg, options = {}) {
   while (svg.firstChild) {
     svg.removeChild(svg.firstChild);
   }
+
+  // Inject SVG defs for subtle gradient or glow filters if needed
+  const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+  defs.innerHTML = `
+    <linearGradient id="halftone-cyan-violet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="${cfg.accentCyan}" />
+      <stop offset="100%" stop-color="${cfg.accentViolet}" />
+    </linearGradient>
+  `;
+  svg.appendChild(defs);
 
   const gridData = computeDotGrid(cfg);
   const frag = document.createDocumentFragment();
@@ -106,15 +145,20 @@ export function createHalftoneDots(targetSvg, options = {}) {
     circle.setAttribute("cy", d.y.toFixed(3));
     circle.setAttribute("r", `${cfg.radius}`);
     circle.setAttribute("fill", cfg.fill);
+    circle.setAttribute("stroke", d.accent);
+    circle.setAttribute("stroke-width", `${cfg.strokeWidth || 2}`);
+    circle.setAttribute("stroke-opacity", "0");
     circle.setAttribute("class", "halftone-dot");
     circle.setAttribute("data-col", `${d.col}`);
     circle.setAttribute("data-row", `${d.row}`);
     circle.setAttribute("data-dist", d.dist.toFixed(4));
     circle.setAttribute("data-norm-dist", d.normDist.toFixed(4));
+    circle.setAttribute("data-accent", d.accent);
 
-    // CSS transform origin for crisp scaling
+    // Explicit CSS transform origin and will-change for crisp scaling
     circle.style.transformOrigin = `${d.x.toFixed(3)}px ${d.y.toFixed(3)}px`;
-    circle.style.willChange = "transform";
+    circle.style.willChange = "transform, fill, stroke-opacity";
+    circle.style.transform = "scale(0)";
 
     frag.appendChild(circle);
     createdCircles.push(circle);
@@ -131,7 +175,7 @@ export function createHalftoneDots(targetSvg, options = {}) {
 }
 
 /**
- * Animates a 0.9s halftone wipe transition on a GSAP timeline.
+ * Animates a halftone dot wave wipe transition on a GSAP timeline.
  *
  * @param {gsap.core.Timeline} timeline - GSAP timeline to append to
  * @param {SVGSVGElement|string|Element[]} target - SVG element, selector, or dot array
@@ -155,6 +199,7 @@ export function animateHalftoneWipe(timeline, target, startTime = 0, options = {
 
   const halfDuration = cfg.halfDuration;
   const dotDuration = cfg.dotDuration;
+  const holdDuration = cfg.holdDuration ?? 0.04;
   const maxStagger = Math.max(0, halfDuration - dotDuration);
   const centerCol = cfg.centerX;
   const centerRow = cfg.centerY;
@@ -162,24 +207,48 @@ export function animateHalftoneWipe(timeline, target, startTime = 0, options = {
     Math.max(centerCol, cfg.cols - 1 - centerCol),
     Math.max(centerRow, cfg.rows - 1 - centerRow)
   );
+  const mode = cfg.mode || "center";
 
-  // Animate each dot with stagger based on Euclidean distance
+  // Choreograph each dot's expansion and contraction
   for (let i = 0; i < dots.length; i++) {
     const dot = dots[i];
     const col = parseFloat(dot.getAttribute("data-col") ?? "0");
     const row = parseFloat(dot.getAttribute("data-row") ?? "0");
+    const accent = dot.getAttribute("data-accent") || cfg.accentCyan;
+
     const dist = Math.hypot(col - centerCol, row - centerRow);
     const normDist = maxDist > 0 ? dist / maxDist : 0;
 
+    // Expansion wave from center outward
     const delayIn = normDist * maxStagger;
-    const delayOut = halfDuration + normDist * maxStagger;
 
-    // Half-wipe in (expand dots from center out to 1.0 to overlap and cover screen)
+    // Receding wave timing based on configured mode
+    let delayOut;
+    if (mode === "sweep") {
+      // Directional diagonal sweep: top-left to bottom-right
+      const normCoord = (col + row) / ((cfg.cols - 1) + (cfg.rows - 1));
+      delayOut = halfDuration + holdDuration + normCoord * maxStagger;
+    } else if (mode === "reverse") {
+      // Outside in
+      delayOut = halfDuration + holdDuration + (1 - normDist) * maxStagger;
+    } else {
+      // Default: "center" (iris out: center dissolves first)
+      delayOut = halfDuration + holdDuration + normDist * maxStagger;
+    }
+
+    // Half-wipe in: dots expand from 0 to 1
+    // Starts as glowing Gemini Cyan / Violet accents, merging into Deep Obsidian Ink #0C0D10
     timeline.fromTo(
       dot,
-      { scale: 0 },
+      {
+        scale: 0,
+        fill: accent,
+        strokeOpacity: 0.85
+      },
       {
         scale: 1,
+        fill: cfg.fill, // #0C0D10
+        strokeOpacity: 0,
         duration: dotDuration,
         ease: cfg.easeIn,
         immediateRender: false,
@@ -188,13 +257,17 @@ export function animateHalftoneWipe(timeline, target, startTime = 0, options = {
       startTime + delayIn
     );
 
-    // Half-wipe out (shrink dots away from center back down to 0)
+    // Half-wipe out: dots shrink back down to 0
+    // Receding dots illuminate with Gemini accents as they contract and disappear
     timeline.to(
       dot,
       {
         scale: 0,
+        fill: accent,
+        strokeOpacity: 0.85,
         duration: dotDuration,
         ease: cfg.easeOut,
+        immediateRender: false,
         transformOrigin: "center center"
       },
       startTime + delayOut
@@ -209,7 +282,7 @@ export function animateHalftoneWipe(timeline, target, startTime = 0, options = {
  *
  * @param {SVGSVGElement|string} target - SVG element or selector
  * @param {Partial<typeof HALFTONE_DEFAULTS>} [options]
- * @returns {gsap.core.Timeline} Paused GSAP timeline of duration 0.9s
+ * @returns {gsap.core.Timeline} Paused GSAP timeline of duration ~0.9s
  */
 export function createHalftoneWipeTimeline(target, options = {}) {
   if (typeof gsap === "undefined") {
@@ -223,18 +296,21 @@ export function createHalftoneWipeTimeline(target, options = {}) {
 /**
  * Helper to setup both wipes for the reel on a main timeline.
  * Triggered:
- * 1. 0.3s before Point 1 (~6.88s)
- * 2. 0.3s before Point 4 (~25.10s)
+ * 1. Wipe 1: before Point 1 (defaults to ~6.6s, peak coverage ~7.04s - 7.18s)
+ * 2. Wipe 2: before Point 4 / Outro (defaults to ~25.8s, peak coverage ~26.24s)
  *
  * @param {gsap.core.Timeline} mainTimeline
  * @param {SVGSVGElement|string} target
- * @param {Partial<typeof HALFTONE_DEFAULTS>} [options]
+ * @param {Partial<typeof HALFTONE_DEFAULTS> & { wipe1Start?: number, wipe2Start?: number }} [options]
  * @returns {gsap.core.Timeline}
  */
 export function setupReelWipes(mainTimeline, target, options = {}) {
   const cfg = { ...HALFTONE_DEFAULTS, ...options };
-  animateHalftoneWipe(mainTimeline, target, cfg.reelWipe1Start, cfg);
-  animateHalftoneWipe(mainTimeline, target, cfg.reelWipe2Start, cfg);
+  const wipe1 = options?.wipe1Start ?? options?.reelWipe1Start ?? cfg.reelWipe1Start;
+  const wipe2 = options?.wipe2Start ?? options?.reelWipe2Start ?? cfg.reelWipe2Start;
+
+  animateHalftoneWipe(mainTimeline, target, wipe1, cfg);
+  animateHalftoneWipe(mainTimeline, target, wipe2, cfg);
   return mainTimeline;
 }
 

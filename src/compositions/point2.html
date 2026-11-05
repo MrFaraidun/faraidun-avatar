@@ -3,20 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:wght@500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Point 2 · Parameters & Physics</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       :root {
-        --ground: #EBE7E1;
-        --ink: #1E1C1A;
-        --red: #D7372C;
-        --grey: #8A857E;
-        --grey-inactive: #B5AFA7;
-        --card-bg: #FBFAF8;
-        --font-display: 'Anton', sans-serif;
-        --font-body: 'Instrument Sans', sans-serif;
+        --obsidian: #0C0D10;
+        --polar-glass: #171920;
+        --border-glass: #2B2F3E;
+        --cyan-gemini: #4285F4;
+        --violet-hyper: #9B51E0;
+        --coral-neon: #FF5722;
+        --green-terminal: #34A853;
+        --text-steel: #8E95A5;
+        --text-white: #FFFFFF;
+        --text-inactive: #6B7280;
+        --font-anton: 'Anton', sans-serif;
+        --font-sans: 'Instrument Sans', sans-serif;
         --font-serif: 'Instrument Serif', serif;
         --font-mono: 'JetBrains Mono', monospace;
       }
@@ -27,14 +36,16 @@
         box-sizing: border-box;
       }
 
-      html, body {
+      html,
+      body {
         margin: 0;
         padding: 0;
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--ground);
-        color: var(--ink);
+        background-color: var(--obsidian);
+        color: var(--text-white);
+        font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
       }
 
@@ -43,725 +54,1166 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--ground);
+        background-color: var(--obsidian);
       }
 
-      /* Subtle engineering background grid */
-      .bg-grid {
+      .clip {
+        position: absolute;
+        box-sizing: border-box;
+      }
+
+      /* Background Dot Grid */
+      .bg-dots {
         position: absolute;
         inset: 0;
-        background-image:
-          linear-gradient(to right, rgba(138, 133, 126, 0.09) 1px, transparent 1px),
-          linear-gradient(to bottom, rgba(138, 133, 126, 0.09) 1px, transparent 1px);
-        background-size: 40px 40px;
+        width: 1080px;
+        height: 1920px;
+        background-image: radial-gradient(#1E2332 1.8px, transparent 1.8px);
+        background-size: 24px 24px;
+        opacity: 0.65;
         pointer-events: none;
       }
 
-      /* Small label at y: 132px */
-      #meta-label {
+      /* Ambient Neon Lighting */
+      .ambient-glow-cyan {
         position: absolute;
-        left: 120px;
-        top: 132px;
-        width: 840px;
+        left: -120px;
+        top: 260px;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(66, 133, 244, 0.16) 0%, transparent 70%);
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      .ambient-glow-violet {
+        position: absolute;
+        right: -100px;
+        top: 550px;
+        width: 650px;
+        height: 650px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(155, 81, 224, 0.15) 0%, transparent 70%);
+        filter: blur(90px);
+        pointer-events: none;
+      }
+
+      .ambient-glow-coral {
+        position: absolute;
+        left: 200px;
+        top: 850px;
+        width: 600px;
+        height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 87, 34, 0.12) 0%, transparent 70%);
+        filter: blur(85px);
+        pointer-events: none;
+      }
+
+      /* Halftone Drop Shadow Layer */
+      .halftone-shadow {
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        background-image: radial-gradient(rgba(43, 47, 62, 0.95) 2px, transparent 2px);
+        background-size: 10px 10px;
+        transform: translate(-14px, 16px);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* 1. Header Badge */
+      .top-badge-container {
+        position: absolute;
+        left: 100px;
+        top: 92px;
+        width: 880px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-family: var(--font-mono);
-        font-size: 25px;
-        font-weight: 500;
-        color: var(--grey);
-        letter-spacing: 0.04em;
-        line-height: 1;
-        z-index: 10;
+        z-index: 20;
       }
 
-      .meta-right span {
-        color: var(--red);
+      .top-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 6px 18px;
+        background: rgba(23, 25, 32, 0.9);
+        border: 2px solid var(--border-glass);
+        border-radius: 100px;
+        font-family: var(--font-mono);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--cyan-gemini);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        backdrop-filter: blur(10px);
+        white-space: nowrap;
+      }
+
+      .badge-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--cyan-gemini);
+        box-shadow: 0 0 10px var(--cyan-gemini);
+      }
+
+      .badge-aux {
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-steel);
+        letter-spacing: 0.04em;
+        white-space: nowrap;
+      }
+
+      /* 2. Captions (Top Left) */
+      .captions-wrapper {
+        position: absolute;
+        left: 100px;
+        top: 168px;
+        width: 880px;
+        height: 140px;
+        z-index: 25;
+      }
+
+      .caption-sentence {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 880px;
+        font-family: var(--font-sans);
+        font-size: 52px;
+        font-weight: 500;
+        line-height: 1.18;
+        letter-spacing: -0.015em;
+      }
+
+      #caption-phase-2 {
+        opacity: 0;
+        display: none;
+      }
+
+      .w-word {
+        color: var(--text-inactive);
+        display: inline;
+        transition: color 0.15s ease;
+      }
+
+      .w-accent-coral {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 60px;
+        color: var(--text-inactive);
+        vertical-align: -2px;
+      }
+
+      /* 3. Title Headline */
+      .title-container {
+        position: absolute;
+        left: 100px;
+        top: 322px;
+        width: 880px;
+        z-index: 30;
+      }
+
+      .headline {
+        font-family: var(--font-anton);
+        font-size: 110px;
+        line-height: 0.95;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        display: flex;
+        align-items: baseline;
+        gap: 20px;
+      }
+
+      .headline .hl-white {
+        color: var(--text-white);
+      }
+
+      .headline .hl-cyan {
+        color: var(--cyan-gemini);
+        text-shadow: 0 0 35px rgba(66, 133, 244, 0.45);
+      }
+
+      .headline-line {
+        position: absolute;
+        bottom: -14px;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--cyan-gemini) 0%, var(--violet-hyper) 50%, var(--coral-neon) 100%);
+        border-radius: 2px;
+        transform-origin: left center;
+      }
+
+      /* 4. System Instructions Glass Card */
+      #system-card-layer {
+        position: absolute;
+        left: 100px;
+        top: 442px;
+        width: 880px;
+        height: 185px;
+        z-index: 35;
+      }
+
+      .glass-card {
+        position: absolute;
+        inset: 0;
+        background: var(--polar-glass);
+        border: 2px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 20px 28px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .card-header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .card-dots-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .card-dots-group .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+
+      .dot-green { background-color: var(--green-terminal); box-shadow: 0 0 8px var(--green-terminal); }
+      .dot-cyan { background-color: var(--cyan-gemini); }
+      .dot-violet { background-color: var(--violet-hyper); }
+
+      .card-title-mono {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-steel);
+        letter-spacing: 0.08em;
+      }
+
+      .card-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 12px;
+        border-radius: 100px;
+        font-family: var(--font-mono);
+        font-size: 18px;
         font-weight: 700;
       }
 
-      /* Captions at x: 120, y: 196, width: 850px */
-      #captions {
-        position: absolute;
-        left: 120px;
-        top: 196px;
-        width: 850px;
-        font-family: var(--font-body);
-        font-weight: 500;
-        font-size: 62px;
-        line-height: 1.18;
-        letter-spacing: -0.02em;
-        z-index: 10;
+      .pill-locked {
+        background: rgba(52, 168, 83, 0.12);
+        border: 1px solid var(--green-terminal);
+        color: var(--green-terminal);
       }
 
-      .cap-word {
-        display: inline-block;
-        color: var(--grey-inactive);
-        margin-right: 14px;
-        transform-origin: center bottom;
+      .pill-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: var(--green-terminal);
+        box-shadow: 0 0 6px var(--green-terminal);
       }
 
-      .cap-key {
-        font-family: var(--font-serif);
-        font-style: italic;
-        font-size: 72px;
-        font-weight: 400;
-        letter-spacing: -0.01em;
+      .sys-code-container {
+        background: var(--obsidian);
+        border: 1.5px solid var(--border-glass);
+        border-radius: 14px;
+        padding: 12px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
       }
 
-      /* Title slams in at 0.0s */
-      #title-wrapper {
-        position: absolute;
-        left: 120px;
-        top: 434px;
-        width: 840px;
-        z-index: 15;
-        transform-origin: left bottom;
-        opacity: 0;
-      }
-
-      #title-text {
-        font-family: var(--font-display);
-        font-size: 120px;
-        line-height: 0.92;
+      .sys-code-line {
+        display: flex;
+        align-items: center;
+        font-family: var(--font-mono);
+        font-size: 26px;
+        line-height: 1.25;
         letter-spacing: -0.01em;
         white-space: nowrap;
       }
 
-      #swash-svg {
-        display: block;
-        margin-top: 4px;
-        overflow: visible;
+      .sys-role {
+        color: var(--cyan-gemini);
+        font-weight: 700;
+        margin-right: 10px;
       }
 
-      #swash-path {
-        stroke-dasharray: 760;
-        stroke-dashoffset: 760;
+      .sys-text-wrap {
+        display: inline-flex;
+        align-items: center;
+        overflow: hidden;
+        white-space: nowrap;
       }
 
-      /* Main Card at x: 120, y: 620, width: 840, height: 420 */
-      #main-card-group {
+      .sys-text {
+        color: var(--text-white);
+        font-weight: 500;
+      }
+
+      .sys-cursor {
+        display: inline-block;
+        width: 9px;
+        height: 24px;
+        background-color: var(--cyan-gemini);
+        margin-left: 6px;
+        vertical-align: middle;
+        box-shadow: 0 0 8px var(--cyan-gemini);
+      }
+
+      /* 5. Temperature Slider & Gaussian Bell Curve Card */
+      #controls-card-layer {
         position: absolute;
-        left: 120px;
-        top: 620px;
-        width: 840px;
-        height: 420px;
-        z-index: 20;
-        opacity: 0;
+        left: 100px;
+        top: 648px;
+        width: 880px;
+        height: 495px;
+        z-index: 35;
       }
 
-      .card-halftone-shadow {
-        position: absolute;
-        left: 12px;
-        top: 12px;
-        width: 840px;
-        height: 420px;
-        border-radius: 20px;
-        background-image: radial-gradient(circle, #1E1C1A 2px, transparent 2.5px);
-        background-size: 8px 8px;
-        opacity: 0.45;
-        z-index: 1;
+      .ctrl-card {
+        padding: 24px 30px;
       }
 
-      .main-card {
-        position: absolute;
-        inset: 0;
-        background: var(--card-bg);
-        border: 3px solid var(--ink);
-        border-radius: 20px;
-        padding: 32px 36px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 2;
-        box-shadow: 4px 4px 0px rgba(30, 28, 26, 0.08);
-      }
-
-      .card-header-row {
+      .ctrl-top-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-      }
-
-      .card-label-badge {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-family: var(--font-mono);
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--grey);
-        letter-spacing: 0.06em;
-      }
-
-      .card-dot-green {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #16A34A;
-        border: 1.5px solid var(--ink);
-      }
-
-      #card-badge {
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        background: var(--red);
-        border: 2.5px solid var(--ink);
-        color: var(--card-bg);
-        font-family: var(--font-display);
-        font-size: 32px;
-        line-height: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 2px 2px 0px var(--ink);
-        opacity: 0;
-      }
-
-      .card-counter-section {
-        margin: 4px 0;
-      }
-
-      #counter-num {
-        font-family: var(--font-display);
-        font-size: 102px;
-        line-height: 0.92;
-        color: var(--ink);
-        letter-spacing: -0.02em;
-      }
-
-      .counter-sub {
-        font-family: var(--font-mono);
-        font-size: 22px;
-        font-weight: 700;
-        color: var(--red);
-        letter-spacing: 0.06em;
-        margin-top: 6px;
-      }
-
-      /* Stamp on ten-million */
-      #stamp-box {
-        position: absolute;
-        right: 32px;
-        top: 108px;
-        border: 5px solid var(--red);
-        border-radius: 8px;
-        padding: 6px 20px;
-        background: rgba(251, 250, 248, 0.98);
-        box-shadow: 4px 4px 0px rgba(215, 55, 44, 0.25);
-        transform: rotate(-6deg);
-        opacity: 0;
-        z-index: 10;
-      }
-
-      #stamp-box span {
-        font-family: var(--font-display);
-        font-size: 52px;
-        color: var(--red);
-        letter-spacing: 0.08em;
-        line-height: 1;
-        display: block;
-      }
-
-      /* Terminal logs line */
-      #terminal-box {
-        background: var(--ground);
-        border: 2px solid var(--ink);
-        border-radius: 12px;
-        padding: 12px 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        opacity: 0;
-      }
-
-      .term-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .term-prompt {
-        font-family: var(--font-mono);
-        font-size: 18px;
-        color: var(--grey);
-      }
-
-      .term-code {
-        font-family: var(--font-mono);
-        font-size: 19px;
-        font-weight: 700;
-        color: var(--ink);
-      }
-
-      .term-tag {
-        font-family: var(--font-mono);
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--red);
-        background: rgba(215, 55, 44, 0.1);
-        padding: 3px 8px;
-        border-radius: 6px;
-        border: 1px solid var(--red);
-      }
-
-      /* Demo animation: 5 document cards stacking infinitely in perspective */
-      #demo-stack-container {
-        position: absolute;
-        left: 120px;
-        top: 610px;
-        width: 840px;
-        height: 580px;
-        z-index: 25;
-        opacity: 0;
-      }
-
-      .demo-stack-stage {
-        position: relative;
-        width: 840px;
-        height: 480px;
-        perspective: 1100px;
-        perspective-origin: 50% 20%;
-        transform-style: preserve-3d;
-      }
-
-      .doc-card {
-        position: absolute;
-        left: 0;
-        width: 840px;
-        height: 200px;
-        background: var(--card-bg);
-        border: 3px solid var(--ink);
-        border-radius: 16px;
-        padding: 18px 24px;
-        box-shadow: 0 12px 24px rgba(30, 28, 26, 0.16), 4px 4px 0px var(--ink);
-        transform-style: preserve-3d;
-        opacity: 0;
-      }
-
-      #doc4 { top: 20px; z-index: 1; transform: translate3d(0, 0, -200px) rotateX(18deg) scale(0.84); }
-      #doc3 { top: 70px; z-index: 2; transform: translate3d(0, 0, -150px) rotateX(18deg) scale(0.88); }
-      #doc2 { top: 120px; z-index: 3; transform: translate3d(0, 0, -100px) rotateX(18deg) scale(0.92); }
-      #doc1 { top: 170px; z-index: 4; transform: translate3d(0, 0, -50px) rotateX(18deg) scale(0.96); }
-      #doc0 { top: 220px; z-index: 5; transform: translate3d(0, 0, 0px) rotateX(18deg) scale(1.0); }
-
-      .doc-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 2px solid rgba(30, 28, 26, 0.12);
-        padding-bottom: 10px;
         margin-bottom: 12px;
       }
 
-      .doc-dots {
+      .ctrl-title-group {
         display: flex;
-        gap: 6px;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .ctrl-title {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-steel);
+        letter-spacing: 0.08em;
+      }
+
+      .mode-badge-wrap {
+        position: relative;
+        height: 32px;
+        display: flex;
         align-items: center;
       }
 
-      .doc-dots span {
-        width: 10px;
-        height: 10px;
+      .mode-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 14px;
+        border-radius: 100px;
+        font-family: var(--font-mono);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        position: absolute;
+        left: 0;
+        white-space: nowrap;
+      }
+
+      .mode-det {
+        background: rgba(66, 133, 244, 0.12);
+        border: 1.5px solid var(--cyan-gemini);
+        color: var(--cyan-gemini);
+      }
+
+      .mode-cre {
+        background: rgba(255, 87, 34, 0.14);
+        border: 1.5px solid var(--coral-neon);
+        color: var(--coral-neon);
+      }
+
+      .mode-dot {
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        border: 1.5px solid var(--ink);
       }
 
-      .d-red { background: var(--red); }
-      .d-grey { background: var(--grey); }
+      .dot-cyan-sm { background-color: var(--cyan-gemini); box-shadow: 0 0 6px var(--cyan-gemini); }
+      .dot-coral-sm { background-color: var(--coral-neon); box-shadow: 0 0 6px var(--coral-neon); }
 
-      .doc-path {
+      .readout-box {
         font-family: var(--font-mono);
-        font-size: 19px;
+        font-size: 38px;
         font-weight: 700;
-        color: var(--ink);
+        color: var(--cyan-gemini);
+        letter-spacing: 0.02em;
+        text-shadow: 0 0 16px rgba(66, 133, 244, 0.4);
       }
 
-      .doc-badge {
-        font-family: var(--font-mono);
-        font-size: 15px;
-        font-weight: 700;
-        background: var(--red);
-        color: var(--card-bg);
-        padding: 4px 10px;
+      .readout-prefix {
+        font-size: 24px;
+        color: var(--text-steel);
+        margin-right: 2px;
+      }
+
+      /* Slider Section */
+      .slider-container {
+        margin: 6px 0 12px 0;
+      }
+
+      .slider-track {
+        position: relative;
+        width: 820px;
+        height: 16px;
+        background: var(--obsidian);
+        border: 2px solid var(--border-glass);
+        border-radius: 8px;
+      }
+
+      .slider-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0;
+        background: linear-gradient(90deg, var(--cyan-gemini), var(--violet-hyper) 65%, var(--coral-neon));
         border-radius: 6px;
-        border: 1.5px solid var(--ink);
       }
 
-      .doc-code {
+      .slider-knob {
+        position: absolute;
+        top: -14px;
+        left: -4px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: #FFFFFF;
+        border: 4px solid var(--cyan-gemini);
+        box-shadow: 0 0 20px rgba(66, 133, 244, 0.85);
+        cursor: pointer;
+        z-index: 10;
+      }
+
+      .slider-ticks {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+        padding: 0 2px;
         font-family: var(--font-mono);
         font-size: 16px;
-        line-height: 1.4;
-        color: var(--ink);
-      }
-
-      .c-line {
-        color: var(--grey);
-        margin-right: 12px;
-        user-select: none;
-      }
-
-      .c-kw {
-        color: var(--red);
         font-weight: 700;
+        color: var(--text-steel);
       }
 
-      .c-fn {
-        color: var(--ink);
-        font-weight: 600;
+      /* Gaussian Bell Curve SVG Display */
+      .curve-arena {
+        position: relative;
+        width: 820px;
+        height: 165px;
+        background: rgba(12, 13, 16, 0.7);
+        border: 1.5px solid var(--border-glass);
+        border-radius: 16px;
+        overflow: hidden;
+        margin-bottom: 12px;
       }
 
-      #demo-summary {
-        margin-top: 18px;
-        background: var(--ink);
-        color: var(--card-bg);
+      #bell-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 820px;
+        height: 165px;
+      }
+
+      /* Token Distribution Readout Chips */
+      .token-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        width: 820px;
+      }
+
+      .tok-chip {
+        background: var(--obsidian);
+        border: 1.5px solid var(--border-glass);
         border-radius: 12px;
-        padding: 14px 24px;
+        padding: 8px 14px;
+      }
+
+      .tok-head {
         display: flex;
         justify-content: space-between;
         align-items: center;
         font-family: var(--font-mono);
         font-size: 18px;
+        margin-bottom: 6px;
+      }
+
+      .tok-name {
+        color: var(--text-white);
         font-weight: 700;
-        box-shadow: 4px 4px 0px rgba(215, 55, 44, 0.4);
+      }
+
+      .tok-prob {
+        font-weight: 700;
+        color: var(--text-steel);
+      }
+
+      .tok-prob-active {
+        color: var(--cyan-gemini);
+      }
+
+      .tok-bar-track {
+        width: 100%;
+        height: 5px;
+        background: #1C202D;
+        border-radius: 3px;
+        overflow: hidden;
+      }
+
+      .tok-bar-fill {
+        height: 100%;
+        border-radius: 3px;
+      }
+
+      /* 6. Stamp / Badge "PROBABILITY PHYSICS" */
+      #stamp-badge-wrap {
+        position: absolute;
+        right: 80px;
+        top: 520px;
+        width: 540px;
+        height: 90px;
+        z-index: 45;
+        pointer-events: none;
+      }
+
+      #stamp-badge {
+        position: absolute;
+        right: 0;
+        top: 0;
+        border: 5px solid var(--coral-neon);
+        border-radius: 12px;
+        padding: 8px 24px;
+        background: rgba(12, 13, 16, 0.96);
+        box-shadow: 0 0 35px rgba(255, 87, 34, 0.55), 8px 8px 0px rgba(255, 87, 34, 0.25);
+        transform: rotate(-6deg);
         opacity: 0;
+        transform-origin: center center;
       }
 
-      .sum-left {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .sum-icon {
-        color: #16A34A;
-        font-size: 14px;
-      }
-
-      .sum-tokens {
-        color: #FBFAF8;
-        background: var(--red);
-        padding: 4px 12px;
-        border-radius: 6px;
+      #stamp-badge span {
+        font-family: var(--font-anton);
+        font-size: 52px;
+        color: var(--coral-neon);
+        letter-spacing: 0.08em;
+        line-height: 1;
+        display: block;
+        text-transform: uppercase;
+        text-shadow: 0 0 16px rgba(255, 87, 34, 0.65);
       }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-p74y"
+    <div
       id="root"
+      class="clip"
       data-composition-id="point2"
       data-start="0"
       data-duration="6.54"
       data-width="1080"
       data-height="1920"
     >
-      <div data-hf-id="hf-yqqm" class="bg-grid"></div>
+      <!-- Background Ambient Elements -->
+      <div class="bg-dots" data-layout-ignore="true"></div>
+      <div class="ambient-glow-cyan" data-layout-ignore="true" data-layout-allow-overflow="true"></div>
+      <div class="ambient-glow-violet" data-layout-ignore="true" data-layout-allow-overflow="true"></div>
+      <div class="ambient-glow-coral" data-layout-ignore="true" data-layout-allow-overflow="true"></div>
 
-      <!-- Small label at y: 132px -->
-      <div data-hf-id="hf-tn53" id="meta-label">
-        <div data-hf-id="hf-mwnb" class="meta-left">02 · CONTEXT</div>
-        <div data-hf-id="hf-tb1i" class="meta-right">TOKENS: <span data-hf-id="hf-yrzr">10M</span></div>
+      <!-- 1. Header Badge -->
+      <div class="top-badge-container" data-layout-ignore="true" id="top-badge-wrap">
+        <div class="top-badge">
+          <span class="badge-dot"></span>
+          <span>02 · PARAMETERS &amp; PHYSICS</span>
+        </div>
+        <div class="badge-aux">STUDIO_API // LIVE_TUNER</div>
       </div>
 
-      <!-- Captions (x: 120, y: 196, width: 850px) -->
-      <div data-hf-id="hf-iuvo" id="captions">
-        <div data-hf-id="hf-e2d4" id="cap-phase-1" class="cap-phase">
-          <span data-hf-id="hf-l84y" class="cap-word" id="w-second">Second </span>
-          <span data-hf-id="hf-zg2c" class="cap-word" id="w-supply">supply </span>
-          <span data-hf-id="hf-u2ty" class="cap-word" id="w-chains">chains </span>
-          <span data-hf-id="hf-ig9u" class="cap-word" id="w-whisper">whisper </span>
-          <span data-hf-id="hf-hlqm" class="cap-word" id="w-about">about </span>
-          <span data-hf-id="hf-8bca" class="cap-word" id="w-a">a </span>
-          <span data-hf-id="hf-w6zw" class="cap-word" id="w-staggering">staggering </span>
-          <span data-hf-id="hf-mkff" class="cap-word cap-key" id="w-tenmillion">ten-million </span>
+      <!-- 2. Captions (Top Left) -->
+      <div class="captions-wrapper" data-layout-allow-overlap="true">
+        <!-- Phase 1: 0.0s - 3.1s -->
+        <div class="caption-sentence" id="caption-phase-1" data-layout-allow-overlap="true">
+          <span class="w-word" id="w-point">Point </span>
+          <span class="w-word" id="w-two">two: </span>
+          <span class="w-word" id="w-sys">System </span>
+          <span class="w-word" id="w-inst">instructions </span>
+          <span class="w-word" id="w-and">and </span>
+          <span class="w-word" id="w-dyn">dynamic </span>
+          <span class="w-word" id="w-temp">temperature </span>
+          <span class="w-accent-coral" id="w-phys">physics.</span>
         </div>
-        <div data-hf-id="hf-y1wu" id="cap-phase-2" class="cap-phase" style="display: none; opacity: 0;">
-          <span data-hf-id="hf-xjau" class="cap-word" id="w-token">token </span>
-          <span data-hf-id="hf-vaek" class="cap-word" id="w-memory">memory </span>
-          <span data-hf-id="hf-txve" class="cap-word" id="w-window">window </span>
-          <span data-hf-id="hf-pq2k" class="cap-word" id="w-that">that </span>
-          <span data-hf-id="hf-ndqy" class="cap-word" id="w-remembers">remembers </span>
-          <span data-hf-id="hf-wnjk" class="cap-word" id="w-entire">entire </span>
-          <span data-hf-id="hf-dku6" class="cap-word" id="w-codebases">codebases</span>
+
+        <!-- Phase 2: 3.1s - 6.54s -->
+        <div class="caption-sentence" id="caption-phase-2" data-layout-allow-overlap="true">
+          <span class="w-word" id="w-dial">Dial </span>
+          <span class="w-word" id="w-in">in </span>
+          <span class="w-word" id="w-det">deterministic </span>
+          <span class="w-accent-coral" id="w-prec">precision </span>
+          <span class="w-word" id="w-or">or </span>
+          <span class="w-word" id="w-creat">creative </span>
+          <span class="w-accent-coral" id="w-spark">sparks </span>
+          <span class="w-word" id="w-with">with </span>
+          <span class="w-word" id="w-live">live </span>
+          <span class="w-word" id="w-curv">curves.</span>
         </div>
       </div>
 
-      <!-- Title slams in at 0.0s -->
-      <div data-hf-id="hf-lt77" id="title-wrapper">
-        <h1 data-hf-id="hf-2vh1" id="title-text">
-          <span data-hf-id="hf-9uqs" style="color: #1E1C1A;">TEN</span> <span data-hf-id="hf-79yz" style="color: #D7372C;">MILLION</span>
+      <!-- 3. Title Headline -->
+      <div class="title-container" id="title-wrap" data-layout-allow-overlap="true">
+        <h1 class="headline" data-layout-allow-overlap="true">
+          <span class="hl-white" data-layout-allow-overlap="true">DYNAMIC</span>
+          <span class="hl-cyan" data-layout-allow-overlap="true">CONTROLS</span>
         </h1>
-        <svg data-hf-id="hf-3wat" id="swash-svg" viewBox="0 0 740 32" width="740" height="32" fill="none">
-          <path data-hf-id="hf-gkbe" id="swash-path" d="M 6 22 C 180 32, 460 10, 730 16" stroke="#D7372C" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+        <div class="headline-line" id="title-line"></div>
       </div>
 
-      <!-- Main Card at x: 120, y: 620, width: 840, height: 420 -->
-      <div data-hf-id="hf-yezb" id="main-card-group">
-        <div data-hf-id="hf-46nh" class="card-halftone-shadow"></div>
-        <div data-hf-id="hf-gsc2" class="main-card" id="main-card">
-          <div data-hf-id="hf-x10j" class="card-header-row">
-            <div data-hf-id="hf-7mq5" class="card-label-badge">
-              <span data-hf-id="hf-esnj" class="card-dot-green"></span>
-              <span data-hf-id="hf-7etp">ACTIVE ATTENTION BUFFER</span>
+      <!-- 4. System Instructions Glass Card -->
+      <div id="system-card-layer" class="clip" data-start="0" data-duration="6.54">
+        <div class="halftone-shadow"></div>
+        <div class="glass-card" id="sys-card-inner">
+          <div class="card-header-bar">
+            <div class="card-dots-group">
+              <span class="dot dot-green"></span>
+              <span class="dot dot-cyan"></span>
+              <span class="dot dot-violet"></span>
             </div>
-            <div data-hf-id="hf-rom0" id="card-badge">#2</div>
-          </div>
-
-          <div data-hf-id="hf-gmyr" class="card-counter-section">
-            <div data-hf-id="hf-8fdz" id="counter-num">1,000,000</div>
-            <div data-hf-id="hf-v2dx" class="counter-sub">TOKENS · REPOSITORY CONTEXT</div>
-          </div>
-
-          <div data-hf-id="hf-iw8q" id="stamp-box">
-            <span data-hf-id="hf-qzkp">MASSIVE</span>
-          </div>
-
-          <div data-hf-id="hf-hdfx" id="terminal-box">
-            <div data-hf-id="hf-ut5c" class="term-left">
-              <span data-hf-id="hf-kwew" class="term-prompt">sys.kv ></span>
-              <span data-hf-id="hf-t2qo" class="term-code">cache_hit: 100% (zero evictions)</span>
+            <div class="card-title-mono" data-layout-ignore="true">SYSTEM INSTRUCTIONS // DIRECTIVE</div>
+            <div class="card-status-pill pill-locked" data-layout-ignore="true">
+              <span class="pill-dot"></span>
+              <span>STRICT_MODE: ACTIVE</span>
             </div>
-            <span data-hf-id="hf-0id4" class="term-tag">10M_CONTEXT</span>
+          </div>
+
+          <div class="sys-code-container" data-layout-ignore="true" data-layout-allow-overflow="true">
+            <div class="sys-code-line" data-layout-allow-overflow="true">
+              <span class="sys-role">System:</span>
+              <div class="sys-text-wrap" id="sys-typed-wrap-1" data-layout-allow-overflow="true">
+                <span class="sys-text">You are an expert compiler.</span>
+              </div>
+            </div>
+            <div class="sys-code-line" data-layout-allow-overflow="true" style="padding-left: 110px;">
+              <div class="sys-text-wrap" id="sys-typed-wrap-2" data-layout-allow-overflow="true">
+                <span class="sys-text">Return strictly verified code.</span>
+              </div>
+              <span class="sys-cursor" id="sys-cursor"></span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Demo animation: 5 document cards stacking infinitely in perspective -->
-      <div data-hf-id="hf-irpk" id="demo-stack-container" data-layout-ignore="true">
-        <div data-hf-id="hf-1zub" class="demo-stack-stage">
-          <div data-hf-id="hf-6x9c" class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc4">
-            <div data-hf-id="hf-23bw" class="doc-header">
-              <div data-hf-id="hf-rqrb" class="doc-dots">
-                <span data-hf-id="hf-wh9d" class="d-red"></span><span data-hf-id="hf-e58l" class="d-grey"></span><span data-hf-id="hf-v0bd" class="d-grey"></span>
+      <!-- 5. Temperature Slider & Gaussian Bell Curve Card -->
+      <div id="controls-card-layer" class="clip" data-start="0" data-duration="6.54">
+        <div class="halftone-shadow"></div>
+        <div class="glass-card ctrl-card" id="ctrl-card-inner">
+          <!-- Top Bar -->
+          <div class="ctrl-top-bar">
+            <div class="ctrl-title-group">
+              <span class="ctrl-title" data-layout-ignore="true">TEMPERATURE PHYSICS</span>
+              <div class="mode-badge-wrap" data-layout-ignore="true">
+                <div id="badge-det" class="mode-badge mode-det">
+                  <span class="mode-dot dot-cyan-sm"></span>
+                  <span>DETERMINISTIC · ARGMAX</span>
+                </div>
+                <div id="badge-cre" class="mode-badge mode-cre">
+                  <span class="mode-dot dot-coral-sm"></span>
+                  <span>CREATIVE SPARKS · HIGH ENTROPY</span>
+                </div>
               </div>
-              <div data-hf-id="hf-2l20" class="doc-path">llvm-project/llvm/lib/Transforms/</div>
-              <div data-hf-id="hf-b098" class="doc-badge">2.1M TOKENS</div>
             </div>
-            <div data-hf-id="hf-5oo0" class="doc-code">
-              <div data-hf-id="hf-lltb"><span data-hf-id="hf-9e4o" class="c-line">01</span> <span data-hf-id="hf-owax" class="c-kw">void</span> <span data-hf-id="hf-ebif" class="c-fn">LoopVectorizePass</span>::buildVPlan() {</div>
-              <div data-hf-id="hf-poj6"><span data-hf-id="hf-877l" class="c-line">02</span>   <span data-hf-id="hf-4lus" class="c-kw">auto</span> *Plan = <span data-hf-id="hf-6830" class="c-fn">createInitialVPlan</span>(L);</div>
-              <div data-hf-id="hf-5xft"><span data-hf-id="hf-8lim" class="c-line">03</span>   <span data-hf-id="hf-lc8l" class="c-kw">return</span> Plan-&gt;<span data-hf-id="hf-i1i4" class="c-fn">execute</span>(State);</div>
+            <div class="readout-box" data-layout-ignore="true">
+              <span class="readout-prefix">T = </span><span id="temp-val-num">0.00</span>
             </div>
           </div>
 
-          <div data-hf-id="hf-2z5b" class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc3">
-            <div data-hf-id="hf-7gwk" class="doc-header">
-              <div data-hf-id="hf-67g7" class="doc-dots">
-                <span data-hf-id="hf-c9dh" class="d-red"></span><span data-hf-id="hf-w78g" class="d-grey"></span><span data-hf-id="hf-vsxf" class="d-grey"></span>
-              </div>
-              <div data-hf-id="hf-yd7a" class="doc-path">postgres/src/backend/executor/</div>
-              <div data-hf-id="hf-vlwc" class="doc-badge">1.6M TOKENS</div>
+          <!-- High-Contrast Glass Slider Track -->
+          <div class="slider-container" data-layout-ignore="true">
+            <div class="slider-track" id="slider-track">
+              <div class="slider-fill" id="slider-fill"></div>
+              <div class="slider-knob" id="slider-knob"></div>
             </div>
-            <div data-hf-id="hf-3hg8" class="doc-code">
-              <div data-hf-id="hf-f020"><span data-hf-id="hf-y43k" class="c-line">01</span> <span data-hf-id="hf-7ydx" class="c-kw">TupleTableSlot</span> *<span data-hf-id="hf-w5gp" class="c-fn">ExecScan</span>(ScanState *node) {</div>
-              <div data-hf-id="hf-ony5"><span data-hf-id="hf-bno5" class="c-line">02</span>   <span data-hf-id="hf-vip5" class="c-kw">return</span> node-&gt;<span data-hf-id="hf-cdyl" class="c-fn">ScanNext</span>(node);</div>
-              <div data-hf-id="hf-9m3r"><span data-hf-id="hf-4v02" class="c-line">03</span> }</div>
-            </div>
-          </div>
-
-          <div data-hf-id="hf-z11a" class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc2">
-            <div data-hf-id="hf-69zh" class="doc-header">
-              <div data-hf-id="hf-5t56" class="doc-dots">
-                <span data-hf-id="hf-dgak" class="d-red"></span><span data-hf-id="hf-ttea" class="d-grey"></span><span data-hf-id="hf-tf39" class="d-grey"></span>
-              </div>
-              <div data-hf-id="hf-3rjn" class="doc-path">pytorch/torch/csrc/autograd/</div>
-              <div data-hf-id="hf-axce" class="doc-badge">1.8M TOKENS</div>
-            </div>
-            <div data-hf-id="hf-2aj5" class="doc-code">
-              <div data-hf-id="hf-lq0x"><span data-hf-id="hf-wx6h" class="c-line">01</span> <span data-hf-id="hf-em44" class="c-kw">variable_list</span> <span data-hf-id="hf-x1wn" class="c-fn">Engine</span>::execute() {</div>
-              <div data-hf-id="hf-7zdr"><span data-hf-id="hf-cul8" class="c-line">02</span>   <span data-hf-id="hf-udek" class="c-kw">auto</span> graph = <span data-hf-id="hf-eyeq" class="c-fn">build_backward_graph</span>();</div>
-              <div data-hf-id="hf-lwja"><span data-hf-id="hf-59b3" class="c-line">03</span>   <span data-hf-id="hf-wpm8" class="c-kw">return</span> evaluate_edges(graph);</div>
+            <div class="slider-ticks">
+              <span>0.0 (Argmax)</span>
+              <span>0.5</span>
+              <span>1.0 (Standard)</span>
+              <span>1.5</span>
+              <span>2.0 (High Entropy)</span>
             </div>
           </div>
 
-          <div data-hf-id="hf-v2x9" class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc1">
-            <div data-hf-id="hf-6oai" class="doc-header">
-              <div data-hf-id="hf-5eu5" class="doc-dots">
-                <span data-hf-id="hf-d1zj" class="d-red"></span><span data-hf-id="hf-um0c" class="d-grey"></span><span data-hf-id="hf-u7pb" class="d-grey"></span>
-              </div>
-              <div data-hf-id="hf-0wwm" class="doc-path">chromium/src/v8/src/compiler/</div>
-              <div data-hf-id="hf-gjz8" class="doc-badge">2.1M TOKENS</div>
-            </div>
-            <div data-hf-id="hf-2ou6" class="doc-code">
-              <div data-hf-id="hf-9oop"><span data-hf-id="hf-xbhi" class="c-line">01</span> <span data-hf-id="hf-ygkp" class="c-kw">class</span> <span data-hf-id="hf-r8xj" class="c-fn">TurbofanOptimizer</span> : <span data-hf-id="hf-22o2" class="c-kw">public</span> Pipeline {</div>
-              <div data-hf-id="hf-jp6i"><span data-hf-id="hf-cga7" class="c-line">02</span>   <span data-hf-id="hf-wu4d" class="c-kw">void</span> <span data-hf-id="hf-foul" class="c-fn">OptimizeBytecode</span>(Graph* graph);</div>
-              <div data-hf-id="hf-pfkk"><span data-hf-id="hf-5nm4" class="c-line">03</span> };</div>
-            </div>
+          <!-- Real-Time SVG Gaussian Bell Curve Display -->
+          <div class="curve-arena" data-layout-ignore="true">
+            <svg id="bell-svg" viewBox="0 0 760 155" preserveAspectRatio="none">
+              <defs>
+                <!-- Cyan Gradient for Deterministic Spike -->
+                <linearGradient id="spikeGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#4285F4" stop-opacity="0.55" />
+                  <stop offset="70%" stop-color="#4285F4" stop-opacity="0.1" />
+                  <stop offset="100%" stop-color="#4285F4" stop-opacity="0.0" />
+                </linearGradient>
+
+                <!-- Coral / Violet Gradient for Creative Broad Wave -->
+                <linearGradient id="broadGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#FF5722" stop-opacity="0.5" />
+                  <stop offset="50%" stop-color="#9B51E0" stop-opacity="0.2" />
+                  <stop offset="100%" stop-color="#9B51E0" stop-opacity="0.0" />
+                </linearGradient>
+
+                <!-- Glowing Laser Filter -->
+                <filter id="laserGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="glow" />
+                  <feComposite in="SourceGraphic" in2="glow" operator="over" />
+                </filter>
+              </defs>
+
+              <!-- Subtle Probability Grid Lines -->
+              <line x1="30" y1="35" x2="730" y2="35" stroke="#2B2F3E" stroke-dasharray="4 4" stroke-width="1" />
+              <line x1="30" y1="75" x2="730" y2="75" stroke="#2B2F3E" stroke-dasharray="4 4" stroke-width="1" />
+              <line x1="30" y1="115" x2="730" y2="115" stroke="#2B2F3E" stroke-dasharray="4 4" stroke-width="1" />
+              <line x1="380" y1="10" x2="380" y2="145" stroke="#2B2F3E" stroke-dasharray="4 4" stroke-width="1.5" />
+
+              <!-- Base Axis -->
+              <line x1="30" y1="145" x2="730" y2="145" stroke="#2B2F3E" stroke-width="2" />
+
+              <!-- Group 1: Deterministic Spike (T = 0.0) -->
+              <g id="curve-spike-group" style="transform-origin: 380px 145px;">
+                <path
+                  id="spike-fill-path"
+                  d="M 30 145 C 200 145 290 145 335 105 C 360 35 375 14 380 14 C 385 14 400 35 425 105 C 470 145 560 145 730 145 L 730 145 L 30 145 Z"
+                  fill="url(#spikeGrad)"
+                />
+                <path
+                  id="spike-stroke-path"
+                  d="M 30 145 C 200 145 290 145 335 105 C 360 35 375 14 380 14 C 385 14 400 35 425 105 C 470 145 560 145 730 145"
+                  stroke="#4285F4"
+                  stroke-width="3.5"
+                  stroke-linecap="round"
+                  fill="none"
+                  filter="url(#laserGlow)"
+                />
+              </g>
+
+              <!-- Group 2: Creative Broad Wave (T = 1.2) -->
+              <g id="curve-broad-group" style="transform-origin: 380px 145px; opacity: 0;">
+                <path
+                  id="broad-fill-path"
+                  d="M 30 145 C 150 141 240 124 310 100 C 350 83 370 75 380 75 C 390 75 410 83 450 100 C 520 124 610 141 730 145 L 730 145 L 30 145 Z"
+                  fill="url(#broadGrad)"
+                />
+                <path
+                  id="broad-stroke-path"
+                  d="M 30 145 C 150 141 240 124 310 100 C 350 83 370 75 380 75 C 390 75 410 83 450 100 C 520 124 610 141 730 145"
+                  stroke="#FF5722"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  fill="none"
+                  filter="url(#laserGlow)"
+                />
+              </g>
+
+              <!-- Center Peak Indicator Marker -->
+              <g id="curve-peak-marker" style="transform-origin: 380px 14px;">
+                <circle id="peak-dot" cx="380" cy="14" r="6" fill="#4285F4" stroke="#FFFFFF" stroke-width="2.5" />
+                <text id="peak-text" x="380" y="32" text-anchor="middle" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" fill="#4285F4">
+                  P_max = 0.992
+                </text>
+              </g>
+
+              <!-- Top Right Softmax Formula -->
+              <text x="720" y="22" text-anchor="end" font-family="'JetBrains Mono', monospace" font-size="15" font-weight="700" fill="#9B51E0">
+                P(tok) = softmax(z_i / T)
+              </text>
+            </svg>
           </div>
 
-          <div data-hf-id="hf-ub9g" class="doc-card" data-layout-allow-overlap="true" data-layout-ignore="true" id="doc0">
-            <div data-hf-id="hf-8ntn" class="doc-header">
-              <div data-hf-id="hf-86zc" class="doc-dots">
-                <span data-hf-id="hf-e8wm" class="d-red"></span><span data-hf-id="hf-s866" class="d-grey"></span><span data-hf-id="hf-rtv5" class="d-grey"></span>
+          <!-- Probability Distribution Readout Chips -->
+          <div class="token-grid" data-layout-ignore="true">
+            <!-- Chip 0 -->
+            <div class="tok-chip">
+              <div class="tok-head">
+                <span class="tok-name">def</span>
+                <span class="tok-prob tok-prob-active" id="p-val-0">99.2%</span>
               </div>
-              <div data-hf-id="hf-ph6l" class="doc-path">linux/kernel/sched/core.c</div>
-              <div data-hf-id="hf-os4j" class="doc-badge">2.4M TOKENS</div>
+              <div class="tok-bar-track">
+                <div class="tok-bar-fill" id="bar-fill-0" style="width: 99.2%; background-color: var(--cyan-gemini);"></div>
+              </div>
             </div>
-            <div data-hf-id="hf-1hx3" class="doc-code">
-              <div data-hf-id="hf-b04b"><span data-hf-id="hf-w4kf" class="c-line">01</span> <span data-hf-id="hf-xb06" class="c-kw">static struct</span> rq *<span data-hf-id="hf-nkyf" class="c-fn">cpu_rq</span>(<span data-hf-id="hf-nnrc" class="c-kw">int</span> cpu) {</div>
-              <div data-hf-id="hf-ayp9"><span data-hf-id="hf-dn7a" class="c-line">02</span>   <span data-hf-id="hf-wbb7" class="c-kw">return</span> &amp;per_cpu(runqueues, cpu);</div>
-              <div data-hf-id="hf-mll3"><span data-hf-id="hf-61x5" class="c-line">03</span> }</div>
+
+            <!-- Chip 1 -->
+            <div class="tok-chip">
+              <div class="tok-head">
+                <span class="tok-name">class</span>
+                <span class="tok-prob" id="p-val-1">0.6%</span>
+              </div>
+              <div class="tok-bar-track">
+                <div class="tok-bar-fill" id="bar-fill-1" style="width: 0.6%; background-color: var(--border-glass);"></div>
+              </div>
+            </div>
+
+            <!-- Chip 2 -->
+            <div class="tok-chip">
+              <div class="tok-head">
+                <span class="tok-name">async</span>
+                <span class="tok-prob" id="p-val-2">0.2%</span>
+              </div>
+              <div class="tok-bar-track">
+                <div class="tok-bar-fill" id="bar-fill-2" style="width: 0.2%; background-color: var(--border-glass);"></div>
+              </div>
+            </div>
+
+            <!-- Chip 3 -->
+            <div class="tok-chip">
+              <div class="tok-head">
+                <span class="tok-name">struct</span>
+                <span class="tok-prob" id="p-val-3">0.0%</span>
+              </div>
+              <div class="tok-bar-track">
+                <div class="tok-bar-fill" id="bar-fill-3" style="width: 0%; background-color: var(--border-glass);"></div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
 
-        <div data-hf-id="hf-xutb" id="demo-summary">
-          <div data-hf-id="hf-y8vx" class="sum-left">
-            <span data-hf-id="hf-95mt" class="sum-icon">●</span>
-            <span data-hf-id="hf-byt9">REPOSITORIES INGESTED · 5 CODEBASES</span>
-          </div>
-          <div data-hf-id="hf-vpyl" class="sum-tokens">10,000,000 TOKENS</div>
+      <!-- 6. Stamp / Badge "PROBABILITY PHYSICS" -->
+      <div id="stamp-badge-wrap" class="clip" data-start="0" data-duration="6.54" data-layout-ignore="true">
+        <div id="stamp-badge">
+          <span>PROBABILITY PHYSICS</span>
         </div>
       </div>
     </div>
 
     <script>
+      // Register paused timeline according to HyperFrames contract
       window.__timelines = window.__timelines || {};
-
       const tl = gsap.timeline({ paused: true });
+      window.__timelines["point2"] = tl;
 
-      // 1. Title slams in at 0.0s on spoken word "Second" (scale 1.22 to 1 in 0.24s, power4.out)
-      tl.fromTo("#title-wrapper",
-        { opacity: 0, scale: 1.22 },
-        { opacity: 1, scale: 1.0, duration: 0.24, ease: "power4.out" },
-        0.0
+      // Initial visual states
+      gsap.set("#caption-phase-1", { display: "block", opacity: 1 });
+      gsap.set("#caption-phase-2", { display: "none", opacity: 0 });
+      gsap.set("#badge-det", { opacity: 1, scale: 1 });
+      gsap.set("#badge-cre", { opacity: 0, scale: 0.85 });
+      gsap.set("#sys-typed-wrap-1", { width: 0 });
+      gsap.set("#sys-typed-wrap-2", { width: 0 });
+      gsap.set("#curve-spike-group", { scaleX: 1, scaleY: 1, opacity: 1 });
+      gsap.set("#curve-broad-group", { scaleX: 0.5, scaleY: 0.25, opacity: 0 });
+      gsap.set("#temp-val-num", { textContent: "0.00" });
+      gsap.set("#p-val-0", { textContent: "99.2%" });
+      gsap.set("#p-val-1", { textContent: "0.6%" });
+      gsap.set("#p-val-2", { textContent: "0.2%" });
+      gsap.set("#p-val-3", { textContent: "0.0%" });
+
+      // ==========================================
+      // SECTION 1: HEADER & HEADLINE ENTRY (0.0s - 0.4s)
+      // ==========================================
+      tl.fromTo(
+        "#top-badge-wrap",
+        { y: -25, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.35, ease: "power2.out" },
+        0.02
       );
 
-      // Hand-drawn red swash underline draws across at 0.12s
-      tl.fromTo("#swash-path",
-        { strokeDashoffset: 760 },
-        { strokeDashoffset: 0, duration: 0.36, ease: "power2.out" },
+      tl.fromTo(
+        "#title-wrap",
+        { scale: 0.85, y: 35, opacity: 0 },
+        { scale: 1.0, y: 0, opacity: 1, duration: 0.4, ease: "back.out(2.0)" },
         0.12
       );
 
-      // 2. Main Card rises 0.18s later (70px up in 0.4s, power3.out)
-      tl.fromTo("#main-card-group",
-        { opacity: 0, y: 70 },
-        { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
-        0.18
+      tl.fromTo(
+        "#title-line",
+        { scaleX: 0 },
+        { scaleX: 1, duration: 0.45, ease: "power2.out" },
+        0.20
       );
 
-      // Number counter: counts up from 1,000,000 to 10,000,000 tokens over 1.15s
-      const counterEl = document.getElementById("counter-num");
-      tl.fromTo(counterEl,
-        { textContent: "1,000,000" },
-        {
-          textContent: 10000000,
-          duration: 1.15,
-          ease: "power2.out",
-          modifiers: {
-            textContent: val => {
-              const n = parseFloat(String(val).replace(/,/g, ""));
-              return isNaN(n) ? "1,000,000" : Math.round(n).toLocaleString("en-US");
-            }
-          }
-        },
-        0.35
+      // ==========================================
+      // SECTION 2: CAPTIONS TIMING - PHASE 1 (0.0s - 3.1s)
+      // "Point two: System instructions and dynamic temperature physics."
+      // ==========================================
+      tl.set("#w-point", { color: "#FFFFFF" }, 0.04);
+      tl.set("#w-two", { color: "#FFFFFF" }, 0.28);
+      tl.set("#w-sys", { color: "#FFFFFF" }, 0.65);
+      tl.set("#w-inst", { color: "#FFFFFF" }, 1.00);
+      tl.set("#w-and", { color: "#FFFFFF" }, 1.45);
+      tl.set("#w-dyn", { color: "#FFFFFF" }, 1.70);
+      tl.set("#w-temp", { color: "#FFFFFF" }, 2.10);
+      tl.to(
+        "#w-phys",
+        { color: "#FF5722", scale: 1.15, duration: 0.18, ease: "back.out(2)" },
+        2.50
       );
 
-      // Red #2 badge spins in at 0.6s
-      tl.fromTo("#card-badge",
-        { opacity: 0, scale: 0, rotation: -180 },
-        { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2)" },
-        0.60
+      // ==========================================
+      // SECTION 3: SYSTEM INSTRUCTIONS CARD ENTRY (0.28s)
+      // ==========================================
+      tl.fromTo(
+        "#system-card-layer",
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.45, ease: "power3.out" },
+        0.28
       );
 
-      // Terminal logs line: cache_hit: 100% (zero evictions) in under 0.9s
-      tl.fromTo("#terminal-box",
-        { opacity: 0, y: 16 },
-        { opacity: 1, y: 0, duration: 0.18, ease: "power2.out" },
-        0.68
+      // Typewriter wipes for 2 lines:
+      // Line 1: "You are an expert compiler."
+      tl.to(
+        "#sys-typed-wrap-1",
+        { width: "auto", duration: 0.5, ease: "steps(28)" },
+        0.65
       );
 
-      // 3. Captions Word sync:
-      // "Second" 0.0s, "supply" 0.46s, "chains" 0.86s, "whisper" 1.14s, "about" 1.50s, "a" 1.58s, "staggering" 1.92s,
-      // "ten-million" 2.32s (KEY WORD: Instrument Serif italic, 72px, red #D7372C), "token" 2.62s, "memory" 3.0s,
-      // "window" 3.4s, "that" 3.94s, "remembers" 4.36s, "entire" 4.68s, "codebases" 5.1s.
-      // Starts #B5AFA7, turns ink #1E1C1A in 0.2s.
-      const captionWords = [
-        { id: "#w-second", time: 0.00, color: "#1E1C1A" },
-        { id: "#w-supply", time: 0.46, color: "#1E1C1A" },
-        { id: "#w-chains", time: 0.86, color: "#1E1C1A" },
-        { id: "#w-whisper", time: 1.14, color: "#1E1C1A" },
-        { id: "#w-about", time: 1.50, color: "#1E1C1A" },
-        { id: "#w-a", time: 1.58, color: "#1E1C1A" },
-        { id: "#w-staggering", time: 1.92, color: "#1E1C1A" },
-        { id: "#w-tenmillion", time: 2.32, color: "#D7372C" },
-        { id: "#w-token", time: 2.62, color: "#1E1C1A" },
-        { id: "#w-memory", time: 3.00, color: "#1E1C1A" },
-        { id: "#w-window", time: 3.40, color: "#1E1C1A" },
-        { id: "#w-that", time: 3.94, color: "#1E1C1A" },
-        { id: "#w-remembers", time: 4.36, color: "#1E1C1A" },
-        { id: "#w-entire", time: 4.68, color: "#1E1C1A" },
-        { id: "#w-codebases", time: 5.10, color: "#1E1C1A" }
-      ];
-
-      tl.set("#cap-phase-1", { display: "block", opacity: 1 }, 0);
-      tl.set("#cap-phase-2", { display: "none", opacity: 0 }, 0);
-      tl.set("#cap-phase-1", { display: "none" }, 2.55);
-      tl.set("#cap-phase-2", { display: "block", opacity: 1 }, 2.55);
-      
-
-      captionWords.forEach(w => {
-        tl.fromTo(w.id,
-          { color: "#B5AFA7" },
-          { color: w.color, duration: 0.20, ease: "power1.out" },
-          w.time
-        );
-      });
-
-      // Stamp lands on key word "ten-million" at 2.32s:
-      // Anton 52px red text MASSIVE inside 5px red border box, tilted -6°.
-      // Motion: stamp: scale 1.75 to 1 and -18° to -6° in 0.2s.
-      tl.fromTo("#stamp-box",
-        { opacity: 0, scale: 1.75, rotation: -18 },
-        { opacity: 1, scale: 1.0, rotation: -6, duration: 0.20, ease: "power4.in" },
-        2.32
+      // Line 2: "Return strictly verified code."
+      tl.to(
+        "#sys-typed-wrap-2",
+        { width: "auto", duration: 0.5, ease: "steps(30)" },
+        1.15
       );
 
-      // Physical micro-impact on card when stamp hits
-      tl.to("#main-card", {
-        scale: 0.985,
-        duration: 0.04,
-        yoyo: true,
-        repeat: 1,
-        ease: "power1.inOut"
-      }, 2.52);
-
-      // 4. Explanation exit & Demo animation:
-      // 0.3s before explanation (~4.6s), card exits upward (50px up, fade out in 0.22s).
-      tl.to("#main-card-group", {
-        y: -50,
-        opacity: 0,
-        duration: 0.22,
-        ease: "power2.in"
-      }, 4.40);
-
-      // Demo animation shows 5 document cards stacking infinitely in perspective:
-      tl.fromTo("#demo-stack-container",
-        { opacity: 0 },
-        { opacity: 1, duration: 0.15 },
-        4.55
+      // Blinking cyan cursor during typing
+      tl.fromTo(
+        "#sys-cursor",
+        { opacity: 1 },
+        { opacity: 0, duration: 0.12, repeat: 7, yoyo: true, ease: "steps(1)" },
+        1.15
       );
 
-      // 5 cards stack in perspective
-      tl.fromTo("#doc4", { opacity: 0, y: 100 }, { opacity: 0.84, y: 0, duration: 0.32, ease: "power3.out" }, 4.60);
-      tl.fromTo("#doc3", { opacity: 0, y: 100 }, { opacity: 0.88, y: 0, duration: 0.32, ease: "power3.out" }, 4.70);
-      tl.fromTo("#doc2", { opacity: 0, y: 100 }, { opacity: 0.92, y: 0, duration: 0.32, ease: "power3.out" }, 4.80);
-      tl.fromTo("#doc1", { opacity: 0, y: 100 }, { opacity: 0.96, y: 0, duration: 0.32, ease: "power3.out" }, 4.90);
-      tl.fromTo("#doc0", { opacity: 0, y: 100 }, { opacity: 1.0, y: 0, duration: 0.32, ease: "power3.out" }, 5.00);
+      // Cursor turns terminal green when verified & locked
+      tl.to(
+        "#sys-cursor",
+        { backgroundColor: "#34A853", boxShadow: "0 0 10px #34A853", duration: 0.15 },
+        1.68
+      );
 
-      // Demo summary bar pops in
-      tl.fromTo("#demo-summary",
-        { opacity: 0, y: 25 },
-        { opacity: 1, y: 0, duration: 0.28, ease: "back.out(1.5)" },
+      // ==========================================
+      // SECTION 4: CONTROLS & PHYSICS CARD ENTRY (0.55s)
+      // ==========================================
+      tl.fromTo(
+        "#controls-card-layer",
+        { y: 60, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, ease: "back.out(1.6)" },
+        0.55
+      );
+
+      // ==========================================
+      // SECTION 5: STAMP "PROBABILITY PHYSICS" SLAM (2.50s)
+      // ==========================================
+      tl.fromTo(
+        "#stamp-badge",
+        { scale: 2.8, rotation: -24, opacity: 0 },
+        { scale: 1.0, rotation: -6, opacity: 1, duration: 0.22, ease: "power4.in" },
+        2.50
+      );
+
+      // Micro-impact card vibration on stamp hit
+      tl.to(
+        ["#sys-card-inner", "#ctrl-card-inner"],
+        { y: 5, duration: 0.04, yoyo: true, repeat: 1, ease: "power1.inOut" },
+        2.72
+      );
+
+      // ==========================================
+      // SECTION 6: CAPTIONS SWITCH TO PHASE 2 (3.10s - 6.54s)
+      // "Dial in deterministic precision or creative sparks with live curves."
+      // ==========================================
+      tl.to("#caption-phase-1", { opacity: 0, duration: 0.15 }, 3.05);
+      tl.set("#caption-phase-1", { display: "none" }, 3.10);
+      tl.set("#caption-phase-2", { display: "block" }, 3.10);
+      tl.fromTo("#caption-phase-2", { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.2, ease: "power2.out" }, 3.10);
+
+      tl.set("#w-dial", { color: "#FFFFFF" }, 3.15);
+      tl.set("#w-in", { color: "#FFFFFF" }, 3.40);
+      tl.set("#w-det", { color: "#FFFFFF" }, 3.65);
+      tl.to(
+        "#w-prec",
+        { color: "#FF5722", scale: 1.15, duration: 0.18, ease: "back.out(2)" },
+        4.05
+      );
+      tl.set("#w-or", { color: "#FFFFFF" }, 4.55);
+      tl.set("#w-creat", { color: "#FFFFFF" }, 4.80);
+      tl.to(
+        "#w-spark",
+        { color: "#FF5722", scale: 1.15, duration: 0.18, ease: "back.out(2)" },
         5.15
       );
+      tl.set("#w-with", { color: "#FFFFFF" }, 5.60);
+      tl.set("#w-live", { color: "#FFFFFF" }, 5.85);
+      tl.set("#w-curv", { color: "#FFFFFF" }, 6.05);
 
-      window.__timelines["point2"] = tl;
+      // ==========================================
+      // SECTION 7: TEMPERATURE SLIDER & DYNAMIC PHYSICS (3.60s - 5.40s)
+      // Dialing temperature from 0.00 to 1.20
+      // ==========================================
+      // Knob slides from 0px to 492px (1.20 / 2.0 * 820px = 492px)
+      tl.fromTo(
+        "#slider-knob",
+        { x: 0 },
+        {
+          x: 492,
+          borderColor: "#FF5722",
+          boxShadow: "0 0 25px rgba(255, 87, 34, 0.95)",
+          duration: 1.8,
+          ease: "power2.inOut"
+        },
+        3.60
+      );
+
+      // Active fill bar follows knob
+      tl.fromTo(
+        "#slider-fill",
+        { width: 0 },
+        { width: 492, duration: 1.8, ease: "power2.inOut" },
+        3.60
+      );
+
+      // Digital readout counter animates from 0.00 to 1.20
+      const readoutEl = document.getElementById("temp-val-num");
+      tl.fromTo(
+        readoutEl,
+        { textContent: "0.00" },
+        {
+          textContent: 1.20,
+          color: "#FF5722",
+          textShadow: "0 0 20px rgba(255, 87, 34, 0.55)",
+          duration: 1.8,
+          ease: "power2.inOut",
+          modifiers: {
+            textContent: val => parseFloat(val).toFixed(2)
+          }
+        },
+        3.60
+      );
+
+      // Mode Badge morphs from Deterministic (Argmax) to Creative Sparks (High Entropy)
+      tl.to("#badge-det", { opacity: 0, scale: 0.85, duration: 0.25, ease: "power2.in" }, 4.10);
+      tl.to("#badge-cre", { opacity: 1, scale: 1.0, duration: 0.25, ease: "back.out(1.8)" }, 4.35);
+
+      // ==========================================
+      // SECTION 8: GAUSSIAN BELL CURVE MORPHING (3.60s - 5.40s)
+      // Deterministic spike flattens and dissolves; Creative broad wave expands
+      // ==========================================
+      tl.to(
+        "#curve-spike-group",
+        { scaleY: 0.28, scaleX: 1.8, opacity: 0, duration: 1.8, ease: "power2.inOut" },
+        3.60
+      );
+
+      tl.to(
+        "#curve-broad-group",
+        { scaleY: 1.0, scaleX: 1.0, opacity: 1, duration: 1.8, ease: "power2.inOut" },
+        3.60
+      );
+
+      // Center Peak Indicator tracks down with the peak
+      tl.to(
+        "#curve-peak-marker",
+        { y: 61, duration: 1.8, ease: "power2.inOut" },
+        3.60
+      );
+
+      tl.to(
+        "#peak-dot",
+        { fill: "#FF5722", duration: 1.8, ease: "power2.inOut" },
+        3.60
+      );
+
+      const peakTextEl = document.getElementById("peak-text");
+      tl.fromTo(
+        peakTextEl,
+        { textContent: "0.992" },
+        {
+          textContent: 0.415,
+          fill: "#FF5722",
+          duration: 1.8,
+          ease: "power2.inOut",
+          modifiers: {
+            textContent: val => "P_max = " + parseFloat(val).toFixed(3)
+          }
+        },
+        3.60
+      );
+
+      // ==========================================
+      // SECTION 9: PROBABILITY DISTRIBUTION CHIP UPDATES (3.60s - 5.40s)
+      // Softmax redistribution over 4 tokens:
+      // tok_0 ("def"):    99.2% -> 41.5%
+      // tok_1 ("class"):   0.6% -> 29.2%
+      // tok_2 ("async"):   0.2% -> 18.1%
+      // tok_3 ("struct"):  0.0% -> 11.2%
+      // ==========================================
+      const p0El = document.getElementById("p-val-0");
+      const p1El = document.getElementById("p-val-1");
+      const p2El = document.getElementById("p-val-2");
+      const p3El = document.getElementById("p-val-3");
+
+      tl.fromTo(p0El, { textContent: "99.2%" }, {
+        textContent: 41.5,
+        color: "#9B51E0",
+        duration: 1.8,
+        ease: "power2.inOut",
+        modifiers: { textContent: v => parseFloat(v).toFixed(1) + "%" }
+      }, 3.60);
+      tl.to("#bar-fill-0", { width: "41.5%", backgroundColor: "#9B51E0", duration: 1.8, ease: "power2.inOut" }, 3.60);
+
+      tl.fromTo(p1El, { textContent: "0.6%" }, {
+        textContent: 29.2,
+        color: "#FF5722",
+        duration: 1.8,
+        ease: "power2.inOut",
+        modifiers: { textContent: v => parseFloat(v).toFixed(1) + "%" }
+      }, 3.60);
+      tl.to("#bar-fill-1", { width: "29.2%", backgroundColor: "#FF5722", duration: 1.8, ease: "power2.inOut" }, 3.60);
+
+      tl.fromTo(p2El, { textContent: "0.2%" }, {
+        textContent: 18.1,
+        color: "#FF8A65",
+        duration: 1.8,
+        ease: "power2.inOut",
+        modifiers: { textContent: v => parseFloat(v).toFixed(1) + "%" }
+      }, 3.60);
+      tl.to("#bar-fill-2", { width: "18.1%", backgroundColor: "#FF8A65", duration: 1.8, ease: "power2.inOut" }, 3.60);
+
+      tl.fromTo(p3El, { textContent: "0.0%" }, {
+        textContent: 11.2,
+        color: "#34A853",
+        duration: 1.8,
+        ease: "power2.inOut",
+        modifiers: { textContent: v => parseFloat(v).toFixed(1) + "%" }
+      }, 3.60);
+      tl.to("#bar-fill-3", { width: "11.2%", backgroundColor: "#34A853", duration: 1.8, ease: "power2.inOut" }, 3.60);
+
+      // Seek to initial frame 0 for preview readiness
       tl.seek(0);
+
+      // Support seek query parameter in dev/testing environments
+      const seekMatch = window.location.href.match(/seek=([\d.]+)/);
+      if (seekMatch) {
+        tl.seek(parseFloat(seekMatch[1]));
+      }
     </script>
   </body>
 </html>

@@ -1,177 +1,267 @@
-<svg id="presenter-svg" viewBox="0 0 650 770" width="650" height="770" xmlns="http://www.w3.org/2000/svg">
+<svg id="presenter-svg" viewBox="0 0 640 760" width="640" height="760" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <!-- Gradients & Filters for Cyber-Editorial Aesthetic -->
+    <linearGradient id="skinGrad" x1="15%" y1="0%" x2="85%" y2="100%">
+      <stop offset="0%" stop-color="#F5D5C0" />
+      <stop offset="55%" stop-color="#E8BA9B" />
+      <stop offset="100%" stop-color="#D49E7C" />
+    </linearGradient>
+    <linearGradient id="skinShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#BF8360" />
+      <stop offset="100%" stop-color="#9C6240" />
+    </linearGradient>
+    <linearGradient id="hoodieGrad" x1="20%" y1="0%" x2="80%" y2="100%">
+      <stop offset="0%" stop-color="#232734" />
+      <stop offset="50%" stop-color="#171920" />
+      <stop offset="100%" stop-color="#101217" />
+    </linearGradient>
+    <linearGradient id="hoodieInnerGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#151720" />
+      <stop offset="100%" stop-color="#0B0C10" />
+    </linearGradient>
+    <linearGradient id="hairGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#222634" />
+      <stop offset="55%" stop-color="#171922" />
+      <stop offset="100%" stop-color="#0E1015" />
+    </linearGradient>
+    <linearGradient id="lensGloss" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.32" />
+      <stop offset="35%" stop-color="#FFFFFF" stop-opacity="0.08" />
+      <stop offset="38%" stop-color="#FFFFFF" stop-opacity="0" />
+      <stop offset="100%" stop-color="#4285F4" stop-opacity="0.10" />
+    </linearGradient>
+    <radialGradient id="cheekBlush" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E8635A" stop-opacity="0.25" />
+      <stop offset="100%" stop-color="#E8635A" stop-opacity="0" />
+    </radialGradient>
+    <filter id="glowCyan" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glowViolet" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
     <style>
-      .p-stroke { stroke: #241914; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
-      .p-skin { fill: #E8BA9B; }
-      .p-hoodie { fill: #D7372C; }
-      .p-hoodie-inner { fill: #B82B21; }
-      .p-ink { fill: #241914; }
+      .p-stroke { stroke: #0E1015; stroke-width: 6px; stroke-linecap: round; stroke-linejoin: round; }
+      .p-skin { fill: url(#skinGrad); }
+      .p-hoodie { fill: url(#hoodieGrad); }
+      .p-hoodie-inner { fill: url(#hoodieInnerGrad); }
+      .p-ink { fill: url(#hairGrad); }
       .p-white { fill: #FBFAF8; }
       .p-teeth { fill: #FBFAF8; }
-      .p-mouth-bg { fill: #381513; }
-      .p-tongue { fill: #D7554C; }
+      .p-mouth-bg { fill: #1E1214; }
+      .p-tongue { fill: #E05D57; }
+      .p-rim-cyan { stroke: #4285F4; stroke-width: 4px; stroke-linecap: round; fill: none; opacity: 0.85; filter: url(#glowCyan); }
+      .p-rim-violet { stroke: #9B51E0; stroke-width: 4px; stroke-linecap: round; fill: none; opacity: 0.85; filter: url(#glowViolet); }
       .mouth-shape { display: none; }
       .mouth-0 { display: block; }
     </style>
   </defs>
 
-  <!-- ROOT GROUP -->
+  <!-- ROOT RIG -->
   <g id="presenter-rig">
-    <!-- BODY / HOODIE (STATIONARY CHEST CROP) -->
-    <g id="presenter-body">
+    <!-- BODY / HOODIE (STATIONARY CHEST CROP WITH ORGANIC BREATHING) -->
+    <g id="presenter-body" style="transform-origin: 320px 760px;">
       <!-- Torso / Shoulders -->
-      <path class="p-hoodie p-stroke" d="M 50 770 C 50 630 140 540 260 520 L 390 520 C 510 540 600 630 600 770 Z" />
-      <!-- Hoodie Hood Collar / Drawstrings -->
-      <path class="p-hoodie-inner p-stroke" d="M 230 520 C 230 620 420 620 420 520 Z" />
-      <!-- Drawstring cords -->
-      <path class="p-stroke" stroke="#FBFAF8" fill="none" stroke-width="5" d="M 270 560 L 270 650" />
-      <path class="p-stroke" stroke="#FBFAF8" fill="none" stroke-width="5" d="M 380 560 L 380 640" />
-      <circle cx="270" cy="655" r="5" class="p-stroke p-white" />
-      <circle cx="380" cy="645" r="5" class="p-stroke p-white" />
+      <path class="p-hoodie p-stroke" d="M 40 760 C 40 620 135 530 255 510 L 385 510 C 505 530 600 620 600 760 Z" />
+      <!-- Subtle Cyber Rim Lighting Accents -->
+      <!-- Left Rim Light (Hyper Violet #9B51E0) -->
+      <path class="p-rim-violet" d="M 245 512 C 145 532 55 615 45 755" />
+      <!-- Right Rim Light (Gemini Cyan #4285F4) -->
+      <path class="p-rim-cyan" d="M 395 512 C 495 532 585 615 595 755" />
+
+      <!-- Hoodie Collar -->
+      <path class="p-hoodie-inner p-stroke" d="M 225 510 C 225 615 415 615 415 510 Z" />
+
+      <!-- Drawstring cords with subtle neon aglets -->
+      <path class="p-stroke" stroke="#E2E8F0" fill="none" stroke-width="4.5" d="M 265 550 L 265 635" />
+      <path class="p-stroke" stroke="#E2E8F0" fill="none" stroke-width="4.5" d="M 375 550 L 375 625" />
+      <circle cx="265" cy="640" r="4.5" fill="#9B51E0" stroke="#0E1015" stroke-width="2" />
+      <circle cx="375" cy="630" r="4.5" fill="#4285F4" stroke="#0E1015" stroke-width="2" />
     </g>
 
-    <!-- HEAD GROUP (SWAYS AND NODS) -->
-    <g id="presenter-head" style="transform-origin: 325px 480px;">
-      <!-- Neck -->
-      <path class="p-skin p-stroke" d="M 275 440 L 275 530 C 310 540 340 540 375 530 L 375 440 Z" />
+    <!-- HEAD GROUP (HIERARCHICAL RIG FOR INDEPENDENT SWAY, GLANCE, AND NODS) -->
+    <g id="presenter-head" style="transform-origin: 320px 480px;">
+      <g id="presenter-head-glance" style="transform-origin: 320px 480px;">
+        <g id="presenter-head-nod" style="transform-origin: 320px 480px;">
+          <!-- Neck -->
+          <path class="p-skin p-stroke" d="M 270 430 L 270 520 C 305 530 335 530 370 520 L 370 430 Z" />
+          <path d="M 270 430 L 270 475 C 305 490 335 490 370 475 L 370 430 Z" fill="url(#skinShadow)" opacity="0.38" />
 
-      <!-- Ears -->
-      <path class="p-skin p-stroke" d="M 180 320 C 160 320 160 370 185 375 Z" />
-      <path class="p-skin p-stroke" d="M 470 320 C 490 320 490 370 465 375 Z" />
+          <!-- Ears -->
+          <path class="p-skin p-stroke" d="M 175 320 C 155 320 155 370 180 375 Z" />
+          <path class="p-skin p-stroke" d="M 465 320 C 485 320 485 370 460 375 Z" />
 
-      <!-- Head base shape -->
-      <path class="p-skin p-stroke" d="M 190 280 C 190 150 460 150 460 280 C 460 410 400 460 325 460 C 250 460 190 410 190 280 Z" />
+          <!-- Head base contour -->
+          <path class="p-skin p-stroke" d="M 185 280 C 185 150 455 150 455 280 C 455 410 395 460 320 460 C 245 460 185 410 185 280 Z" />
 
-      <!-- Stylized Hair -->
-      <path class="p-ink p-stroke" d="M 185 270 C 175 220 210 140 280 130 C 330 120 420 125 460 180 C 475 200 470 250 465 270 C 455 240 435 220 405 215 C 385 210 365 225 335 215 C 305 205 290 220 265 225 C 235 230 215 250 185 270 Z" />
+          <!-- Cheek blush -->
+          <ellipse cx="230" cy="358" rx="22" ry="12" fill="url(#cheekBlush)" />
+          <ellipse cx="410" cy="358" rx="22" ry="12" fill="url(#cheekBlush)" />
 
-      <!-- Eyebrows -->
-      <g id="presenter-brows">
-        <path class="p-stroke" fill="none" stroke-width="8" stroke="#241914" d="M 225 275 Q 260 265 285 275" />
-        <path class="p-stroke" fill="none" stroke-width="8" stroke="#241914" d="M 365 275 Q 390 265 425 275" />
-      </g>
+          <!-- Cyber-Editorial Hair -->
+          <path class="p-ink p-stroke" d="M 180 270 C 170 215 205 135 275 125 C 325 115 415 120 455 175 C 470 195 468 245 463 270 C 452 238 430 215 398 210 C 378 206 358 220 330 210 C 300 200 285 215 258 220 C 228 225 205 248 180 270 Z" />
+          <!-- Subtle Hair Rim Highlights -->
+          <path d="M 185 260 C 178 218 212 142 275 130" fill="none" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+          <path d="M 450 178 C 465 200 462 245 458 265" fill="none" stroke="#4285F4" stroke-width="3" stroke-linecap="round" opacity="0.8" />
 
-      <!-- Eyes (Open vs Closed) -->
-      <g id="presenter-eyes-open">
-        <!-- Left eye -->
-        <circle cx="255" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
-        <circle cx="257" cy="305" r="9" class="p-ink" />
-        <circle cx="254" cy="302" r="3" fill="#FBFAF8" />
-        <!-- Right eye -->
-        <circle cx="395" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
-        <circle cx="397" cy="305" r="9" class="p-ink" />
-        <circle cx="394" cy="302" r="3" fill="#FBFAF8" />
-      </g>
+          <!-- 2.5D Facial Parallax Group -->
+          <g id="presenter-face-parallax">
+            <!-- Eyebrows (Lift on accent words) -->
+            <g id="presenter-brows">
+              <path class="p-stroke" fill="none" stroke-width="8" stroke="#0E1015" d="M 220 274 Q 255 264 280 274" />
+              <path class="p-stroke" fill="none" stroke-width="8" stroke="#0E1015" d="M 360 274 Q 385 264 420 274" />
+            </g>
 
-      <g id="presenter-eyes-closed" style="display: none;">
-        <!-- Left shut eyelid -->
-        <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 240 308 Q 255 318 270 308" />
-        <!-- Right shut eyelid -->
-        <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 380 308 Q 395 318 410 308" />
-      </g>
+            <!-- Eyes: Open State with Gaze Tracking -->
+            <g id="presenter-eyes-open">
+              <!-- Sclera (Left & Right) -->
+              <circle cx="250" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
+              <circle cx="390" cy="305" r="16" fill="#FBFAF8" class="p-stroke" />
 
-      <!-- Glasses -->
-      <g id="presenter-glasses">
-        <!-- Frame Left -->
-        <rect x="220" y="278" width="72" height="54" rx="14" fill="none" stroke="#241914" stroke-width="8" />
-        <!-- Frame Right -->
-        <rect x="358" y="278" width="72" height="54" rx="14" fill="none" stroke="#241914" stroke-width="8" />
-        <!-- Bridge -->
-        <path d="M 292 298 Q 325 290 358 298" fill="none" stroke="#241914" stroke-width="8" stroke-linecap="round" />
-        <!-- Temples -->
-        <path d="M 220 295 L 182 305" fill="none" stroke="#241914" stroke-width="7" stroke-linecap="round" />
-        <path d="M 430 295 L 468 305" fill="none" stroke="#241914" stroke-width="7" stroke-linecap="round" />
-        <!-- Subtle lens sheen -->
-        <path d="M 230 290 L 250 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
-        <path d="M 368 290 L 388 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.6" />
-      </g>
+              <!-- Independent Gaze Group (Shifts leftwards towards UI cards) -->
+              <g id="presenter-eyes-gaze">
+                <!-- Left Eye -->
+                <circle cx="252" cy="305" r="9" class="p-ink" />
+                <circle cx="252" cy="305" r="7.5" fill="none" stroke="#4285F4" stroke-width="1.2" opacity="0.65" />
+                <circle cx="249" cy="302" r="3.2" fill="#FBFAF8" />
+                <!-- Right Eye -->
+                <circle cx="392" cy="305" r="9" class="p-ink" />
+                <circle cx="392" cy="305" r="7.5" fill="none" stroke="#9B51E0" stroke-width="1.2" opacity="0.65" />
+                <circle cx="389" cy="302" r="3.2" fill="#FBFAF8" />
+              </g>
+            </g>
 
-      <!-- Nose -->
-      <path class="p-stroke" fill="none" stroke-width="5" stroke="#241914" d="M 320 325 Q 328 348 320 355 C 326 357 334 354 336 348" />
+            <!-- Eyes: Closed State (Blinks) -->
+            <g id="presenter-eyes-closed" style="display: none;">
+              <path class="p-stroke" fill="none" stroke-width="6" stroke="#0E1015" d="M 235 308 Q 250 318 265 308" />
+              <path class="p-stroke" fill="none" stroke-width="6" stroke="#0E1015" d="M 375 308 Q 390 318 405 308" />
+            </g>
 
-      <!-- 10 MOUTH SHAPES (0 to 9) -->
-      <g id="presenter-mouths">
-        <!-- Shape 0: Closed line seam -->
-        <g id="mouth-0" class="mouth-shape mouth-0">
-          <path class="p-stroke" fill="none" stroke-width="6" stroke="#241914" d="M 298 396 Q 325 402 352 396" />
-        </g>
+            <!-- Clean Glasses (Dark frames with subtle Cyan bridge rim and reflections) -->
+            <g id="presenter-glasses">
+              <!-- Frame Left & Right -->
+              <rect x="215" y="278" width="72" height="54" rx="14" fill="none" stroke="#0E1015" stroke-width="8" />
+              <rect x="353" y="278" width="72" height="54" rx="14" fill="none" stroke="#0E1015" stroke-width="8" />
+              <!-- Lens Sheen Gloss -->
+              <rect x="217" y="280" width="68" height="50" rx="12" fill="url(#lensGloss)" pointer-events="none" />
+              <rect x="355" y="280" width="68" height="50" rx="12" fill="url(#lensGloss)" pointer-events="none" />
+              <!-- Bridge -->
+              <path d="M 287 298 Q 320 290 353 298" fill="none" stroke="#0E1015" stroke-width="8" stroke-linecap="round" />
+              <!-- Subtle Gemini Cyan Bridge Highlight -->
+              <path d="M 292 297 Q 320 291 348 297" fill="none" stroke="#4285F4" stroke-width="2.5" stroke-linecap="round" opacity="0.85" />
+              <!-- Temples -->
+              <path d="M 215 295 L 175 305" fill="none" stroke="#0E1015" stroke-width="7" stroke-linecap="round" />
+              <path d="M 425 295 L 465 305" fill="none" stroke="#0E1015" stroke-width="7" stroke-linecap="round" />
+              <!-- Lens Specular Glints -->
+              <path d="M 225 290 L 245 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.75" />
+              <path d="M 363 290 L 383 286" stroke="#FBFAF8" stroke-width="3" stroke-linecap="round" opacity="0.75" />
+            </g>
 
-        <!-- Shape 1: Slight relaxed slit -->
-        <g id="mouth-1" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 298 395 Q 325 402 352 395 Q 325 407 298 395 Z" />
-        </g>
+            <!-- Nose -->
+            <path class="p-stroke" fill="none" stroke-width="5" stroke="#0E1015" d="M 315 325 Q 323 348 315 355 C 321 357 329 354 331 348" />
 
-        <!-- Shape 2: Small round 'oo' / 'w' -->
-        <g id="mouth-2" class="mouth-shape">
-          <ellipse cx="325" cy="398" rx="14" ry="12" class="p-mouth-bg p-stroke" />
-        </g>
+            <!-- 10 DISTINCT MOUTH SHAPES (0 through 9) -->
+            <g id="presenter-mouths">
+              <!-- Shape 0: Closed line seam (silent gaps) -->
+              <g id="mouth-0" class="mouth-shape mouth-0">
+                <path class="p-stroke" fill="none" stroke-width="6" stroke="#0E1015" d="M 293 396 Q 320 402 347 396" />
+              </g>
 
-        <!-- Shape 3: Medium round 'o' -->
-        <g id="mouth-3" class="mouth-shape">
-          <ellipse cx="325" cy="400" rx="20" ry="17" class="p-mouth-bg p-stroke" />
-          <path d="M 312 408 Q 325 400 338 408 Q 325 417 312 408 Z" class="p-tongue" />
-        </g>
+              <!-- Shape 1: Slight relaxed slit -->
+              <g id="mouth-1" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 293 395 Q 320 402 347 395 Q 320 407 293 395 Z" />
+              </g>
 
-        <!-- Shape 4: Flat teeth 'ee' / 's' -->
-        <g id="mouth-4" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 292 396 Q 325 393 358 396 Q 355 409 325 410 Q 295 409 292 396 Z" />
-          <path d="M 296 397 Q 325 395 354 397 L 352 403 Q 325 402 298 403 Z" class="p-teeth" />
-        </g>
+              <!-- Shape 2: Small round 'oo' / 'w' -->
+              <g id="mouth-2" class="mouth-shape">
+                <ellipse cx="320" cy="398" rx="14" ry="12" class="p-mouth-bg p-stroke" />
+              </g>
 
-        <!-- Shape 5: Medium smile open -->
-        <g id="mouth-5" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 290 395 Q 325 390 360 395 C 360 418 345 425 325 425 C 305 425 290 418 290 395 Z" />
-          <path d="M 294 395 Q 325 392 356 395 L 354 402 Q 325 400 296 402 Z" class="p-teeth" />
-          <path d="M 306 416 Q 325 407 344 416 Q 325 425 306 416 Z" class="p-tongue" />
-        </g>
+              <!-- Shape 3: Medium round 'o' -->
+              <g id="mouth-3" class="mouth-shape">
+                <ellipse cx="320" cy="400" rx="20" ry="17" class="p-mouth-bg p-stroke" />
+                <path d="M 307 408 Q 320 400 333 408 Q 320 417 307 408 Z" class="p-tongue" />
+              </g>
 
-        <!-- Shape 6: Medium open 'ah' -->
-        <g id="mouth-6" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 295 395 Q 325 392 355 395 C 355 425 342 432 325 432 C 308 432 295 425 295 395 Z" />
-          <path d="M 298 395 Q 325 393 352 395 L 350 401 Q 325 400 300 401 Z" class="p-teeth" />
-          <path d="M 308 422 Q 325 413 342 422 Q 325 432 308 422 Z" class="p-tongue" />
-        </g>
+              <!-- Shape 4: Flat teeth 'ee' / 's' -->
+              <g id="mouth-4" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 287 396 Q 320 393 353 396 Q 350 409 320 410 Q 290 409 287 396 Z" />
+                <path d="M 291 397 Q 320 395 349 397 L 347 403 Q 320 402 293 403 Z" class="p-teeth" />
+              </g>
 
-        <!-- Shape 7: Wide open speech -->
-        <g id="mouth-7" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 288 394 Q 325 388 362 394 C 362 428 348 438 325 438 C 302 438 288 428 288 394 Z" />
-          <path d="M 292 394 Q 325 390 358 394 L 355 403 Q 325 401 295 403 Z" class="p-teeth" />
-          <path d="M 304 425 Q 325 414 346 425 Q 325 438 304 425 Z" class="p-tongue" />
-        </g>
+              <!-- Shape 5: Medium smile open -->
+              <g id="mouth-5" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 285 395 Q 320 390 355 395 C 355 418 340 425 320 425 C 300 425 285 418 285 395 Z" />
+                <path d="M 289 395 Q 320 392 351 395 L 349 402 Q 320 400 291 402 Z" class="p-teeth" />
+                <path d="M 301 416 Q 320 407 339 416 Q 320 425 301 416 Z" class="p-tongue" />
+              </g>
 
-        <!-- Shape 8: Broad open vowel -->
-        <g id="mouth-8" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 285 393 Q 325 386 365 393 C 365 435 348 444 325 444 C 302 444 285 435 285 393 Z" />
-          <path d="M 290 393 Q 325 388 360 393 L 357 404 Q 325 402 293 404 Z" class="p-teeth" />
-          <path d="M 300 430 Q 325 416 350 430 Q 325 444 300 430 Z" class="p-tongue" />
-        </g>
+              <!-- Shape 6: Medium open 'ah' -->
+              <g id="mouth-6" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 290 395 Q 320 392 350 395 C 350 425 337 432 320 432 C 303 432 290 425 290 395 Z" />
+                <path d="M 293 395 Q 320 393 347 395 L 345 401 Q 320 400 295 401 Z" class="p-teeth" />
+                <path d="M 303 422 Q 320 413 337 422 Q 320 432 303 422 Z" class="p-tongue" />
+              </g>
 
-        <!-- Shape 9: Maximum wide open shout -->
-        <g id="mouth-9" class="mouth-shape">
-          <path class="p-mouth-bg p-stroke" d="M 280 392 Q 325 384 370 392 C 370 442 350 452 325 452 C 300 452 280 442 280 392 Z" />
-          <path d="M 286 392 Q 325 386 364 392 L 361 405 Q 325 403 289 405 Z" class="p-teeth" />
-          <path d="M 295 436 Q 325 420 355 436 Q 325 452 295 436 Z" class="p-tongue" />
+              <!-- Shape 7: Wide open speech -->
+              <g id="mouth-7" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 283 394 Q 320 388 357 394 C 357 428 343 438 320 438 C 297 438 283 428 283 394 Z" />
+                <path d="M 287 394 Q 320 390 353 394 L 350 403 Q 320 401 290 403 Z" class="p-teeth" />
+                <path d="M 299 425 Q 320 414 341 425 Q 320 438 299 425 Z" class="p-tongue" />
+              </g>
+
+              <!-- Shape 8: Broad open vowel -->
+              <g id="mouth-8" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 280 393 Q 320 386 360 393 C 360 435 343 444 320 444 C 297 444 280 435 280 393 Z" />
+                <path d="M 285 393 Q 320 388 355 393 L 352 404 Q 320 402 288 404 Z" class="p-teeth" />
+                <path d="M 295 430 Q 320 416 345 430 Q 320 444 295 430 Z" class="p-tongue" />
+              </g>
+
+              <!-- Shape 9: Maximum wide open vowel -->
+              <g id="mouth-9" class="mouth-shape">
+                <path class="p-mouth-bg p-stroke" d="M 275 392 Q 320 384 365 392 C 365 442 345 452 320 452 C 295 452 275 442 275 392 Z" />
+                <path d="M 281 392 Q 320 386 359 392 L 356 405 Q 320 403 284 405 Z" class="p-teeth" />
+                <path d="M 290 436 Q 320 420 350 436 Q 320 452 290 436 Z" class="p-tongue" />
+              </g>
+            </g>
+          </g>
         </g>
       </g>
     </g>
 
-    <!-- HANDS -->
-    <!-- Pointing hand (raises from below) -->
-    <g id="hand-pointing" style="transform-origin: 180px 770px; opacity: 0;">
-      <!-- Forearm sleeve -->
-      <path class="p-hoodie p-stroke" d="M 120 770 L 150 560 L 210 575 L 180 770 Z" />
+    <!-- HAND GESTURES -->
+    <!-- Pointing hand (viewer's left side, raises and points up-left toward active cards) -->
+    <g id="hand-pointing" style="transform-origin: 175px 760px; opacity: 0;">
+      <!-- Forearm sleeve (dark hoodie with Hyper Violet rim light) -->
+      <path class="p-hoodie p-stroke" d="M 115 760 L 145 550 L 210 565 L 180 760 Z" />
+      <path class="p-rim-violet" d="M 118 755 L 146 553" />
       <!-- Hand / Pointing Finger -->
-      <path class="p-skin p-stroke" d="M 155 565 C 150 535 155 460 170 450 C 182 442 195 452 190 480 L 188 535 C 198 535 215 545 210 565 C 205 580 185 585 155 565 Z" />
-      <!-- Finger crease -->
-      <path class="p-stroke" fill="none" stroke-width="4" stroke="#241914" d="M 172 490 L 185 494" />
+      <path class="p-skin p-stroke" d="M 150 550 C 144 520 148 450 162 432 C 174 424 186 434 182 462 L 180 500 C 192 495 208 502 205 522 C 208 528 206 540 200 552 C 190 565 175 565 150 550 Z" />
+      <!-- Pointer knuckle crease & nail line -->
+      <path class="p-stroke" fill="none" stroke-width="4" stroke="#0E1015" d="M 166 470 L 178 474" />
+      <path class="p-stroke" fill="none" stroke-width="3.5" stroke="#0E1015" d="M 180 515 C 192 512 198 522 195 532" />
+      <path class="p-stroke" fill="none" stroke-width="3" stroke="#0E1015" d="M 178 535 C 188 535 194 542 190 550" />
     </g>
 
-    <!-- Open Palm Hand (raises from below) -->
-    <g id="hand-palm" style="transform-origin: 470px 770px; opacity: 0;">
-      <!-- Forearm sleeve -->
-      <path class="p-hoodie p-stroke" d="M 440 770 L 460 570 L 525 555 L 500 770 Z" />
-      <!-- Open Palm Hand -->
-      <path class="p-skin p-stroke" d="M 465 570 C 455 530 460 470 480 465 C 495 460 505 480 500 515 C 510 485 525 480 535 495 C 540 515 530 540 525 555 C 515 575 490 580 465 570 Z" />
+    <!-- Open Palm hand (viewer's right side, raises and gestures leftwards presenting cards) -->
+    <g id="hand-palm" style="transform-origin: 470px 760px; opacity: 0;">
+      <!-- Forearm sleeve (dark hoodie with Gemini Cyan rim light) -->
+      <path class="p-hoodie p-stroke" d="M 435 760 L 455 560 L 525 542 L 500 760 Z" />
+      <path class="p-rim-cyan" d="M 495 755 L 522 546" />
+      <!-- Open Palm Hand with distinct expressive fingers -->
+      <path class="p-skin p-stroke" d="M 458 560 C 448 530 442 495 450 480 C 458 472 466 480 468 498 C 466 462 470 435 480 430 C 490 426 498 438 496 468 C 500 442 506 432 516 435 C 524 440 522 465 520 485 C 524 468 532 462 538 470 C 544 482 538 522 530 545 C 518 565 488 570 458 560 Z" />
+      <!-- Finger separation creases -->
+      <path class="p-stroke" fill="none" stroke-width="3.5" stroke="#0E1015" d="M 483 480 L 483 505" />
+      <path class="p-stroke" fill="none" stroke-width="3.5" stroke="#0E1015" d="M 508 480 L 508 505" />
+      <path class="p-stroke" fill="none" stroke-width="3.5" stroke="#0E1015" d="M 465 515 C 472 522 478 528 475 538" />
     </g>
   </g>
 </svg>

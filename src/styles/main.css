@@ -1,17 +1,86 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap');
+/* ==========================================================================
+   CYBER-EDITORIAL SWISS PRINT MEETS GOOGLE DEEPMIND MINIMAL
+   Master Design System & Motion Tokens for Google AI Studio Explainer Reel
+   Resolution: 1080x1920 (9:16 Vertical)
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:ital,wght@0,400..800;1,400..800&display=swap');
 
 :root {
-  --ink: #1E1C1A;
-  --red: #D7372C;
-  --grey: #8A857E;
-  --paper: #EBE7E1;
-  --card-bg: #FBFAF8;
+  /* ------------------------------------------------------------------------
+     1. Canvas & Palette Tokens
+     ------------------------------------------------------------------------ */
+  /* Canvas / Paper: Deep Obsidian Ink */
+  --canvas: #0C0D10;
+  --paper: #0C0D10;
+  --cream: #0C0D10;
+  --bg-dark: #0C0D10;
+  --canvas-rgb: 12, 13, 16;
+  --bg-grain-opacity: 0.03;
+
+  /* Surface Cards: Crisp Polar Glass */
+  --surface-card: #171920;
+  --card: #171920;
+  --card-bg: #171920;
+  --surface-elevated: #1F222C;
+  --surface-border: #2B2F3E;
+  --border: #2B2F3E;
+  --border-width: 2px;
+  --card-radius: 20px;
+  --card-radius-sm: 12px;
+  --card-radius-lg: 28px;
+
+  /* Primary Accent System */
+  --gemini-cyan: #4285F4;
+  --accent-cyan: #4285F4;
+  --hyper-violet: #9B51E0;
+  --accent-violet: #9B51E0;
+  --spark-coral: #FF5722;
+  --neon-coral: #FF5722;
+  --accent-coral: #FF5722;
+  --red: #FF5722;
+  --terminal-green: #34A853;
+  --accent-green: #34A853;
+  --green: #34A853;
+
+  /* Editorial Inks & Text Colors */
+  --text-primary: #FFFFFF;
+  --ink: #FFFFFF;
+  --text-secondary: #94A3B8;
+  --text-inactive: #6B7280;
+  --caption-inactive: #6B7280;
+  --grey: #6B7280;
+  --grey-inactive: #6B7280;
+  --muted: #6B7280;
+  --white: #FFFFFF;
+
+  /* ------------------------------------------------------------------------
+     2. Typography Families & Scales (Auto-resolved Google Fonts)
+     ------------------------------------------------------------------------ */
   --font-anton: 'Anton', sans-serif;
+  --font-display: 'Anton', sans-serif;
   --font-sans: 'Instrument Sans', sans-serif;
+  --font-body: 'Instrument Sans', sans-serif;
   --font-serif: 'Instrument Serif', serif;
   --font-mono: 'JetBrains Mono', monospace;
+
+  /* ------------------------------------------------------------------------
+     3. 2.5D Depth & Transform Planes
+     ------------------------------------------------------------------------ */
+  --perspective: 1400px;
+  --depth-back-z: -140px;
+  --depth-mid-z: 0px;
+  --depth-fore-z: 60px;
+  --depth-float-z: 120px;
+
+  /* Halftone Drop Shadow Geometry: 14px down, 12px left */
+  --halftone-offset-x: -12px;
+  --halftone-offset-y: 14px;
 }
 
+/* --------------------------------------------------------------------------
+   Global Layout & Reset
+   -------------------------------------------------------------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -24,37 +93,60 @@ html, body {
   width: 1080px;
   height: 1920px;
   overflow: hidden;
-  background-color: var(--paper);
-  color: var(--ink);
+  background-color: var(--canvas);
+  color: var(--text-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Track 1: Paper Background with fine noise grain */
-#bg-track {
-  position: absolute;
-  inset: 0;
+/* Master 3D Viewport Root */
+#root,
+.composition-root,
+.perspective-viewport {
+  position: relative;
   width: 1080px;
   height: 1920px;
-  background-color: #EBE7E1;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3Ccolor-profile name='sRGB'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
-  z-index: 10;
-  pointer-events: none;
+  overflow: hidden;
+  background-color: var(--canvas);
+  perspective: var(--perspective);
+  perspective-origin: center 45%;
+  transform-style: preserve-3d;
 }
 
-/* Shared Clip Container */
+/* HyperFrames Standard Clip */
 .clip {
   position: absolute;
   box-sizing: border-box;
 }
 
-/* Track 2: Scene container & Sub-compositions */
-#scenes-track {
+/* --------------------------------------------------------------------------
+   Track 1: Deep Obsidian Ink Canvas with 3% Procedural SVG Grain
+   -------------------------------------------------------------------------- */
+#bg-track,
+#track-paper,
+.canvas-bg {
+  position: absolute;
+  inset: 0;
+  width: 1080px;
+  height: 1920px;
+  background-color: var(--canvas);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23grain)' opacity='0.03'/%3E%3C/svg%3E");
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   Track 2: Scene Container & 2.5D Parallax Layers
+   -------------------------------------------------------------------------- */
+#scenes-track,
+.scenes-container {
   position: absolute;
   inset: 0;
   width: 1080px;
   height: 1920px;
   z-index: 20;
+  transform-style: preserve-3d;
 }
 
 .scene-container {
@@ -64,110 +156,305 @@ html, body {
   height: 1920px;
   opacity: 0;
   visibility: hidden;
+  transform-style: preserve-3d;
 }
 
-/* Card Styles: #FBFAF8 with 3px ink border (#1E1C1A), 20px corners, halftone dot shadow (1.7px ink dots on 8px grid, offset 13px left, 12px down) */
-.card {
+.depth-container {
+  transform-style: preserve-3d;
+}
+
+.depth-back {
+  transform: translateZ(var(--depth-back-z));
+  will-change: transform;
+}
+
+.depth-mid {
+  transform: translateZ(var(--depth-mid-z));
+  will-change: transform;
+}
+
+.depth-fore {
+  transform: translateZ(var(--depth-fore-z));
+  will-change: transform;
+}
+
+.depth-float {
+  transform: translateZ(var(--depth-float-z));
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   Surface Cards: Crisp Polar Glass with Dynamic Halftone Drop Shadow
+   -------------------------------------------------------------------------- */
+.card,
+.surface-card {
   position: relative;
   isolation: isolate;
-  background-color: #FBFAF8;
-  border: 3px solid #1E1C1A;
-  border-radius: 20px;
+  background-color: var(--surface-card);
+  border: var(--border-width) solid var(--surface-border);
+  border-radius: var(--card-radius);
   padding: 36px 40px;
   box-sizing: border-box;
 }
 
-.card::before {
+/* Halftone Dot Drop Shadow: Offset 14px down, 12px left, dark dot texture */
+.card::before,
+.surface-card::before {
   content: "";
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 20px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='0.85' fill='%231E1C1A'/%3E%3C/svg%3E");
+  border-radius: var(--card-radius);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23000000' fill-opacity='0.75'/%3E%3C/svg%3E");
   background-repeat: repeat;
-  transform: translate(-13px, 12px);
+  transform: translate(var(--halftone-offset-x), var(--halftone-offset-y));
   z-index: -1;
   pointer-events: none;
 }
 
-/* Small labels at y 132px: JetBrains Mono 25px grey (NO //!) */
-.section-label {
-  position: absolute;
-  left: 120px;
-  top: 132px;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 25px;
-  font-weight: 500;
-  color: #8A857E;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  line-height: 1;
+/* Card Accent Border Variants */
+.card.border-cyan,
+.surface-card.border-cyan {
+  border-color: var(--gemini-cyan);
 }
 
-/* Captions: x 120px, y 196px, width 850px in Instrument Sans 500 at 62px */
-.captions-box {
+.card.border-violet,
+.surface-card.border-violet {
+  border-color: var(--hyper-violet);
+}
+
+.card.border-coral,
+.card.border-red,
+.surface-card.border-coral {
+  border-color: var(--spark-coral);
+}
+
+.card.border-green,
+.surface-card.border-green {
+  border-color: var(--terminal-green);
+}
+
+/* --------------------------------------------------------------------------
+   Headlines & Kinetic Slams (Anton up to 164px)
+   -------------------------------------------------------------------------- */
+.hero-title,
+.title-hero {
+  font-family: var(--font-anton);
+  font-size: 164px;
+  line-height: 0.90;
+  text-transform: uppercase;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  transform-origin: center center;
+}
+
+.title-large {
+  font-family: var(--font-anton);
+  font-size: 136px;
+  line-height: 0.94;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.title-medium {
+  font-family: var(--font-anton);
+  font-size: 104px;
+  line-height: 0.98;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.title-small {
+  font-family: var(--font-anton);
+  font-size: 72px;
+  line-height: 1.02;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.kinetic-slam {
+  display: inline-block;
+  transform-origin: 50% 60%;
+  will-change: transform, opacity;
+}
+
+.tracking-tight { letter-spacing: -0.04em; }
+.tracking-normal { letter-spacing: -0.01em; }
+.tracking-wide { letter-spacing: 0.04em; }
+
+/* --------------------------------------------------------------------------
+   Captions: Instrument Sans 500 at 58px with Word Activation
+   x: 120px, y: 196px, width: 850px
+   -------------------------------------------------------------------------- */
+.captions-box,
+.caption-container {
   position: absolute;
   left: 120px;
   top: 196px;
   width: 850px;
   min-height: 180px;
-  font-family: 'Instrument Sans', sans-serif;
+  font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 62px;
-  line-height: 1.15;
-  color: #1E1C1A;
+  font-size: 58px;
+  line-height: 1.16;
+  color: var(--text-inactive);
   letter-spacing: -0.02em;
   pointer-events: none;
   z-index: 40;
 }
 
-/* Titles: Anton up to 176px */
-.hero-title {
-  font-family: 'Anton', sans-serif;
-  font-size: 156px;
-  line-height: 0.92;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: #1E1C1A;
+.caption-word {
+  display: inline-block;
+  color: var(--caption-inactive);
 }
 
-.title-large {
-  font-family: 'Anton', sans-serif;
-  font-size: 132px;
-  line-height: 0.95;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  color: #1E1C1A;
+.caption-word.active,
+.caption-word.is-active {
+  color: var(--text-primary);
 }
 
-.title-medium {
-  font-family: 'Anton', sans-serif;
-  font-size: 96px;
-  line-height: 1.0;
-  text-transform: uppercase;
-  letter-spacing: -0.01em;
-  color: #1E1C1A;
+/* Key Accent Word in Instrument Serif Italic at 1.18x in Spark Coral #FF5722 */
+.caption-word.accent,
+.caption-word.is-accent,
+.caption-word em {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.18em;
+  color: var(--spark-coral);
+  letter-spacing: 0.01em;
+  padding: 0 4px;
 }
 
-/* Stamps: Anton 52px red text in 5px red box, tilted -6° */
+/* --------------------------------------------------------------------------
+   Data & Technical Code: JetBrains Mono
+   Strictly no // comments. Reading font floor 28px.
+   -------------------------------------------------------------------------- */
+.section-label,
+.editorial-kicker {
+  position: absolute;
+  left: 120px;
+  top: 132px;
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 500;
+  color: var(--text-inactive);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  line-height: 1;
+}
+
+.code-box,
+.code-terminal {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  line-height: 1.5;
+  background-color: #0E1015;
+  border: 1px solid var(--surface-border);
+  border-radius: var(--card-radius-sm);
+  padding: 24px 28px;
+  color: var(--text-secondary);
+  overflow: hidden;
+  tab-size: 2;
+}
+
+/* Syntax Highlighting for Live JSON & Typed Code */
+.token-key { color: var(--gemini-cyan); font-weight: 600; }
+.token-string { color: var(--terminal-green); }
+.token-number { color: var(--spark-coral); font-weight: 600; }
+.token-boolean { color: var(--hyper-violet); font-weight: 600; }
+.token-punct { color: #CBD5E1; }
+.token-operator { color: var(--hyper-violet); }
+.token-keyword { color: var(--gemini-cyan); font-weight: 700; }
+.token-fn { color: #60A5FA; }
+
+/* Technical Stats, Specs & Badges */
+.tech-stat,
+.spec-val {
+  font-family: var(--font-mono);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.tech-stat.cyan, .spec-val.cyan { color: var(--gemini-cyan); }
+.tech-stat.coral, .spec-val.coral, .spec-val.red { color: var(--spark-coral); }
+.tech-stat.green, .spec-val.green { color: var(--terminal-green); }
+.tech-stat.violet, .spec-val.violet { color: var(--hyper-violet); }
+
+.spec-name {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.spec-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px dashed var(--surface-border);
+}
+
+.spec-row:last-child {
+  border-bottom: none;
+}
+
+/* --------------------------------------------------------------------------
+   Stamps: Anton 52px High-Contrast Box Tilted at -6°
+   -------------------------------------------------------------------------- */
 .stamp {
-  font-family: 'Anton', sans-serif;
+  font-family: var(--font-anton);
   font-size: 52px;
-  color: #D7372C;
-  border: 5px solid #D7372C;
+  color: var(--spark-coral);
+  border: 5px solid var(--spark-coral);
   border-radius: 8px;
-  padding: 8px 22px;
+  padding: 8px 24px;
   transform: rotate(-6deg);
   display: inline-block;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   line-height: 1;
   background-color: transparent;
+  box-shadow: 0 0 16px rgba(255, 87, 34, 0.2);
 }
 
-/* Track 3: Presenter container at x 430px, y 1170px, 650x770px */
+.stamp.stamp-cyan {
+  color: var(--gemini-cyan);
+  border-color: var(--gemini-cyan);
+  box-shadow: 0 0 16px rgba(66, 133, 244, 0.2);
+}
+
+.stamp.stamp-green {
+  color: var(--terminal-green);
+  border-color: var(--terminal-green);
+  box-shadow: 0 0 16px rgba(52, 168, 83, 0.2);
+}
+
+.stamp.stamp-violet {
+  color: var(--hyper-violet);
+  border-color: var(--hyper-violet);
+  box-shadow: 0 0 16px rgba(155, 81, 224, 0.2);
+}
+
+.stamp.stamp-white {
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+  box-shadow: 0 0 16px rgba(255, 255, 255, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   Track 3: Presenter Container (Anchored at bottom-right)
+   x: 440px, y: 1160px, 640x760px
+   -------------------------------------------------------------------------- */
 #scene-presenter,
 #presenter-track,
 #presenter-frame {
@@ -185,7 +472,9 @@ html, body {
   display: block;
 }
 
-/* Track 4: Captions & Titles layer */
+/* --------------------------------------------------------------------------
+   Track 4: Captions & Titles Layer
+   -------------------------------------------------------------------------- */
 #captions-track {
   position: absolute;
   inset: 0;
@@ -195,8 +484,11 @@ html, body {
   pointer-events: none;
 }
 
-/* Track 5: Wipes (Halftone dot wipe overlay) */
-#wipe-track {
+/* --------------------------------------------------------------------------
+   Track 5: Halftone Wave Wipe Overlay
+   -------------------------------------------------------------------------- */
+#wipe-track,
+#wipe-overlay {
   position: absolute;
   inset: 0;
   width: 1080px;
@@ -210,80 +502,131 @@ html, body {
   inset: 0;
   width: 1080px;
   height: 1920px;
-  background-color: #EBE7E1;
-  border-left: 6px solid #1E1C1A;
-  border-right: 6px solid #1E1C1A;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='0.85' fill='%231E1C1A'/%3E%3C/svg%3E");
+  background-color: var(--canvas);
+  border-left: 4px solid var(--surface-border);
+  border-right: 4px solid var(--surface-border);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3E%3Ccircle cx='4' cy='4' r='1.5' fill='%23000000' fill-opacity='0.75'/%3E%3C/svg%3E");
   background-repeat: repeat;
   transform: translateX(100%);
 }
 
-/* Utility UI components */
+/* --------------------------------------------------------------------------
+   Fluid Utility Components (After Effects Motion Styling)
+   -------------------------------------------------------------------------- */
 .badge-pill {
   display: inline-flex;
   align-items: center;
-  padding: 6px 16px;
+  gap: 8px;
+  padding: 8px 20px;
   border-radius: 999px;
-  border: 2px solid #1E1C1A;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 20px;
+  border: 2px solid var(--surface-border);
+  background-color: var(--surface-card);
+  font-family: var(--font-mono);
+  font-size: 28px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #1E1C1A;
+  color: var(--text-primary);
+  line-height: 1;
 }
 
-.badge-pill.red {
-  border-color: #D7372C;
-  color: #D7372C;
-}
-
-.spec-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding: 14px 0;
-  border-bottom: 2px dashed #8A857E;
-}
-
-.spec-row:last-child {
-  border-bottom: none;
-}
-
-.spec-name {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 24px;
-  color: #8A857E;
-  text-transform: uppercase;
-}
-
-.spec-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 32px;
-  font-weight: 700;
-  color: #1E1C1A;
-}
-
-.spec-val.red {
-  color: #D7372C;
-}
+.badge-pill.cyan { border-color: var(--gemini-cyan); color: var(--gemini-cyan); }
+.badge-pill.coral, .badge-pill.red { border-color: var(--spark-coral); color: var(--spark-coral); }
+.badge-pill.violet { border-color: var(--hyper-violet); color: var(--hyper-violet); }
+.badge-pill.green { border-color: var(--terminal-green); color: var(--terminal-green); }
 
 .bar-container {
   width: 100%;
-  height: 38px;
-  border: 2px solid #1E1C1A;
-  border-radius: 8px;
-  background-color: #FBFAF8;
+  height: 42px;
+  border: 2px solid var(--surface-border);
+  border-radius: var(--card-radius-sm);
+  background-color: #0E1015;
   position: relative;
   overflow: hidden;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .bar-fill {
   height: 100%;
-  background-color: #1E1C1A;
+  background-color: var(--text-primary);
   transform-origin: left center;
+  border-radius: calc(var(--card-radius-sm) - 2px);
 }
 
-.bar-fill.red {
-  background-color: #D7372C;
+.bar-fill.cyan { background-color: var(--gemini-cyan); }
+.bar-fill.coral, .bar-fill.red { background-color: var(--spark-coral); }
+.bar-fill.violet { background-color: var(--hyper-violet); }
+.bar-fill.green { background-color: var(--terminal-green); }
+
+/* Glowing Borders & Laser Lines */
+.glow-cyan {
+  box-shadow: 0 0 30px rgba(66, 133, 244, 0.35);
+}
+
+.glow-coral {
+  box-shadow: 0 0 30px rgba(255, 87, 34, 0.35);
+}
+
+.glow-violet {
+  box-shadow: 0 0 30px rgba(155, 81, 224, 0.35);
+}
+
+.glow-green {
+  box-shadow: 0 0 30px rgba(52, 168, 83, 0.35);
+}
+
+.laser-line {
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--gemini-cyan), #FFFFFF, var(--gemini-cyan), transparent);
+  box-shadow: 0 0 14px var(--gemini-cyan);
+}
+
+/* Tactile Interactive Action Button */
+.action-button,
+.get-code-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 18px 36px;
+  background-color: var(--gemini-cyan);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--card-radius-sm);
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 8px 24px rgba(66, 133, 244, 0.35);
+}
+
+/* Swiss Editorial Technical Markers */
+.swiss-crosshair {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+.swiss-crosshair::before,
+.swiss-crosshair::after {
+  content: "";
+  position: absolute;
+  background-color: var(--surface-border);
+}
+
+.swiss-crosshair::before {
+  left: 9px;
+  top: 0;
+  width: 2px;
+  height: 20px;
+}
+
+.swiss-crosshair::after {
+  left: 0;
+  top: 9px;
+  width: 20px;
+  height: 2px;
 }

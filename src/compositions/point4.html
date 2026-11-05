@@ -3,965 +3,1244 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Point 4 - Slashed Costs</title>
-    <!-- Fonts -->
+    <title>Point 4 · One-Click Export & Search Grounding</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       :root {
-        --cream: #EBE7E1;
-        --ink: #1E1C1A;
-        --red: #D7372C;
-        --grey: #8A857E;
-        --card-bg: #FBFAF8;
-        --muted: #B5AFA7;
-        --green: #22A048;
+        --obsidian: #0C0D10;
+        --polar-glass: #171920;
+        --border-dark: #2B2F3E;
+        --cyan: #4285F4;
+        --cyan-glow: rgba(66, 133, 244, 0.45);
+        --violet: #9B51E0;
+        --coral: #FF5722;
+        --green: #34A853;
+        --yellow: #FBBC05;
+        --red: #EA4335;
+        --text-white: #FFFFFF;
+        --text-muted: #8E9AA8;
+        --text-dim: #64748B;
       }
 
       * {
+        box-sizing: border-box;
         margin: 0;
         padding: 0;
-        box-sizing: border-box;
       }
 
       html,
       body {
-        margin: 0;
-        padding: 0;
         width: 1080px;
         height: 1920px;
+        margin: 0;
+        padding: 0;
         overflow: hidden;
-        background-color: var(--cream);
-        color: var(--ink);
+        background-color: var(--obsidian);
+        color: var(--text-white);
         font-family: 'Instrument Sans', sans-serif;
         -webkit-font-smoothing: antialiased;
       }
 
-      .clip {
+      #root {
         position: relative;
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
+        background-color: var(--obsidian);
+        perspective: 1400px;
       }
 
-      /* 2. Top Label (NO //) */
-      .top-label {
+      .clip {
         position: absolute;
-        left: 120px;
-        top: 132px;
-        width: 840px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 25px;
-        font-weight: 700;
-        color: var(--grey);
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        z-index: 10;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
       }
 
-      .top-label .cut-val {
-        color: var(--red);
-        font-weight: 700;
-      }
-
-      /* 3. Captions */
-      .captions {
+      /* Procedural Cyber Grid Background */
+      .bg-grid {
         position: absolute;
-        left: 120px;
-        top: 196px;
-        width: 850px;
-        font-family: 'Instrument Sans', sans-serif;
-        font-size: 58px;
-        font-weight: 500;
-        line-height: 1.25;
-        letter-spacing: -0.01em;
-        z-index: 10;
-        word-spacing: 0.06em;
+        inset: 0;
+        background-image: 
+          radial-gradient(rgba(255, 255, 255, 0.07) 1.5px, transparent 1.6px),
+          linear-gradient(to right, rgba(43, 47, 62, 0.15) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(43, 47, 62, 0.15) 1px, transparent 1px);
+        background-size: 36px 36px, 72px 72px, 72px 72px;
+        pointer-events: none;
+        z-index: 1;
       }
 
-      .c-word {
-        color: var(--muted);
-        display: inline-block;
-        white-space: pre;
-      }
-
-      .c-keyword {
-        font-family: 'Instrument Serif', serif;
-        font-style: italic;
-        font-size: 72px;
-        font-weight: 400;
-        color: var(--muted);
-        vertical-align: -2px;
-      }
-
-      /* 4. Title Section: SLASHED COSTS */
-      .title-container {
-        position: absolute;
-        left: 120px;
-        top: 440px;
-        width: 840px;
-        z-index: 10;
-        transform-origin: 0% 50%;
-        opacity: 0;
-      }
-
-      .headline {
-        font-family: 'Anton', sans-serif;
-        font-size: 150px;
-        line-height: 0.95;
-        letter-spacing: 0.01em;
-        text-transform: uppercase;
-        display: flex;
-        gap: 24px;
-      }
-
-      .headline .t-black {
-        color: var(--ink);
-      }
-
-      .headline .t-red {
-        color: var(--red);
-      }
-
-      .swash-svg {
-        position: absolute;
-        left: 0;
-        bottom: -22px;
-        width: 840px;
-        height: 28px;
-        overflow: visible;
-      }
-
-      .swash-path {
-        stroke: var(--red);
-        stroke-width: 8;
-        stroke-linecap: round;
-        fill: none;
-      }
-
-      /* Halftone shadow for main card (1.7px dots on 8px grid, offset 13px left, 12px down) */
+      /* Halftone Shadow Template */
       .halftone-shadow {
         position: absolute;
-        left: 107px;
-        top: 632px;
-        width: 840px;
-        height: 420px;
-        border-radius: 20px;
-        background-image: radial-gradient(var(--ink) 1.7px, transparent 1.8px);
+        border-radius: 18px;
+        background-image: radial-gradient(#000000 2.2px, transparent 2.3px);
         background-size: 8px 8px;
-        opacity: 0.85;
-        z-index: 4;
+        opacity: 0.75;
+        pointer-events: none;
       }
 
-      /* 5. Main Card */
-      .main-card {
+      /* 1. Header Label (y: 105px) */
+      .header-badge {
         position: absolute;
+        top: 105px;
         left: 120px;
-        top: 620px;
         width: 840px;
-        height: 420px;
-        background-color: var(--card-bg);
-        border: 3px solid var(--ink);
-        border-radius: 20px;
-        padding: 34px 40px;
-        z-index: 6;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        opacity: 0;
-      }
-
-      .card-header {
+        height: 40px;
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
-      }
-
-      .card-header-left {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .card-metric-tag {
+        align-items: center;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
+        font-size: 28px;
         font-weight: 700;
-        color: var(--grey);
+        color: var(--text-muted);
         letter-spacing: 0.08em;
         text-transform: uppercase;
-      }
-
-      .card-benchmark-sub {
-        font-size: 22px;
-        color: var(--grey);
-        font-weight: 500;
-      }
-
-      /* Red #4 Badge */
-      .badge-4 {
-        width: 72px;
-        height: 72px;
-        background-color: var(--red);
-        border: 3px solid var(--ink);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 4px 4px 0px var(--ink);
-        transform: scale(0) rotate(0deg);
-        transform-origin: 50% 50%;
-      }
-
-      .badge-4 span {
-        font-family: 'Anton', sans-serif;
-        font-size: 38px;
-        color: #FBFAF8;
-        line-height: 1;
-        margin-top: 2px;
-      }
-
-      /* Counter readout */
-      .counter-display-row {
-        display: flex;
-        align-items: baseline;
-        gap: 28px;
-        margin: 6px 0;
-      }
-
-      .big-counter {
-        font-family: 'Anton', sans-serif;
-        font-size: 118px;
-        line-height: 1;
-        color: var(--red);
-        letter-spacing: -0.02em;
-        min-width: 360px;
-      }
-
-      .comparison-col {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .comp-prev {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 22px;
-        color: var(--grey);
-        text-decoration: line-through;
-        text-decoration-thickness: 2px;
-        text-decoration-color: var(--red);
-      }
-
-      .comp-gain {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 26px;
-        font-weight: 700;
-        color: var(--green);
-      }
-
-      /* Server Cost Graph Animation */
-      .graph-container {
-        width: 100%;
-        background-color: #EFECE6;
-        border: 2px solid var(--ink);
-        border-radius: 12px;
-        padding: 14px 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }
-
-      .graph-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 16px;
-        font-weight: 700;
-        color: var(--grey);
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
-      .graph-legend {
-        color: var(--green);
-        font-weight: 700;
-      }
-
-      .bars-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .bar-row {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 16px;
-      }
-
-      .bar-label {
-        width: 110px;
-        color: var(--ink);
-        font-weight: 700;
-        font-size: 15px;
-      }
-
-      .bar-track {
-        flex: 1;
-        height: 24px;
-        background-color: #DFDBD3;
-        border: 1.5px solid var(--ink);
-        border-radius: 6px;
-        overflow: hidden;
-        position: relative;
-      }
-
-      .bar-fill {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        padding-right: 8px;
-        border-radius: 4px;
-      }
-
-      .bar-fill-legacy {
-        background-color: var(--grey);
-      }
-
-      .bar-fill-flash {
-        background-color: var(--green);
-        width: 100%;
-      }
-
-      .bar-val {
-        color: #FBFAF8;
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 1;
-      }
-
-      /* 6. Demo Animation: 4 Server Racks Shutting Down into Single Core */
-      .demo-container {
-        position: absolute;
-        left: 120px;
-        top: 620px;
-        width: 840px;
-        height: 420px;
-        background-color: var(--card-bg);
-        border: 3px solid var(--ink);
-        border-radius: 20px;
-        padding: 30px 36px;
-        z-index: 5;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        z-index: 10;
         opacity: 0;
       }
 
-      .demo-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 2px solid #E5E0D8;
-        padding-bottom: 12px;
-      }
-
-      .demo-title {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--ink);
-        letter-spacing: 0.05em;
+      .header-badge-tag {
         display: flex;
         align-items: center;
         gap: 12px;
       }
 
-      .live-dot {
+      .status-pulse-dot {
         width: 12px;
         height: 12px;
-        background-color: var(--green);
         border-radius: 50%;
-        box-shadow: 0 0 8px rgba(34, 160, 72, 0.6);
+        background-color: var(--cyan);
+        box-shadow: 0 0 12px var(--cyan);
       }
 
-      .demo-power-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 19px;
+      .header-meta {
+        font-weight: 600;
+        color: var(--cyan);
+        letter-spacing: 0.12em;
+      }
+
+      /* 2. Captions (y: 145px) */
+      .captions-container {
+        position: absolute;
+        top: 145px;
+        left: 120px;
+        width: 840px;
+        height: 190px;
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 50px;
+        font-weight: 600;
+        line-height: 1.22;
+        letter-spacing: -0.015em;
+        z-index: 10;
+      }
+
+      .caption-sentence {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 840px;
+      }
+
+      .c-word {
+        color: var(--text-muted);
+        display: inline;
+        transition: color 0.15s ease;
+      }
+
+      .c-word.active {
+        color: var(--text-white);
+      }
+
+      .c-accent {
+        font-family: 'Instrument Serif', serif;
+        font-style: italic;
+        font-size: 64px;
+        line-height: 0.95;
+        vertical-align: -2px;
+        color: var(--text-muted);
+        display: inline;
+        transition: color 0.15s ease;
+      }
+
+      .c-accent.active-coral {
+        color: var(--coral);
+      }
+
+      .c-accent.active-cyan {
+        color: var(--cyan);
+      }
+
+      .c-highlight-py.active {
+        color: #79B8FF;
         font-weight: 700;
-        color: var(--red);
       }
 
-      .racks-grid {
+      .c-highlight-ts.active {
+        color: #61AFEF;
+        font-weight: 700;
+      }
+
+      .c-highlight-curl.active {
+        color: var(--coral);
+        font-weight: 700;
+      }
+
+      /* 3. Anton Headline (y: 360px) */
+      .headline-container {
+        position: absolute;
+        top: 360px;
+        left: 120px;
+        width: 840px;
+        height: 120px;
+        z-index: 10;
+        opacity: 0;
+        transform-origin: 0% 50%;
+      }
+
+      .headline-text {
+        font-family: 'Anton', sans-serif;
+        font-size: 108px;
+        line-height: 0.94;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
         display: flex;
-        gap: 16px;
-        justify-content: space-between;
-        margin: 12px 0;
+        gap: 24px;
       }
 
-      .rack-unit {
-        flex: 1;
-        background-color: #EFECE6;
-        border: 2px solid var(--ink);
-        border-radius: 12px;
-        padding: 14px 12px;
+      .hl-white {
+        color: var(--text-white);
+      }
+
+      .hl-cyan {
+        color: var(--cyan);
+        text-shadow: 0 0 35px rgba(66, 133, 244, 0.6);
+      }
+
+      .swash-svg {
+        position: absolute;
+        left: 0;
+        bottom: -16px;
+        width: 840px;
+        height: 16px;
+        overflow: visible;
+      }
+
+      .swash-path {
+        stroke: var(--cyan);
+        stroke-width: 6;
+        stroke-linecap: round;
+        fill: none;
+        filter: drop-shadow(0 0 10px rgba(66, 133, 244, 0.7));
+      }
+
+      /* 4. Grounding Card (y: 495px) */
+      .grounding-shadow {
+        left: 108px;
+        top: 507px;
+        width: 840px;
+        height: 116px;
+        z-index: 4;
+      }
+
+      .grounding-card {
+        position: absolute;
+        top: 495px;
+        left: 120px;
+        width: 840px;
+        height: 116px;
+        background-color: var(--polar-glass);
+        border: 2px solid var(--border-dark);
+        border-radius: 18px;
+        padding: 20px 28px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 6;
+        opacity: 0;
+        backdrop-filter: blur(12px);
+      }
+
+      .grounding-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+      }
+
+      .google-search-icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        background: rgba(43, 47, 62, 0.4);
+        border: 1.5px solid var(--border-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .grounding-text-col {
         display: flex;
         flex-direction: column;
+        gap: 6px;
+      }
+
+      .grounding-title {
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-white);
+        display: flex;
+        align-items: center;
         gap: 10px;
       }
 
-      .rack-top {
+      .grounding-status-row {
         display: flex;
-        justify-content: space-between;
         align-items: center;
+        gap: 12px;
+      }
+
+      .g-dots-chip {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        background: #11141A;
+        border: 1px solid var(--border-dark);
+        padding: 4px 10px;
+        border-radius: 20px;
+      }
+
+      .g-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+      }
+
+      .g-dot-blue { background-color: var(--cyan); }
+      .g-dot-red { background-color: var(--red); }
+      .g-dot-yellow { background-color: var(--yellow); }
+      .g-dot-green { background-color: var(--green); }
+
+      .grounding-status-label {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
+        font-size: 19px;
         font-weight: 700;
+        color: var(--green);
+        letter-spacing: 0.04em;
       }
 
-      .rack-id {
-        color: var(--ink);
-      }
-
-      .rack-status {
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 11px;
-      }
-
-      .s-active {
-        background-color: var(--green);
-        color: #FBFAF8;
-      }
-
-      .s-offline {
-        background-color: var(--grey);
-        color: #FBFAF8;
-        text-decoration: line-through;
-      }
-
-      .rack-body {
+      .grounding-right {
         display: flex;
-        flex-direction: column;
-        gap: 8px;
-        background-color: #DFDBD3;
-        border: 1.5px solid var(--ink);
-        border-radius: 8px;
-        padding: 10px 8px;
+        align-items: center;
+        gap: 20px;
       }
 
-      .rack-slot {
+      .latency-pill {
         display: flex;
         align-items: center;
         gap: 8px;
+        background-color: #121822;
+        border: 1.5px solid #2B3A4E;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        font-weight: 600;
+        color: #79B8FF;
+        letter-spacing: 0.02em;
       }
 
-      .led-dot {
+      .latency-dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background-color: var(--grey);
-      }
-
-      .led-dot.active {
         background-color: var(--green);
+        box-shadow: 0 0 8px var(--green);
       }
 
-      .led-dot.led-green {
-        background-color: var(--green);
-        box-shadow: 0 0 6px rgba(34, 160, 72, 0.8);
+      /* Toggle Switch */
+      .toggle-track {
+        width: 68px;
+        height: 38px;
+        background-color: #183321;
+        border: 2px solid var(--green);
+        border-radius: 24px;
+        position: relative;
+        box-shadow: 0 0 14px rgba(52, 168, 83, 0.4);
       }
 
-      .slot-line {
-        flex: 1;
-        height: 5px;
-        background-color: #C8C3BA;
-        border-radius: 3px;
+      .toggle-thumb {
+        position: absolute;
+        top: 3px;
+        left: 33px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background-color: var(--text-white);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
       }
 
-      .slot-line.slot-green {
-        background-color: var(--green);
+      /* 5. Hero Button & Burst Container (y: 630px) */
+      .hero-cta-wrapper {
+        position: absolute;
+        top: 630px;
+        left: 120px;
+        width: 840px;
+        height: 80px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 15;
       }
 
-      .rack-power {
+      .btn-get-code {
+        position: relative;
+        width: 360px;
+        height: 74px;
+        background: linear-gradient(135deg, #4285F4 0%, #1D54B8 100%);
+        border: 2px solid #8AB4F8;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
         font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--text-white);
+        box-shadow: 0 0 32px var(--cyan-glow), 0 8px 24px rgba(0, 0, 0, 0.5);
+        cursor: pointer;
+        opacity: 0;
+        transform-origin: 50% 50%;
+      }
+
+      .btn-code-icon {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 800;
+        color: #E8F0FE;
+      }
+
+      .btn-ripple-ring {
+        position: absolute;
+        inset: -6px;
+        border: 3px solid var(--cyan);
+        border-radius: 20px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* Language Chips */
+      .lang-chip {
+        position: absolute;
+        padding: 9px 20px;
+        border-radius: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 22px;
         font-weight: 700;
-        color: var(--grey);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 20;
+        opacity: 0;
+        transform-origin: 50% 50%;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      }
+
+      #chip-py {
+        background: #101E33;
+        border: 2px solid #387EB8;
+        color: #79B8FF;
+      }
+
+      #chip-ts {
+        background: #11223A;
+        border: 2px solid #3178C6;
+        color: #61AFEF;
+      }
+
+      #chip-curl {
+        background: #2B1616;
+        border: 2px solid #FF5722;
+        color: #FFA07A;
+      }
+
+      /* Burst Particles */
+      .burst-particle {
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 18;
+      }
+
+      /* 6. Dark Glass IDE Terminal (y: 730px) */
+      .terminal-shadow {
+        left: 108px;
+        top: 742px;
+        width: 840px;
+        height: 415px;
+        z-index: 4;
+      }
+
+      .terminal-window {
+        position: absolute;
+        top: 730px;
+        left: 120px;
+        width: 840px;
+        height: 415px;
+        background-color: var(--polar-glass);
+        border: 2px solid var(--border-dark);
+        border-radius: 18px;
+        overflow: hidden;
+        z-index: 6;
+        opacity: 0;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(12px);
+      }
+
+      /* Terminal Header Bar */
+      .terminal-header {
+        height: 50px;
+        background: #111318;
+        border-bottom: 2px solid var(--border-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+      }
+
+      .terminal-dots {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .t-dot {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+      }
+
+      .t-dot-red { background-color: #FF5F56; }
+      .t-dot-yellow { background-color: #FFBD2E; }
+      .t-dot-green { background-color: #27C93F; }
+
+      .terminal-tabs {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 100%;
+      }
+
+      .terminal-tab {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text-dim);
+        padding: 0 16px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .terminal-tab.active-tab {
+        color: var(--text-white);
+        background: #1A1D26;
+        border-bottom: 2px solid var(--cyan);
+      }
+
+      .copy-action-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 18px;
+        color: var(--text-dim);
+      }
+
+      /* Terminal Code Body */
+      .terminal-body {
+        flex: 1;
+        padding: 20px 24px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        line-height: 1.45;
+        color: #D1D5DB;
+        display: flex;
+        gap: 20px;
+        position: relative;
+        background-color: #0E1015;
+      }
+
+      .code-line-numbers {
+        display: flex;
+        flex-direction: column;
+        color: #4B5563;
+        font-weight: 600;
+        user-select: none;
         text-align: right;
       }
 
-      .rack-highlight {
-        border-color: var(--green);
-        border-width: 3px;
-        background-color: #F3F8F3;
-      }
-
-      .demo-footer {
+      .code-content {
+        flex: 1;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 17px;
-        font-weight: 700;
+        flex-direction: column;
+        overflow: hidden;
       }
 
-      .footer-chip {
-        padding: 8px 16px;
-        background-color: #EFECE6;
-        border: 2px solid var(--ink);
-        border-radius: 8px;
-        color: var(--ink);
+      .code-line {
+        white-space: pre;
       }
 
-      .footer-chip.chip-green {
-        background-color: var(--green);
-        color: #FBFAF8;
-        border-color: var(--ink);
+      .code-line-typed {
+        position: relative;
+        display: inline-block;
       }
 
-      /* Stamp: Anton 52px red text EFFICIENCY inside 5px red border box, tilted -6° */
-      .efficiency-stamp {
+      .t-kwd { color: #C678DD; font-weight: 600; }
+      .t-mod { color: #E5C07B; }
+      .t-fn { color: #61AFEF; font-weight: 700; }
+      .t-str { color: #98C379; }
+      .t-arg { color: #D19A66; }
+      .t-val { color: var(--cyan); font-weight: 700; }
+
+      .grounding-code-highlight {
+        background: rgba(66, 133, 244, 0.16);
+        border: 1px solid rgba(66, 133, 244, 0.4);
+        padding: 1px 6px;
+        border-radius: 4px;
+      }
+
+      .typing-cursor {
+        display: inline-block;
+        width: 3px;
+        height: 22px;
+        background-color: var(--cyan);
+        vertical-align: -3px;
+        margin-left: 2px;
+        box-shadow: 0 0 8px var(--cyan);
+      }
+
+      /* Snapping Copied Badge */
+      .copied-badge {
         position: absolute;
-        left: 275px;
-        top: 735px;
-        padding: 14px 44px;
-        border: 5px solid var(--red);
-        border-radius: 10px;
-        background-color: rgba(251, 250, 248, 0.96);
-        box-shadow: 6px 6px 0px rgba(215, 55, 44, 0.35);
-        font-family: 'Anton', sans-serif;
-        font-size: 52px;
-        color: var(--red);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        line-height: 1;
-        z-index: 25;
+        top: 20px;
+        right: 24px;
+        background: #0B2215;
+        border: 2px solid var(--green);
+        border-radius: 12px;
+        padding: 10px 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--green);
+        box-shadow: 0 0 24px rgba(52, 168, 83, 0.45);
         opacity: 0;
         transform-origin: 50% 50%;
+        z-index: 30;
+      }
+
+      /* 7. Production Ready Stamp (y: 840px) */
+      .stamp-badge {
+        position: absolute;
+        top: 840px;
+        left: 450px;
+        border: 5px solid var(--cyan);
+        color: var(--cyan);
+        background-color: rgba(12, 13, 16, 0.96);
+        font-family: 'Anton', sans-serif;
+        font-size: 52px;
+        line-height: 1;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 8px 24px;
+        border-radius: 8px;
+        transform: scale(2.2) rotate(-22deg);
+        opacity: 0;
         pointer-events: none;
+        z-index: 60;
+        box-shadow: 0 8px 32px rgba(66, 133, 244, 0.45), inset 0 0 0 2px rgba(66, 133, 244, 0.2);
+        white-space: nowrap;
       }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-kv15"
+    <div
       id="root"
+      class="clip"
       data-composition-id="point4"
       data-start="0"
-      data-duration="6.60"
+      data-duration="6.5"
       data-width="1080"
       data-height="1920"
     >
-      <!-- 2. Small Label (NO //) -->
-      <div data-hf-id="hf-noog" class="top-label">
-        <div data-hf-id="hf-zqnv" class="label-left">04 · PRICING</div>
-        <div data-hf-id="hf-yg55" class="label-right">CUT: <span data-hf-id="hf-gvvw" class="cut-val">-90%</span></div>
+      <!-- Background Cyber Grid -->
+      <div class="bg-grid clip" data-start="0" data-duration="6.5"></div>
+
+      <!-- 1. Header Label -->
+      <div class="header-badge clip" id="header-badge" data-start="0" data-duration="6.5" data-layout-ignore="true">
+        <div class="header-badge-tag">
+          <div class="status-pulse-dot"></div>
+          <span>04 · DEPLOYMENT &amp; GROUNDING</span>
+        </div>
+        <span class="header-meta">GEMINI 2.5</span>
       </div>
 
-      <!-- 3. Captions -->
-      <div data-hf-id="hf-jzzm" id="captions" class="captions">
-        <div data-hf-id="hf-e2d4" id="cap-phase-1" class="cap-phase">
-          <span data-hf-id="hf-ojoy" class="c-word" id="cw-0">Fourth </span>
-          <span data-hf-id="hf-wkh3" class="c-word" id="cw-1">new </span>
-          <span data-hf-id="hf-7gv5" class="c-word" id="cw-2">edge </span>
-          <span data-hf-id="hf-dc6d" class="c-word" id="cw-3">distillation </span>
-          <span data-hf-id="hf-6dxu" class="c-word" id="cw-4">reportedly </span>
+      <!-- 2. Captions (Top Left) -->
+      <div class="captions-container clip" id="captions-container" data-start="0" data-duration="6.5" data-layout-allow-overlap="true">
+        <!-- Sentence 1 (0.0s - 2.65s) -->
+        <div class="caption-sentence" id="sentence-1" data-layout-allow-overlap="true">
+          <span class="c-word" id="w-pt4">Point </span>
+          <span class="c-word" id="w-four">four: </span>
+          <span class="c-word" id="w-oneclick">One-click </span>
+          <span class="c-word" id="w-get">Get </span>
+          <span class="c-accent" id="w-code">Code </span>
+          <span class="c-word" id="w-and1">and </span>
+          <span class="c-word" id="w-search">search </span>
+          <span class="c-accent" id="w-grounding">grounding.</span>
         </div>
-        <div data-hf-id="hf-y1wu" id="cap-phase-2" class="cap-phase" style="display: none; opacity: 0;">
-          <span data-hf-id="hf-uvrk" class="c-word" id="cw-5">slashes </span>
-          <span data-hf-id="hf-ddnw" class="c-word" id="cw-6">energy </span>
-          <span data-hf-id="hf-1yei" class="c-word" id="cw-7">and </span>
-          <span data-hf-id="hf-m6bv" class="c-word" id="cw-8">token </span>
-          <span data-hf-id="hf-jtbz" class="c-word" id="cw-9">costs </span>
-          <span data-hf-id="hf-7ob0" class="c-word" id="cw-10">by </span>
-          <span data-hf-id="hf-96fa" class="c-keyword" id="cw-11">ninety </span>
-        </div>
-        <div data-hf-id="hf-v28d" id="cap-phase-3" class="cap-phase" style="display: none; opacity: 0;">
-          <span data-hf-id="hf-lzt0" class="c-word" id="cw-12">percent </span>
-          <span data-hf-id="hf-bepv" class="c-word" id="cw-13">across </span>
-          <span data-hf-id="hf-y50o" class="c-word" id="cw-14">the </span>
-          <span data-hf-id="hf-xmyo" class="c-word" id="cw-15">board</span>
+        <!-- Sentence 2 (2.65s - 6.5s) -->
+        <div class="caption-sentence" id="sentence-2" data-layout-allow-overlap="true" style="opacity: 0;">
+          <span class="c-word" id="w-connect">Connect </span>
+          <span class="c-accent" id="w-live">live </span>
+          <span class="c-accent" id="w-web">web </span>
+          <span class="c-word" id="w-data">data </span>
+          <span class="c-word" id="w-and2">and </span>
+          <span class="c-word" id="w-export">export </span>
+          <span class="c-word" id="w-production">production </span>
+          <span class="c-word c-highlight-py" id="w-python">Python, </span>
+          <span class="c-word c-highlight-ts" id="w-ts">TypeScript, </span>
+          <span class="c-word" id="w-and3">and </span>
+          <span class="c-word c-highlight-curl" id="w-curl">cURL.</span>
         </div>
       </div>
 
-      <!-- 4. Title: SLASHED COSTS with hand-drawn red swash underline -->
-      <div data-hf-id="hf-kaw0" id="title-box" class="title-container">
-        <div data-hf-id="hf-sodk" class="headline">
-          <span data-hf-id="hf-pqwz" class="t-black">SLASHED</span>
-          <span data-hf-id="hf-0nxx" class="t-red">COSTS</span>
+      <!-- 3. Anton Headline -->
+      <div class="headline-container clip" id="headline-container" data-start="0" data-duration="6.5" data-layout-allow-overlap="true">
+        <div class="headline-text">
+          <span class="hl-white">ONE-CLICK</span>
+          <span class="hl-cyan">EXPORT</span>
         </div>
-        <svg data-hf-id="hf-dfut" class="swash-svg" viewBox="0 0 840 28">
-          <path data-hf-id="hf-k7x2"
-            id="swash-stroke"
-            class="swash-path"
-            d="M 4 20 C 210 32, 560 10, 836 16"
-          />
+        <svg class="swash-svg" viewBox="0 0 840 16">
+          <path id="swash-line" class="swash-path" d="M 0,8 Q 280,16 840,6" />
         </svg>
       </div>
 
-      <!-- Halftone shadow for main card -->
-      <div data-hf-id="hf-2021" id="card-shadow" class="halftone-shadow"></div>
-
-      <!-- 5. Main Card -->
-      <div data-hf-id="hf-gsc2" id="main-card" class="main-card">
-        <div data-hf-id="hf-89q4" class="card-header">
-          <div data-hf-id="hf-v3r2" class="card-header-left">
-            <span data-hf-id="hf-2t9f" class="card-metric-tag">INFERENCE PRICING PER 1M TOKENS</span>
-            <span data-hf-id="hf-taxp" class="card-benchmark-sub">New Edge-Distillation Architecture</span>
-          </div>
-          <div data-hf-id="hf-jwiq" id="badge-4" class="badge-4">
-            <span data-hf-id="hf-n6mu">#4</span>
-          </div>
-        </div>
-
-        <div data-hf-id="hf-9dua" class="counter-display-row">
-          <div data-hf-id="hf-licb" id="price-counter" class="big-counter">$0.350</div>
-          <div data-hf-id="hf-8vo2" class="comparison-col">
-            <div data-hf-id="hf-x6pk" class="comp-prev">PREV: $0.350</div>
-            <div data-hf-id="hf-kqxi" class="comp-gain">-90% CUT</div>
-          </div>
-        </div>
-
-        <!-- Server cost graph animation drops by 90% -->
-        <div data-hf-id="hf-8uwq" class="graph-container">
-          <div data-hf-id="hf-4q92" class="graph-header">
-            <span data-hf-id="hf-6red" class="graph-title">CLUSTER COMPUTE EXPENSE</span>
-            <span data-hf-id="hf-ymf0" class="graph-legend">10x COST EFFICIENCY</span>
-          </div>
-          <div data-hf-id="hf-00g4" class="bars-wrapper">
-            <div data-hf-id="hf-vxho" class="bar-row">
-              <span data-hf-id="hf-b2ao" class="bar-label">STANDARD</span>
-              <div data-hf-id="hf-2kxp" class="bar-track">
-                <div data-hf-id="hf-7d85" class="bar-fill bar-fill-legacy" style="width: 100%;">
-                  <span data-hf-id="hf-pfk4" class="bar-val">$0.350</span>
+      <!-- 4. Grounding Card -->
+      <div class="clip" id="grounding-wrapper" data-start="0" data-duration="6.5">
+        <div class="halftone-shadow grounding-shadow" id="grounding-shadow"></div>
+        <div class="grounding-card" id="grounding-card">
+          <div class="grounding-left">
+            <div class="google-search-icon-box">
+              <!-- Google Search Magnifier SVG -->
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+                <path d="M15.5 14H14.71L14.43 13.73C15.41 12.59 16 11.11 16 9.5C16 5.91 13.09 3 9.5 3C5.91 3 3 5.91 3 9.5C3 13.09 5.91 16 9.5 16C11.11 16 12.59 15.41 13.73 14.43L14 14.71V15.5L19 20.49L20.49 19L15.5 14ZM9.5 14C7.01 14 5 11.99 5 9.5C5 7.01 7.01 5 9.5 5C11.99 5 14 7.01 14 9.5C14 11.99 11.99 14 9.5 14Z" fill="#4285F4"/>
+              </svg>
+            </div>
+            <div class="grounding-text-col">
+              <div class="grounding-title">
+                <span>Grounding with Google Search</span>
+              </div>
+              <div class="grounding-status-row" data-layout-ignore="true">
+                <div class="g-dots-chip">
+                  <span class="g-dot g-dot-blue"></span>
+                  <span class="g-dot g-dot-red"></span>
+                  <span class="g-dot g-dot-yellow"></span>
+                  <span class="g-dot g-dot-green"></span>
                 </div>
+                <span class="grounding-status-label" id="grounding-status-label">STATUS: CONNECTED</span>
               </div>
             </div>
-            <div data-hf-id="hf-x17o" class="bar-row">
-              <span data-hf-id="hf-mhlx" class="bar-label">FLASH 4</span>
-              <div data-hf-id="hf-dok1" class="bar-track">
-                <div data-hf-id="hf-npr6" id="cost-bar" class="bar-fill bar-fill-flash">
-                  <span data-hf-id="hf-w03n" id="cost-bar-val" class="bar-val">$0.035</span>
-                </div>
-              </div>
+          </div>
+
+          <div class="grounding-right">
+            <div class="latency-pill" id="latency-pill" data-layout-ignore="true">
+              <span class="latency-dot"></span>
+              <span>&lt;120ms verification</span>
+            </div>
+            <div class="toggle-track" id="toggle-track">
+              <div class="toggle-thumb" id="toggle-thumb"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 6. Demo Animation Container (4 Server Racks Shutting Down into Single Core) -->
-      <div data-hf-id="hf-60qo" id="demo-box" class="demo-container">
-        <div data-hf-id="hf-0p31" class="demo-header">
-          <div data-hf-id="hf-4d28" class="demo-title">
-            <div data-hf-id="hf-2oe0" id="demo-live-dot" class="live-dot"></div>
-            <span data-hf-id="hf-pqsj" id="demo-status-text">TOPOLOGY: 4-RACK CLUSTER</span>
-          </div>
-          <div data-hf-id="hf-x9f1" id="demo-power-tag" class="demo-power-tag">POWER: 4.8 kW</div>
+      <!-- 5. "Get Code" Hero Button & Language Micro-Chips Burst -->
+      <div class="hero-cta-wrapper clip" id="hero-cta-wrapper" data-start="0" data-duration="6.5" data-layout-allow-overlap="true">
+        <div class="btn-get-code" id="btn-get-code">
+          <div class="btn-ripple-ring" id="btn-ripple"></div>
+          <span class="btn-code-icon">&lt;/&gt;</span>
+          <span>Get Code</span>
         </div>
 
-        <div data-hf-id="hf-bhy8" class="racks-grid" data-layout-allow-overlap="true" data-layout-ignore="true">
-          <!-- Rack 1 -->
-          <div data-hf-id="hf-2mk7" id="rack-1" class="rack-unit" data-layout-allow-overlap="true">
-            <div data-hf-id="hf-kz5r" class="rack-top">
-              <span data-hf-id="hf-38nw" class="rack-id">RACK 01</span>
-              <span data-hf-id="hf-zqep" class="rack-status s-active" id="rs-1">ONLINE</span>
-            </div>
-            <div data-hf-id="hf-05yy" class="rack-body">
-              <div data-hf-id="hf-yyqq" class="rack-slot"><div data-hf-id="hf-rtm5" class="led-dot active" id="led-1a"></div><div data-hf-id="hf-gnvf" class="slot-line"></div></div>
-              <div data-hf-id="hf-mc7a" class="rack-slot"><div data-hf-id="hf-vrq6" class="led-dot active" id="led-1b"></div><div data-hf-id="hf-6yor" class="slot-line"></div></div>
-              <div data-hf-id="hf-mqib" class="rack-slot"><div data-hf-id="hf-zpu7" class="led-dot active" id="led-1c"></div><div data-hf-id="hf-6kdq" class="slot-line"></div></div>
-            </div>
-            <div data-hf-id="hf-9rtg" class="rack-power" id="rp-1">1.2 kW</div>
-          </div>
-
-          <!-- Rack 2 -->
-          <div data-hf-id="hf-rr2k" id="rack-2" class="rack-unit" data-layout-allow-overlap="true">
-            <div data-hf-id="hf-6akf" class="rack-top">
-              <span data-hf-id="hf-21qt" class="rack-id">RACK 02</span>
-              <span data-hf-id="hf-hof2" class="rack-status s-active" id="rs-2">ONLINE</span>
-            </div>
-            <div data-hf-id="hf-p526" class="rack-body">
-              <div data-hf-id="hf-n4tc" class="rack-slot"><div data-hf-id="hf-4yb0" class="led-dot active" id="led-2a"></div><div data-hf-id="hf-662p" class="slot-line"></div></div>
-              <div data-hf-id="hf-kco5" class="rack-slot"><div data-hf-id="hf-ftsn" class="led-dot active" id="led-2b"></div><div data-hf-id="hf-5rro" class="slot-line"></div></div>
-              <div data-hf-id="hf-kqz6" class="rack-slot"><div data-hf-id="hf-9o2u" class="led-dot active" id="led-2c"></div><div data-hf-id="hf-5dgn" class="slot-line"></div></div>
-            </div>
-            <div data-hf-id="hf-ohen" class="rack-power" id="rp-2">1.2 kW</div>
-          </div>
-
-          <!-- Rack 3 -->
-          <div data-hf-id="hf-uqc5" id="rack-3" class="rack-unit" data-layout-allow-overlap="true">
-            <div data-hf-id="hf-5w9e" class="rack-top">
-              <span data-hf-id="hf-2g1u" class="rack-id">RACK 03</span>
-              <span data-hf-id="hf-oa4r" class="rack-status s-active" id="rs-3">ONLINE</span>
-            </div>
-            <div data-hf-id="hf-pjd7" class="rack-body">
-              <div data-hf-id="hf-l5a7" class="rack-slot"><div data-hf-id="hf-tszv" class="led-dot active" id="led-3a"></div><div data-hf-id="hf-4z5m" class="slot-line"></div></div>
-              <div data-hf-id="hf-ljl8" class="rack-slot"><div data-hf-id="hf-l540" class="led-dot active" id="led-3b"></div><div data-hf-id="hf-4kul" class="slot-line"></div></div>
-              <div data-hf-id="hf-irg1" class="rack-slot"><div data-hf-id="hf-lwrt" class="led-dot active" id="led-3c"></div><div data-hf-id="hf-ajg0" class="slot-line"></div></div>
-            </div>
-            <div data-hf-id="hf-65ea" class="rack-power" id="rp-3">1.2 kW</div>
-          </div>
-
-          <!-- Rack 4 / Single Lean Core -->
-          <div data-hf-id="hf-dgm2" id="rack-4" class="rack-unit rack-highlight">
-            <div data-hf-id="hf-5hyd" class="rack-top">
-              <span data-hf-id="hf-cqtq" class="rack-id">EDGE CORE</span>
-              <span data-hf-id="hf-urhc" class="rack-status s-active" id="rs-4">ONLINE</span>
-            </div>
-            <div data-hf-id="hf-pxo8" class="rack-body">
-              <div data-hf-id="hf-j5r2" class="rack-slot"><div data-hf-id="hf-1b8s" class="led-dot active led-green"></div><div data-hf-id="hf-gikz" class="slot-line slot-green"></div></div>
-              <div data-hf-id="hf-mv2a" class="rack-slot"><div data-hf-id="hf-qmro" class="led-dot active led-green"></div><div data-hf-id="hf-lyer" class="slot-line slot-green"></div></div>
-              <div data-hf-id="hf-mgr9" class="rack-slot"><div data-hf-id="hf-pful" class="led-dot active led-green"></div><div data-hf-id="hf-lk3q" class="slot-line slot-green"></div></div>
-            </div>
-            <div data-hf-id="hf-rax3" class="rack-power" id="rp-4">0.1 kW</div>
-          </div>
+        <!-- Burst Micro-Chips -->
+        <div class="lang-chip" id="chip-py" data-layout-ignore="true">
+          <span>🐍</span>
+          <span>python</span>
+        </div>
+        <div class="lang-chip" id="chip-ts" data-layout-ignore="true">
+          <span>🔷</span>
+          <span>typescript</span>
+        </div>
+        <div class="lang-chip" id="chip-curl" data-layout-ignore="true">
+          <span>⚡</span>
+          <span>curl</span>
         </div>
 
-        <div data-hf-id="hf-gekz" class="demo-footer">
-          <div data-hf-id="hf-cra3" class="footer-chip" id="chip-status">3 RACKS SHUT DOWN · 1 LEAN CORE</div>
-          <div data-hf-id="hf-j2tc" class="footer-chip chip-green" id="chip-savings">-90% ENERGY & COST</div>
+        <!-- Radial Sparks -->
+        <div class="burst-particle" id="bp-1" style="background:#4285F4;"></div>
+        <div class="burst-particle" id="bp-2" style="background:#EA4335;"></div>
+        <div class="burst-particle" id="bp-3" style="background:#FBBC05;"></div>
+        <div class="burst-particle" id="bp-4" style="background:#34A853;"></div>
+        <div class="burst-particle" id="bp-5" style="background:#9B51E0;"></div>
+        <div class="burst-particle" id="bp-6" style="background:#FF5722;"></div>
+      </div>
+
+      <!-- 6. Dark Glass IDE Terminal Window -->
+      <div class="clip" id="terminal-wrapper" data-start="0" data-duration="6.5">
+        <div class="halftone-shadow terminal-shadow" id="terminal-shadow"></div>
+        <div class="terminal-window" id="terminal-window">
+          <!-- Terminal Header -->
+          <div class="terminal-header">
+            <div class="terminal-dots">
+              <span class="t-dot t-dot-red"></span>
+              <span class="t-dot t-dot-yellow"></span>
+              <span class="t-dot t-dot-green"></span>
+            </div>
+            <div class="terminal-tabs" data-layout-ignore="true">
+              <div class="terminal-tab active-tab">
+                <span style="color:#79B8FF;">🐍</span>
+                <span>main.py</span>
+              </div>
+              <div class="terminal-tab">
+                <span>api.ts</span>
+              </div>
+              <div class="terminal-tab">
+                <span>request.sh</span>
+              </div>
+            </div>
+            <div class="copy-action-btn" data-layout-ignore="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="#8E9AA8"/>
+              </svg>
+              <span>Copy</span>
+            </div>
+          </div>
+
+          <!-- Terminal Code Body -->
+          <div class="terminal-body" data-layout-ignore="true">
+            <div class="code-line-numbers" data-layout-ignore="true">
+              <span>1</span>
+              <span>2</span>
+              <span>3</span>
+              <span>4</span>
+              <span>5</span>
+              <span>6</span>
+              <span>7</span>
+              <span>8</span>
+            </div>
+
+            <div class="code-content" data-layout-ignore="true">
+              <div class="code-line" id="code-l1"><span class="t-kwd">from</span> google <span class="t-kwd">import</span> genai</div>
+              <div class="code-line" id="code-l2"><span class="t-kwd">from</span> google.genai <span class="t-kwd">import</span> types</div>
+              <div class="code-line" id="code-l3">client = genai.Client()</div>
+              <div class="code-line" id="code-l4">
+                <span class="code-line-typed" id="typed-call"><span class="t-val">response</span> = client.models.generate_content(</span><span class="typing-cursor" id="t-cursor"></span>
+              </div>
+              <div class="code-line" id="code-l5">    model=<span class="t-str">"gemini-2.5-flash"</span>,</div>
+              <div class="code-line" id="code-l6">    contents=<span class="t-str">"Live market insights 2026"</span>,</div>
+              <div class="code-line" id="code-l7">    config=types.GenerateContentConfig(</div>
+              <div class="code-line" id="code-l8">        <span class="grounding-code-highlight" id="code-grounding">tools=[{<span class="t-str">"google_search"</span>: {}}]</span></div>
+              <div class="code-line" id="code-l9">    )</div>
+              <div class="code-line" id="code-l10">)</div>
+            </div>
+
+            <!-- Snapping Copied Confirmation -->
+            <div class="copied-badge" id="copied-badge" data-layout-ignore="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                <path d="M9 16.17L4.83 12L3.41 13.41L9 19L21 7L19.59 5.59L9 16.17Z" fill="#34A853"/>
+              </svg>
+              <span>COPIED TO CLIPBOARD</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Stamp: Anton 52px red text EFFICIENCY inside 5px red border box, tilted -6° -->
-      <div data-hf-id="hf-wau1" id="stamp" class="efficiency-stamp">EFFICIENCY</div>
+      <!-- 7. Production Ready Stamp -->
+      <div class="clip" id="stamp-container" data-start="0" data-duration="6.5">
+        <div class="stamp-badge" id="stamp-prod-ready" data-layout-allow-overlap="true">
+          PRODUCTION READY
+        </div>
+      </div>
     </div>
 
+    <!-- GSAP Choreography Timeline (Standard Synchronous Script for HyperFrames) -->
     <script>
-      // Initialize GSAP Root Timeline
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["point4"] = tl;
 
-      // 1. Swash setup (stroke-dasharray / stroke-dashoffset)
-      const swash = document.getElementById("swash-stroke");
-      const swashLen = (swash && typeof swash.getTotalLength === "function" && swash.getTotalLength() > 0) 
-        ? swash.getTotalLength() 
-        : 850;
-      if (swash) {
-        gsap.set(swash, {
-          strokeDasharray: swashLen,
-          strokeDashoffset: swashLen
-        });
-      }
+      // Initial States
+      gsap.set("#swash-line", { strokeDasharray: 860, strokeDashoffset: 860 });
+      gsap.set("#grounding-shadow", { opacity: 0 });
+      gsap.set("#terminal-shadow", { opacity: 0 });
 
-      // Initial state setup (Hide elements with CSS initially)
-      gsap.set("#title-box", { opacity: 0, scale: 1.22 });
-      gsap.set("#card-shadow", { opacity: 0, y: 70 });
-      gsap.set("#main-card", { opacity: 0, y: 70 });
-      gsap.set("#demo-box", { opacity: 0, y: 30 });
-      gsap.set("#stamp", { opacity: 0, scale: 1.75, rotation: -18 });
+      // Code lines initial states for typing choreography
+      gsap.set(["#code-l1", "#code-l2", "#code-l3"], { opacity: 0 });
+      gsap.set("#typed-call", { clipPath: "inset(0 100% 0 0)" });
+      gsap.set(["#code-l5", "#code-l6", "#code-l7", "#code-l8", "#code-l9", "#code-l10"], { opacity: 0 });
+      gsap.set("#code-grounding", { backgroundColor: "rgba(66, 133, 244, 0.0)" });
 
-      // 4. Title slams in at 0.0s: scale 1.22 to 1 in 0.24s, power4.out
-      tl.to("#title-box", {
-        opacity: 1,
-        scale: 1,
-        duration: 0.24,
-        ease: "power4.out"
-      }, 0.0);
+      // Deterministic cursor blink integrated into main timeline
+      tl.to("#t-cursor", { opacity: 0, duration: 0.22, repeat: 14, yoyo: true, ease: "steps(1)" }, 2.4);
 
-      // Hand-drawn red swash underline draws across at 0.12s
-      if (swash) {
-        tl.to(swash, {
-          strokeDashoffset: 0,
-          duration: 0.38,
-          ease: "power2.out"
-        }, 0.12);
-      }
+      // ==========================================
+      // TIMELINE CHOREOGRAPHY (0.0s - 6.5s)
+      // ==========================================
 
-      // 3. Caption word sync:
-      // "Fourth" 0.0s, "new" 0.96s, "edge" 1.0s, "distillation" 1.2s, "reportedly" 1.86s,
-      // "slashes" 2.2s, "energy" 2.96s, "and" 3.26s, "token" 3.84s, "costs" 4.04s, "by" 4.36s,
-      // "ninety" 4.78s (KEY WORD: red #D7372C), "percent" 5.06s, "across" 5.48s, "the" 5.66s, "board" 5.94s.
-      // Starts #B5AFA7, turns ink #1E1C1A in 0.2s.
-      const wordTimings = [
-        { id: "#cw-0", time: 0.0 },
-        { id: "#cw-1", time: 0.96 },
-        { id: "#cw-2", time: 1.0 },
-        { id: "#cw-3", time: 1.2 },
-        { id: "#cw-4", time: 1.86 },
-        { id: "#cw-5", time: 2.2 },
-        { id: "#cw-6", time: 2.96 },
-        { id: "#cw-7", time: 3.26 },
-        { id: "#cw-8", time: 3.84 },
-        { id: "#cw-9", time: 4.04 },
-        { id: "#cw-10", time: 4.36 },
-        // #cw-11 handled below
-        { id: "#cw-12", time: 5.06 },
-        { id: "#cw-13", time: 5.48 },
-        { id: "#cw-14", time: 5.66 },
-        { id: "#cw-15", time: 5.94 }
-      ];
-
-      tl.set([".c-word", ".c-keyword"], { display: "inline-block" }, 0);
-      tl.set("#cap-phase-1", { display: "block", opacity: 1 }, 0);
-      tl.set("#cap-phase-2", { display: "none", opacity: 0 }, 0);
-      tl.set("#cap-phase-3", { display: "none", opacity: 0 }, 0);
-
-      tl.set("#cap-phase-1", { display: "none" }, 2.15);
-      tl.set("#cap-phase-2", { display: "block", opacity: 1 }, 2.15);
-
-      tl.set("#cap-phase-2", { display: "none" }, 5.00);
-      tl.set("#cap-phase-3", { display: "block", opacity: 1 }, 5.00);
-
-      wordTimings.forEach(item => {
-        tl.to(item.id, {
-          color: "#1E1C1A",
-          duration: 0.2,
-          ease: "power1.out"
-        }, item.time);
-      });
-
-      // KEY WORD: "ninety" at 4.78s turns #D7372C
-      tl.to("#cw-11", {
-        color: "#D7372C",
-        duration: 0.2,
-        ease: "power1.out"
-      }, 4.78);
-
-      // 5. Main Card rises 0.18s later (70px up in 0.4s, power3.out)
-      tl.to(["#main-card", "#card-shadow"], {
+      // 0.00s - 0.50s: Header & Anton Headline Entrance
+      tl.to("#header-badge", {
         opacity: 1,
         y: 0,
         duration: 0.4,
         ease: "power3.out"
-      }, 0.18);
+      }, 0.05);
 
-      // Number counter: counts down from $0.350 down to $0.035 per million tokens over 1.15s (0.18s to 1.33s)
-      const counterTarget = { val: 0.350 };
-      const counterEl = document.getElementById("price-counter");
-      tl.to(counterTarget, {
-        val: 0.035,
-        duration: 1.15,
-        ease: "power2.out",
-        onUpdate: function () {
-          if (counterEl) {
-            counterEl.textContent = "$" + counterTarget.val.toFixed(3);
-          }
-        }
-      }, 0.18);
-
-      // Server cost graph animation drops by 90% (from 100% to 10% width)
-      tl.fromTo("#cost-bar",
-        { width: "100%" },
-        { width: "10%", duration: 1.15, ease: "power2.out" },
-        0.18
-      );
-
-      // Red #4 badge spins in at 0.6s (scale 0->1, rotation 0->360deg)
-      tl.to("#badge-4", {
-        scale: 1,
-        rotation: 360,
-        duration: 0.45,
-        ease: "back.out(1.8)"
-      }, 0.6);
-
-      // 6. Explanation exit & Demo animation:
-      // 0.3s before explanation (~4.5s), card exits upward (50px up, fade out in 0.22s)
-      tl.to(["#main-card", "#card-shadow"], {
-        y: -50,
+      tl.fromTo("#headline-container", {
         opacity: 0,
-        duration: 0.22,
-        ease: "power2.in"
-      }, 4.5);
+        scale: 1.18,
+        y: -15
+      }, {
+        opacity: 1,
+        scale: 1.0,
+        y: 0,
+        duration: 0.48,
+        ease: "power4.out"
+      }, 0.12);
 
-      // Demo animation container enters at 4.52s
-      tl.to("#demo-box", {
+      tl.to("#swash-line", {
+        strokeDashoffset: 0,
+        duration: 0.55,
+        ease: "power3.out"
+      }, 0.32);
+
+      // ------------------------------------------
+      // Captions Sentence 1 (0.10s - 2.65s)
+      // "Point four: One-click Get Code and search grounding."
+      // ------------------------------------------
+      tl.to("#w-pt4", { className: "c-word active", duration: 0.08 }, 0.10);
+      tl.to("#w-four", { className: "c-word active", duration: 0.08 }, 0.32);
+      tl.to("#w-oneclick", { className: "c-word active", duration: 0.08 }, 0.65);
+      tl.to("#w-get", { className: "c-word active", duration: 0.08 }, 1.05);
+      tl.to("#w-code", { className: "c-accent active-cyan", duration: 0.12 }, 1.25);
+      tl.to("#w-and1", { className: "c-word active", duration: 0.08 }, 1.62);
+      tl.to("#w-search", { className: "c-word active", duration: 0.08 }, 1.82);
+      tl.to("#w-grounding", { className: "c-accent active-coral", duration: 0.12 }, 2.08);
+
+      // ------------------------------------------
+      // 0.65s - 1.50s: Grounding Card Slam & Active Toggle
+      // ------------------------------------------
+      tl.fromTo("#grounding-card", {
+        y: 36,
+        opacity: 0,
+        scale: 0.94
+      }, {
+        y: 0,
+        opacity: 1,
+        scale: 1.0,
+        duration: 0.5,
+        ease: "back.out(2.2)"
+      }, 0.65);
+
+      tl.to("#grounding-shadow", {
+        opacity: 0.75,
+        duration: 0.5
+      }, 0.65);
+
+      // Toggle click animation at 1.25s
+      tl.fromTo("#toggle-thumb", {
+        x: -28
+      }, {
+        x: 0,
+        duration: 0.28,
+        ease: "back.out(2.5)"
+      }, 1.25);
+
+      tl.fromTo(".g-dot", {
+        scale: 0
+      }, {
+        scale: 1,
+        stagger: 0.06,
+        duration: 0.22,
+        ease: "back.out(3.0)"
+      }, 1.35);
+
+      tl.fromTo("#latency-pill", {
+        scale: 0.7,
+        opacity: 0
+      }, {
+        scale: 1.0,
+        opacity: 1,
+        duration: 0.3,
+        ease: "back.out(2)"
+      }, 1.45);
+
+      // ------------------------------------------
+      // 1.50s - 2.40s: "Get Code" Hero Button Interaction & Chip Explosion
+      // ------------------------------------------
+      tl.fromTo("#btn-get-code", {
+        scale: 0.82,
+        opacity: 0,
+        y: 20
+      }, {
+        scale: 1.0,
         opacity: 1,
         y: 0,
-        duration: 0.24,
-        ease: "power3.out"
-      }, 4.52);
+        duration: 0.42,
+        ease: "back.out(2.4)"
+      }, 1.55);
 
-      // 4 Server racks shutting down into ultra-lean single core:
-      // Rack 1 shuts down at 4.56s
-      tl.call(() => {
-        const rs1 = document.getElementById("rs-1");
-        if (rs1) {
-          rs1.textContent = "OFFLINE";
-          rs1.className = "rack-status s-offline";
-        }
-        const rp1 = document.getElementById("rp-1");
-        if (rp1) rp1.textContent = "0.0 kW";
-      }, null, 4.56);
-      tl.to("#rack-1", { opacity: 0.3, scale: 0.94, duration: 0.18, ease: "power2.out" }, 4.56);
-      tl.to(["#led-1a", "#led-1b", "#led-1c"], { backgroundColor: "#8A857E", duration: 0.1 }, 4.56);
+      // Tactile button press at 2.0s
+      tl.to("#btn-get-code", {
+        scale: 0.93,
+        duration: 0.10,
+        ease: "power2.in"
+      }, 2.00);
 
-      // Rack 2 shuts down at 4.63s
-      tl.call(() => {
-        const rs2 = document.getElementById("rs-2");
-        if (rs2) {
-          rs2.textContent = "OFFLINE";
-          rs2.className = "rack-status s-offline";
-        }
-        const rp2 = document.getElementById("rp-2");
-        if (rp2) rp2.textContent = "0.0 kW";
-      }, null, 4.63);
-      tl.to("#rack-2", { opacity: 0.3, scale: 0.94, duration: 0.18, ease: "power2.out" }, 4.63);
-      tl.to(["#led-2a", "#led-2b", "#led-2c"], { backgroundColor: "#8A857E", duration: 0.1 }, 4.63);
+      // Button spring release with back.out(3) at 2.10s
+      tl.to("#btn-get-code", {
+        scale: 1.0,
+        duration: 0.38,
+        ease: "back.out(3.0)"
+      }, 2.10);
 
-      // Rack 3 shuts down at 4.70s
-      tl.call(() => {
-        const rs3 = document.getElementById("rs-3");
-        if (rs3) {
-          rs3.textContent = "OFFLINE";
-          rs3.className = "rack-status s-offline";
-        }
-        const rp3 = document.getElementById("rp-3");
-        if (rp3) rp3.textContent = "0.0 kW";
-      }, null, 4.70);
-      tl.to("#rack-3", { opacity: 0.3, scale: 0.94, duration: 0.18, ease: "power2.out" }, 4.70);
-      tl.to(["#led-3a", "#led-3b", "#led-3c"], { backgroundColor: "#8A857E", duration: 0.1 }, 4.70);
+      // Ripple glow expansion
+      tl.fromTo("#btn-ripple", {
+        scale: 1.0,
+        opacity: 0.85
+      }, {
+        scale: 1.35,
+        opacity: 0,
+        duration: 0.45,
+        ease: "power2.out"
+      }, 2.10);
 
-      // Rack 4 (Single Core) expands and pulses at 4.74s
-      tl.call(() => {
-        const pTag = document.getElementById("demo-power-tag");
-        if (pTag) {
-          pTag.textContent = "POWER: 0.1 kW";
-          pTag.style.color = "var(--green)";
-        }
-        const statusText = document.getElementById("demo-status-text");
-        if (statusText) statusText.textContent = "TOPOLOGY: ULTRA-LEAN EDGE CORE";
-      }, null, 4.74);
-      tl.fromTo("#rack-4",
-        { scale: 1 },
-        { scale: 1.05, duration: 0.14, yoyo: true, repeat: 1, ease: "power2.out" },
-        4.74
-      );
-
-      // Stamp lands on key word "ninety" at ~4.78s:
-      // Anton 52px red text EFFICIENCY inside 5px red border box, tilted -6°
-      // Motion: scale 1.75 to 1 and -18° to -6° in 0.2s (ease: power4.in)
-      tl.to("#stamp", {
+      // Explosion of language selector micro-chips at 2.12s
+      tl.fromTo("#chip-py", {
+        x: 0,
+        y: 0,
+        scale: 0.2,
+        opacity: 0,
+        rotate: 0
+      }, {
+        x: -240,
+        y: -48,
+        scale: 1.0,
         opacity: 1,
-        scale: 1,
-        rotation: -6,
-        duration: 0.2,
-        ease: "power4.in"
-      }, 4.78);
+        rotate: -6,
+        duration: 0.44,
+        ease: "back.out(2.6)"
+      }, 2.12);
 
-      // Final seek to 0 for HyperFrames playback
+      tl.fromTo("#chip-ts", {
+        x: 0,
+        y: 0,
+        scale: 0.2,
+        opacity: 0,
+        rotate: 0
+      }, {
+        x: 0,
+        y: -68,
+        scale: 1.0,
+        opacity: 1,
+        rotate: 2,
+        duration: 0.44,
+        ease: "back.out(2.6)"
+      }, 2.15);
+
+      tl.fromTo("#chip-curl", {
+        x: 0,
+        y: 0,
+        scale: 0.2,
+        opacity: 0,
+        rotate: 0
+      }, {
+        x: 240,
+        y: -48,
+        scale: 1.0,
+        opacity: 1,
+        rotate: 6,
+        duration: 0.44,
+        ease: "back.out(2.6)"
+      }, 2.18);
+
+      // Micro particles burst radial explosion
+      const particles = [
+        { id: "#bp-1", x: -140, y: -70 },
+        { id: "#bp-2", x: -60, y: -90 },
+        { id: "#bp-3", x: 70, y: -90 },
+        { id: "#bp-4", x: 150, y: -70 },
+        { id: "#bp-5", x: -180, y: 10 },
+        { id: "#bp-6", x: 180, y: 10 }
+      ];
+
+      particles.forEach((p, idx) => {
+        tl.fromTo(p.id, {
+          x: 0,
+          y: 0,
+          scale: 1.5,
+          opacity: 1
+        }, {
+          x: p.x,
+          y: p.y,
+          scale: 0,
+          opacity: 0,
+          duration: 0.42,
+          ease: "power3.out"
+        }, 2.10 + idx * 0.015);
+      });
+
+      // ------------------------------------------
+      // 2.30s - 4.80s: Dark Glass IDE Terminal Window Entrance & Live Code Typing
+      // ------------------------------------------
+      tl.fromTo("#terminal-window", {
+        scale: 0.88,
+        y: 40,
+        opacity: 0
+      }, {
+        scale: 1.0,
+        y: 0,
+        opacity: 1,
+        duration: 0.52,
+        ease: "back.out(2.2)"
+      }, 2.30);
+
+      tl.to("#terminal-shadow", {
+        opacity: 0.75,
+        duration: 0.52
+      }, 2.30);
+
+      // Live Typing Animation
+      tl.to(["#code-l1", "#code-l2"], {
+        opacity: 1,
+        duration: 0.15,
+        stagger: 0.08
+      }, 2.50);
+
+      tl.to("#code-l3", {
+        opacity: 1,
+        duration: 0.12
+      }, 2.70);
+
+      // Typing `response = client.models.generate_content(`
+      tl.to("#typed-call", {
+        clipPath: "inset(0 0% 0 0)",
+        duration: 0.65,
+        ease: "steps(36)"
+      }, 2.85);
+
+      tl.to(["#code-l5", "#code-l6", "#code-l7"], {
+        opacity: 1,
+        duration: 0.18,
+        stagger: 0.08
+      }, 3.55);
+
+      // Search Grounding Line Pop & Highlight
+      tl.to("#code-l8", {
+        opacity: 1,
+        duration: 0.15
+      }, 3.85);
+
+      tl.to("#code-grounding", {
+        backgroundColor: "rgba(66, 133, 244, 0.28)",
+        borderColor: "rgba(66, 133, 244, 0.8)",
+        duration: 0.35,
+        yoyo: true,
+        repeat: 1
+      }, 4.05);
+
+      tl.to(["#code-l9", "#code-l10"], {
+        opacity: 1,
+        duration: 0.12,
+        stagger: 0.06
+      }, 4.35);
+
+      // ------------------------------------------
+      // Captions Sentence 2 (2.65s - 6.5s)
+      // "Connect live web data and export production Python, TypeScript, and cURL."
+      // ------------------------------------------
+      tl.to("#sentence-1", { opacity: 0, duration: 0.18 }, 2.65);
+      tl.to("#sentence-2", { opacity: 1, duration: 0.20 }, 2.70);
+
+      tl.to("#w-connect", { className: "c-word active", duration: 0.08 }, 2.75);
+      tl.to("#w-live", { className: "c-accent active-cyan", duration: 0.08 }, 3.02);
+      tl.to("#w-web", { className: "c-accent active-cyan", duration: 0.08 }, 3.28);
+      tl.to("#w-data", { className: "c-word active", duration: 0.08 }, 3.52);
+      tl.to("#w-and2", { className: "c-word active", duration: 0.08 }, 3.85);
+      tl.to("#w-export", { className: "c-word active", duration: 0.08 }, 4.05);
+      tl.to("#w-production", { className: "c-word active", duration: 0.08 }, 4.35);
+      tl.to("#w-python", { className: "c-word c-highlight-py active", duration: 0.10 }, 4.80);
+      tl.to("#w-ts", { className: "c-word c-highlight-ts active", duration: 0.10 }, 5.20);
+      tl.to("#w-and3", { className: "c-word active", duration: 0.08 }, 5.65);
+      tl.to("#w-curl", { className: "c-word c-highlight-curl active", duration: 0.12 }, 5.85);
+
+      // ------------------------------------------
+      // 4.85s: "COPIED TO CLIPBOARD" Snapping Badge
+      // ------------------------------------------
+      tl.fromTo("#copied-badge", {
+        scale: 0.3,
+        opacity: 0,
+        y: -10
+      }, {
+        scale: 1.0,
+        opacity: 1,
+        y: 0,
+        duration: 0.38,
+        ease: "elastic.out(1.15, 0.45)"
+      }, 4.85);
+
+      // ------------------------------------------
+      // 5.35s: "PRODUCTION READY" Stamp Slam
+      // ------------------------------------------
+      tl.fromTo("#stamp-prod-ready", {
+        scale: 2.3,
+        rotate: -24,
+        opacity: 0
+      }, {
+        scale: 1.0,
+        rotate: -6,
+        opacity: 1,
+        duration: 0.32,
+        ease: "back.out(2.8)"
+      }, 5.35);
+
+      // Terminal screen shake on stamp impact
+      tl.to("#terminal-window", {
+        y: "+=6",
+        duration: 0.04,
+        yoyo: true,
+        repeat: 3,
+        ease: "power1.inOut"
+      }, 5.38);
+
       tl.seek(0);
-
-      // Support ?seek=X for deterministic test snapshots
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.has("seek")) {
-        tl.seek(parseFloat(urlParams.get("seek")));
-      }
     </script>
   </body>
 </html>

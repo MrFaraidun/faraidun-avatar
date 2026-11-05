@@ -1,10 +1,10 @@
 /**
  * Master Audio Track Integration for HyperFrames
- * 
- * Defines all 21 synchronized audio tracks:
+ *
+ * Defines all 31 synchronized audio tracks:
  * - Track 1: Voiceover narrative
  * - Track 2: Background music with 0.8s fade out
- * - Tracks 3–21: 19 discrete SFX event cues mapped to animation keyframes
+ * - Tracks 3–31: 29 discrete SFX event cues mapped to animation keyframes
  *
  * Each audio element contains data-start, data-duration, data-volume,
  * and individual data-track-index as required by the HyperFrames audio pipeline.
@@ -18,10 +18,10 @@ export const AUDIO_TRACKS = [
     event: "Voiceover",
     file: "voice.wav",
     src: "src/audio/voice.wav",
-    start: "0.0",
-    duration: "37.31",
-    volume: "1.0",
-    description: "Voiceover: Complete spoken narrative for Gemini Flash 4 reel"
+    start: "0.00",
+    duration: "38.00",
+    volume: "1.00",
+    description: "Voiceover: Complete spoken narrative for Google AI Studio reel"
   },
   {
     id: "audio-music",
@@ -30,8 +30,8 @@ export const AUDIO_TRACKS = [
     event: "Background Music",
     file: "music.wav",
     src: "src/audio/music.wav",
-    start: "0.0",
-    duration: "37.5",
+    start: "0.00",
+    duration: "38.00",
     volume: "0.16",
     fadeOut: "0.8",
     description: "Background Music: Warm Rhodes lo-fi beat matching cream paper aesthetic, 0.8s fade out"
@@ -40,243 +40,362 @@ export const AUDIO_TRACKS = [
     id: "sfx-1-hook-pop",
     trackIndex: 3,
     type: "sfx",
-    event: "Hook Pop 1",
+    event: "Hook Problem Card Pop",
     file: "sfx_pop.wav",
     src: "src/audio/sfx_pop.wav",
-    start: "0.0",
+    start: "0.00",
     duration: "0.14",
     volume: "0.75",
-    description: "SFX 1: Hook Pop 1 on problem card entry at 0.0s"
+    description: "SFX 1: Hook Pop on problem card entry at 0.00s"
   },
   {
-    id: "sfx-2-hook-payoff-a",
+    id: "sfx-2-hook-thud",
     trackIndex: 4,
     type: "sfx",
-    event: "Hook Payoff Pop A",
-    file: "sfx_pop.wav",
-    src: "src/audio/sfx_pop.wav",
-    start: "1.90",
-    duration: "0.14",
+    event: "Hook Problem Strike Thud",
+    file: "sfx_thud.wav",
+    src: "src/audio/sfx_thud.wav",
+    start: "1.70",
+    duration: "0.25",
     volume: "0.75",
-    description: "SFX 2: Hook Payoff Pop A on first card reveal at 1.90s"
+    description: "SFX 2: Hook Thud on boilerplate strikethrough stamp at 1.70s"
   },
   {
-    id: "sfx-3-hook-payoff-b",
+    id: "sfx-3-hook-payoff-a",
     trackIndex: 5,
     type: "sfx",
-    event: "Hook Payoff Pop B",
+    event: "Hook Cockpit Card Pop A",
     file: "sfx_pop.wav",
     src: "src/audio/sfx_pop.wav",
-    start: "2.06",
+    start: "2.80",
     duration: "0.14",
     volume: "0.75",
-    description: "SFX 3: Hook Payoff Pop B on second card reveal at 2.06s"
+    description: "SFX 3: Hook Payoff Pop A on developer cockpit card reveal at 2.80s"
   },
   {
-    id: "sfx-4-hook-payoff-c",
+    id: "sfx-4-hook-payoff-b",
     trackIndex: 6,
     type: "sfx",
-    event: "Hook Payoff Pop C",
+    event: "Hook Cockpit Card Pop B",
     file: "sfx_pop.wav",
     src: "src/audio/sfx_pop.wav",
-    start: "2.22",
+    start: "2.96",
     duration: "0.14",
     volume: "0.75",
-    description: "SFX 4: Hook Payoff Pop C on third card reveal at 2.22s"
+    description: "SFX 4: Hook Payoff Pop B on model parameter card reveal at 2.96s"
   },
   {
-    id: "sfx-5-wipe-1-whoosh",
+    id: "sfx-5-hook-payoff-c",
     trackIndex: 7,
     type: "sfx",
-    event: "Wipe 1 Whoosh",
-    file: "sfx_whoosh.wav",
-    src: "src/audio/sfx_whoosh.wav",
-    start: "6.88",
-    duration: "0.5",
+    event: "Hook Cockpit Card Pop C",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "3.12",
+    duration: "0.14",
     volume: "0.75",
-    description: "SFX 5: Wipe 1 Whoosh under halftone dot transition into Point 1 at 6.88s"
+    description: "SFX 5: Hook Payoff Pop C on live playground card reveal at 3.12s"
   },
   {
-    id: "sfx-6-point-1-tick",
+    id: "sfx-6-wipe-1-whoosh",
     trackIndex: 8,
     type: "sfx",
-    event: "Point 1 Tick Roll",
-    file: "sfx_tick.wav",
-    src: "src/audio/sfx_tick.wav",
-    start: "7.36",
-    duration: "1.15",
+    event: "Wipe 1 Halftone Whoosh",
+    file: "sfx_whoosh.wav",
+    src: "src/audio/sfx_whoosh.wav",
+    start: "6.20",
+    duration: "0.50",
     volume: "0.75",
-    description: "SFX 6: Point 1 Tick Roll under 18ms latency counter countdown at 7.36s"
+    description: "SFX 6: Wipe 1 Whoosh under halftone dot transition into Point 1 at 6.20s"
   },
   {
-    id: "sfx-7-point-1-type",
+    id: "sfx-7-point-1-pop",
     trackIndex: 9,
+    type: "sfx",
+    event: "Point 1 Title Pop",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "6.50",
+    duration: "0.14",
+    volume: "0.75",
+    description: "SFX 7: Point 1 Pop on title entry at 6.50s"
+  },
+  {
+    id: "sfx-8-point-1-tick",
+    trackIndex: 10,
+    type: "sfx",
+    event: "Point 1 2M Counter Tick",
+    file: "sfx_tick.wav",
+    src: "src/audio/sfx_tick.wav",
+    start: "7.40",
+    duration: "1.15",
+    volume: "0.75",
+    description: "SFX 8: Point 1 Tick Roll under 2M token context counter count-up at 7.40s"
+  },
+  {
+    id: "sfx-9-point-1-type",
+    trackIndex: 11,
     type: "sfx",
     event: "Point 1 Terminal Type",
     file: "sfx_type.wav",
     src: "src/audio/sfx_type.wav",
-    start: "8.50",
+    start: "9.35",
     duration: "0.85",
     volume: "0.75",
-    description: "SFX 7: Point 1 Terminal Type on live prompt typing at 8.50s"
+    description: "SFX 9: Point 1 Terminal Type on multimodal file ingest at 9.35s"
   },
   {
-    id: "sfx-8-point-1-thud",
-    trackIndex: 10,
+    id: "sfx-10-point-1-thud",
+    trackIndex: 12,
     type: "sfx",
     event: "Point 1 Stamp Thud",
     file: "sfx_thud.wav",
     src: "src/audio/sfx_thud.wav",
-    start: "12.40",
+    start: "12.00",
     duration: "0.25",
     volume: "0.75",
-    description: "SFX 8: Point 1 Stamp Thud on REALTIME badge slam at 12.40s"
+    description: "SFX 10: Point 1 Stamp Thud on MULTIMODAL badge slam at 12.00s"
   },
   {
-    id: "sfx-9-point-2-tick",
-    trackIndex: 11,
+    id: "sfx-11-point-2-pop",
+    trackIndex: 13,
     type: "sfx",
-    event: "Point 2 Tick Roll",
+    event: "Point 2 Title Pop",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "13.00",
+    duration: "0.14",
+    volume: "0.75",
+    description: "SFX 11: Point 2 Pop on system instructions title entry at 13.00s"
+  },
+  {
+    id: "sfx-12-point-2-tick",
+    trackIndex: 14,
+    type: "sfx",
+    event: "Point 2 Physics Dial Tick",
     file: "sfx_tick.wav",
     src: "src/audio/sfx_tick.wav",
-    start: "13.72",
+    start: "13.70",
     duration: "1.15",
     volume: "0.75",
-    description: "SFX 9: Point 2 Tick Roll under 10M token counter count-up at 13.72s"
+    description: "SFX 12: Point 2 Tick Roll under dynamic temperature slider dial at 13.70s"
   },
   {
-    id: "sfx-10-point-2-type",
-    trackIndex: 12,
+    id: "sfx-13-point-2-type",
+    trackIndex: 15,
     type: "sfx",
     event: "Point 2 Terminal Type",
     file: "sfx_type.wav",
     src: "src/audio/sfx_type.wav",
-    start: "14.80",
+    start: "14.85",
     duration: "0.85",
     volume: "0.75",
-    description: "SFX 10: Point 2 Terminal Type under stack card burst at 14.80s"
+    description: "SFX 13: Point 2 Terminal Type on system instructions prompt at 14.85s"
   },
   {
-    id: "sfx-11-point-2-thud",
-    trackIndex: 13,
+    id: "sfx-14-point-2-thud",
+    trackIndex: 16,
     type: "sfx",
     event: "Point 2 Stamp Thud",
     file: "sfx_thud.wav",
     src: "src/audio/sfx_thud.wav",
-    start: "15.46",
+    start: "18.50",
     duration: "0.25",
     volume: "0.75",
-    description: "SFX 11: Point 2 Stamp Thud on MASSIVE badge slam at 15.46s"
+    description: "SFX 14: Point 2 Stamp Thud on DYNAMIC PHYSICS badge slam at 18.50s"
   },
   {
-    id: "sfx-12-point-3-tick",
-    trackIndex: 14,
+    id: "sfx-15-point-3-pop",
+    trackIndex: 17,
     type: "sfx",
-    event: "Point 3 Tick Roll",
+    event: "Point 3 Title Pop",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "19.50",
+    duration: "0.14",
+    volume: "0.75",
+    description: "SFX 15: Point 3 Pop on structured output title entry at 19.50s"
+  },
+  {
+    id: "sfx-16-point-3-tick",
+    trackIndex: 18,
+    type: "sfx",
+    event: "Point 3 Schema Parser Tick",
     file: "sfx_tick.wav",
     src: "src/audio/sfx_tick.wav",
-    start: "20.26",
+    start: "20.25",
     duration: "1.15",
     volume: "0.75",
-    description: "SFX 12: Point 3 Tick Roll under runtime ops counter at 20.26s"
+    description: "SFX 16: Point 3 Tick Roll under JSON schema parser validation at 20.25s"
   },
   {
-    id: "sfx-13-point-3-type",
-    trackIndex: 15,
+    id: "sfx-17-point-3-type",
+    trackIndex: 19,
     type: "sfx",
     event: "Point 3 Terminal Type",
     file: "sfx_type.wav",
     src: "src/audio/sfx_type.wav",
-    start: "21.40",
+    start: "22.60",
     duration: "0.85",
     volume: "0.75",
-    description: "SFX 13: Point 3 Terminal Type under tool execution node clicks at 21.40s"
+    description: "SFX 17: Point 3 Terminal Type on JSON schema code generation at 22.60s"
   },
   {
-    id: "sfx-14-point-3-thud",
-    trackIndex: 16,
+    id: "sfx-18-point-3-chime",
+    trackIndex: 20,
+    type: "sfx",
+    event: "Point 3 Schema Enforcement Chime",
+    file: "sfx_chime.wav",
+    src: "src/audio/sfx_chime.wav",
+    start: "23.40",
+    duration: "0.50",
+    volume: "0.75",
+    description: "SFX 18: Point 3 Schema Chime on strict schema validation lock at 23.40s"
+  },
+  {
+    id: "sfx-19-point-3-thud",
+    trackIndex: 21,
     type: "sfx",
     event: "Point 3 Stamp Thud",
     file: "sfx_thud.wav",
     src: "src/audio/sfx_thud.wav",
-    start: "23.40",
+    start: "24.80",
     duration: "0.25",
     volume: "0.75",
-    description: "SFX 14: Point 3 Stamp Thud on AUTONOMOUS badge slam at 23.40s"
+    description: "SFX 19: Point 3 Stamp Thud on ZERO HALLUCINATIONS badge slam at 24.80s"
   },
   {
-    id: "sfx-15-wipe-2-whoosh",
-    trackIndex: 17,
+    id: "sfx-20-wipe-2-whoosh",
+    trackIndex: 22,
     type: "sfx",
-    event: "Wipe 2 Whoosh",
+    event: "Wipe 2 Halftone Whoosh",
     file: "sfx_whoosh.wav",
     src: "src/audio/sfx_whoosh.wav",
-    start: "25.10",
-    duration: "0.5",
+    start: "25.70",
+    duration: "0.50",
     volume: "0.75",
-    description: "SFX 15: Wipe 2 Whoosh under halftone dot transition into Point 4 at 25.10s"
+    description: "SFX 20: Wipe 2 Whoosh under halftone dot transition into Point 4 at 25.70s"
   },
   {
-    id: "sfx-16-point-4-tick",
-    trackIndex: 18,
+    id: "sfx-21-point-4-pop",
+    trackIndex: 23,
     type: "sfx",
-    event: "Point 4 Tick Roll",
+    event: "Point 4 Title Pop",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "26.00",
+    duration: "0.14",
+    volume: "0.75",
+    description: "SFX 21: Point 4 Pop on Get Code title entry at 26.00s"
+  },
+  {
+    id: "sfx-22-point-4-tick",
+    trackIndex: 24,
+    type: "sfx",
+    event: "Point 4 Grounding Tick",
     file: "sfx_tick.wav",
     src: "src/audio/sfx_tick.wav",
-    start: "25.58",
+    start: "26.70",
     duration: "1.15",
     volume: "0.75",
-    description: "SFX 16: Point 4 Tick Roll under price percentage drop counter (-90%) at 25.58s"
+    description: "SFX 22: Point 4 Tick Roll under search grounding live data sync at 26.70s"
   },
   {
-    id: "sfx-17-point-4-type",
-    trackIndex: 19,
+    id: "sfx-23-point-4-ding",
+    trackIndex: 25,
     type: "sfx",
-    event: "Point 4 Graph Type",
+    event: "Point 4 Get Code Ding",
+    file: "sfx_ding.wav",
+    src: "src/audio/sfx_ding.wav",
+    start: "27.42",
+    duration: "0.45",
+    volume: "0.75",
+    description: "SFX 23: Point 4 Get Code Ding on one-click export button click at 27.42s"
+  },
+  {
+    id: "sfx-24-point-4-type",
+    trackIndex: 26,
+    type: "sfx",
+    event: "Point 4 Terminal Type",
     file: "sfx_type.wav",
     src: "src/audio/sfx_type.wav",
-    start: "26.70",
+    start: "29.00",
     duration: "0.85",
     volume: "0.75",
-    description: "SFX 17: Point 4 Graph Type on cost curve collapse at 26.70s"
+    description: "SFX 24: Point 4 Terminal Type on Python, TypeScript, and cURL export at 29.00s"
   },
   {
-    id: "sfx-18-point-4-thud",
-    trackIndex: 20,
+    id: "sfx-25-point-4-thud",
+    trackIndex: 27,
     type: "sfx",
     event: "Point 4 Stamp Thud",
     file: "sfx_thud.wav",
     src: "src/audio/sfx_thud.wav",
-    start: "30.18",
+    start: "31.00",
     duration: "0.25",
     volume: "0.75",
-    description: "SFX 18: Point 4 Stamp Thud on EFFICIENCY badge slam at 30.18s"
+    description: "SFX 25: Point 4 Stamp Thud on PRODUCTION READY badge slam at 31.00s"
   },
   {
-    id: "sfx-19-closing-pop",
-    trackIndex: 21,
+    id: "sfx-26-outro-pop-1",
+    trackIndex: 28,
     type: "sfx",
-    event: "Closing Pop",
+    event: "Outro Pop 1",
     file: "sfx_pop.wav",
     src: "src/audio/sfx_pop.wav",
-    start: "32.00",
+    start: "32.50",
     duration: "0.14",
     volume: "0.75",
-    description: "SFX 19: Closing Pop on final seamless loop restart at 32.00s"
+    description: "SFX 26: Outro Pop on Prototype Here card at 32.50s"
+  },
+  {
+    id: "sfx-27-outro-pop-2",
+    trackIndex: 29,
+    type: "sfx",
+    event: "Outro Pop 2",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "33.70",
+    duration: "0.14",
+    volume: "0.75",
+    description: "SFX 27: Outro Pop on Ship Everywhere card at 33.70s"
+  },
+  {
+    id: "sfx-28-outro-thud",
+    trackIndex: 30,
+    type: "sfx",
+    event: "Outro Velocity Thud",
+    file: "sfx_thud.wav",
+    src: "src/audio/sfx_thud.wav",
+    start: "36.70",
+    duration: "0.25",
+    volume: "0.75",
+    description: "SFX 28: Outro Thud on PURE VELOCITY badge slam at 36.70s"
+  },
+  {
+    id: "sfx-29-closing-pop",
+    trackIndex: 31,
+    type: "sfx",
+    event: "Closing Seamless Loop Pop",
+    file: "sfx_pop.wav",
+    src: "src/audio/sfx_pop.wav",
+    start: "37.80",
+    duration: "0.14",
+    volume: "0.75",
+    description: "SFX 29: Closing Pop on final seamless loop restart at 37.80s"
   }
 ];
 
 /**
- * Generate a single <audio> tag HTML string for a track
- * @param {object} track - Track metadata object
+ * Generate an HTML <audio> tag string for a given track specification
+ * @param {Object} track - Audio track object from AUDIO_TRACKS
  * @param {string} [baseDir="src/audio"] - Directory prefix for audio sources
- * @returns {string} HTML string
+ * @returns {string} Formatted HTML audio tag
  */
 export function generateAudioTag(track, baseDir = "src/audio") {
-  const src = `${baseDir}/${track.file}`;
-  const fadeOutAttr = track.fadeOut ? ` data-fade-out="${track.fadeOut}"` : "";
+  const src = track.src || `${baseDir}/${track.file}`;
   const fadeInAttr = track.fadeIn ? ` data-fade-in="${track.fadeIn}"` : "";
-
+  const fadeOutAttr = track.fadeOut ? ` data-fade-out="${track.fadeOut}"` : "";
   return `    <audio id="${track.id}" src="${src}" data-start="${track.start}" data-duration="${track.duration}" data-volume="${track.volume}"${fadeInAttr}${fadeOutAttr} data-track-index="${track.trackIndex}" preload="auto"></audio>`;
 }
 
@@ -287,7 +406,7 @@ export function generateAudioTag(track, baseDir = "src/audio") {
  */
 export function generateAudioTracksHtml(baseDir = "src/audio") {
   return [
-    "    <!-- HyperFrames Master Audio Tracks (Voiceover, Music, and 19 SFX event triggers) -->",
+    "    <!-- HyperFrames Master Audio Tracks (Voiceover, Music, and 29 SFX event triggers) -->",
     ...AUDIO_TRACKS.map(track => generateAudioTag(track, baseDir))
   ].join("\n");
 }

@@ -3,23 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Hook - Gemini Flash 4</title>
-    <!-- Google Fonts: Instrument Sans (500, 700), Instrument Serif (Italic), JetBrains Mono (500, 700) -->
+    <title>Hook - Google AI Studio Explainer</title>
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       :root {
-        --cream: #EBE7E1;
-        --ink: #1E1C1A;
-        --red: #D7372C;
-        --grey: #8A857E;
-        --card: #FBFAF8;
-        --caption-inactive: #B5AFA7;
+        --bg-obsidian: #0C0D10;
+        --polar-glass: #171920;
+        --border-glass: #2B2F3E;
+        --gemini-cyan: #4285F4;
+        --gemini-cyan-light: #5B9BFF;
+        --neon-coral: #FF5722;
+        --neon-coral-light: #FF8A65;
+        --hyper-violet: #9B51E0;
+        --hyper-violet-light: #B072FF;
+        --text-white: #FFFFFF;
+        --caption-inactive: #9CA3AF;
+        --status-green: #00E676;
       }
 
       * {
@@ -35,9 +41,9 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
+        background-color: var(--bg-obsidian);
         font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-        color: var(--ink);
+        color: var(--text-white);
         -webkit-font-smoothing: antialiased;
       }
 
@@ -46,25 +52,66 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
+        background-color: var(--bg-obsidian);
       }
 
-      /* Base clip rule */
       .clip {
         position: absolute;
         box-sizing: border-box;
       }
 
-      /* ----------------------------------------------------
-         CAPTIONS SECTION
-         x: 120px, y: 196px, width: 850px. Font: Instrument Sans 500 at 62px.
-         Block container (NOT flexbox), no full stops anywhere.
-         ---------------------------------------------------- */
-      #captions {
+      /* 3% Procedural SVG Noise Grain Overlay */
+      #grain-overlay {
         position: absolute;
-        left: 120px;
-        top: 196px;
-        width: 850px;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        pointer-events: none;
+        z-index: 1;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+      }
+
+      /* Top Editorial Category Tracker */
+      #top-tracker {
+        left: 90px;
+        top: 84px;
+        width: 900px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 40;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+      }
+
+      .tracker-left {
+        color: var(--caption-inactive);
+      }
+
+      .tracker-right {
+        color: var(--gemini-cyan-light);
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .tracker-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: var(--gemini-cyan-light);
+        box-shadow: 0 0 10px var(--gemini-cyan);
+      }
+
+      /* Captions Container */
+      #captions {
+        left: 90px;
+        top: 154px;
+        width: 900px;
+        height: 190px;
         display: block;
         z-index: 50;
       }
@@ -73,14 +120,13 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 850px;
+        width: 900px;
         display: block;
         font-family: 'Instrument Sans', sans-serif;
-        font-weight: 500;
-        font-size: 62px;
+        font-weight: 600;
+        font-size: 54px;
         line-height: 1.25;
-        letter-spacing: -0.025em;
-        word-spacing: 0.04em;
+        letter-spacing: -0.02em;
       }
 
       #caption-line-1 {
@@ -100,547 +146,521 @@
         font-family: 'Instrument Serif', Georgia, serif;
         font-style: italic;
         font-weight: 400;
-        font-size: 72px;
+        font-size: 64px;
         line-height: 1.1;
         letter-spacing: -0.01em;
       }
 
-      /* ----------------------------------------------------
-         HALFTONE SHADOW UTILITY
-         1.7px dots on 8px grid
-         ---------------------------------------------------- */
+      /* Halftone Drop Shadow Utility (Offset 14px down, 12px left) */
       .halftone-shadow {
         position: absolute;
+        left: -12px;
+        top: 14px;
+        width: 100%;
+        height: 100%;
         pointer-events: none;
-        background-image: radial-gradient(circle, var(--ink) 1.7px, transparent 1.8px);
+        background-image: radial-gradient(circle, rgba(0, 0, 0, 0.75) 2px, transparent 2.2px);
         background-size: 8px 8px;
-        z-index: 1;
+        border-radius: inherit;
+        z-index: 0;
       }
 
-      /* ----------------------------------------------------
-         PROBLEM CARD (0.0s - 1.68s)
-         x: 120px, y: 560px, width: 840px, height: 380px.
-         #FBFAF8 with 3px ink border, 20px corners,
-         halftone dot shadow offset 13px left, 12px down.
-         ---------------------------------------------------- */
+      /* Problem Card (0.0s – 2.4s) */
       #problem-card-wrapper {
-        position: absolute;
-        left: 120px;
-        top: 560px;
-        width: 840px;
-        height: 380px;
+        left: 90px;
+        top: 380px;
+        width: 900px;
+        height: 700px;
         z-index: 20;
-      }
-
-      #problem-card-shadow {
-        left: -13px;
-        top: 12px;
-        width: 840px;
-        height: 380px;
-        border-radius: 20px;
+        isolation: isolate;
+        transform-origin: center center;
       }
 
       #problem-card {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 840px;
-        height: 380px;
-        border-radius: 20px;
-        border: 3px solid var(--ink);
-        background-color: var(--card);
-        padding: 34px 38px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 2;
-        overflow: hidden;
-      }
-
-      .card-header-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .status-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 6px 14px;
-        border-radius: 100px;
-        background: #F8ECEB;
-        border: 1.5px solid var(--red);
-      }
-
-      .status-dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background-color: var(--red);
-      }
-
-      .status-pill-text {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        font-weight: 700;
-        color: var(--red);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-
-      .server-cluster-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        font-weight: 500;
-        color: var(--grey);
-        letter-spacing: 0.05em;
-      }
-
-      .problem-headline-block {
-        margin-top: 4px;
-      }
-
-      .problem-headline {
-        font-family: 'Instrument Sans', sans-serif;
-        font-weight: 700;
-        font-size: 32px;
-        line-height: 1.2;
-        letter-spacing: -0.02em;
-        color: var(--ink);
-      }
-
-      .problem-subheadline {
-        font-size: 17px;
-        font-weight: 500;
-        color: var(--grey);
-        margin-top: 6px;
-        letter-spacing: -0.01em;
-      }
-
-      /* Sluggish Progress Bar */
-      .progress-bar-wrap {
-        width: 100%;
-        margin-top: 2px;
-      }
-
-      .progress-track {
-        width: 100%;
-        height: 44px;
-        background: var(--cream);
-        border: 2.5px solid var(--ink);
-        border-radius: 12px;
         position: relative;
-        overflow: hidden;
-      }
-
-      .progress-fill {
-        width: 14%;
+        width: 100%;
         height: 100%;
-        background: var(--red);
-        border-right: 2px solid var(--ink);
-        position: relative;
+        background-color: var(--polar-glass);
+        border: 2px solid var(--border-glass);
+        border-radius: 26px;
+        padding: 38px 42px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+        overflow: hidden;
+        z-index: 2;
       }
 
-      .progress-bar-legend {
+      .card-header-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 8px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        font-weight: 700;
       }
 
-      .legend-left {
-        color: var(--red);
-      }
-
-      .legend-right {
-        color: var(--grey);
-      }
-
-      .problem-card-footer {
+      .terminal-controls {
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        padding-top: 14px;
-        border-top: 1.5px dashed #D6D1CA;
+        gap: 10px;
+      }
+
+      .mac-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+      }
+
+      .mac-dot.red { background-color: #FF5F56; }
+      .mac-dot.yellow { background-color: #FFBD2E; }
+      .mac-dot.green { background-color: #27C93F; }
+
+      .card-title-file {
         font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-      }
-
-      .footer-item {
-        color: var(--grey);
-      }
-
-      .footer-item strong {
-        color: var(--ink);
-        font-weight: 700;
-      }
-
-      /* Strike-through SVG */
-      .strikethrough-svg {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 840px;
-        height: 380px;
-        pointer-events: none;
-        z-index: 10;
-      }
-
-      /* ----------------------------------------------------
-         LINE 2 PAYOFF CARDS (1.68s - 7.18s)
-         3 Small payoff cards pop in 0.16s apart:
-         Card A (1.90s): "SUB-20MS STREAM"
-         Card B (2.06s): "10M TOKEN MEMORY"
-         Card C (2.22s): "FLASH 4 ARCHITECTURE" (Main payoff card)
-         Pop motion: scale 0.55 to 1 in 0.34s, ease: back.out(2.2).
-         At 3.4s, hand-drawn red ring draws around Card C.
-         ---------------------------------------------------- */
-      #payoff-container {
-        position: absolute;
-        left: 120px;
-        top: 560px;
-        width: 840px;
-        height: 440px;
-        z-index: 20;
-      }
-
-      .payoff-card-wrapper {
-        position: absolute;
-        box-sizing: border-box;
-        transform-origin: center center;
-        /* Initially hidden */
-        opacity: 0;
-        transform: scale(0.55);
-      }
-
-      /* Card A */
-      #card-a-wrap {
-        left: 0;
-        top: 0;
-        width: 405px;
-        height: 180px;
-      }
-
-      #card-a-shadow {
-        left: -10px;
-        top: 10px;
-        width: 405px;
-        height: 180px;
-        border-radius: 18px;
-      }
-
-      #card-a {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 405px;
-        height: 180px;
-        border-radius: 18px;
-        border: 3px solid var(--ink);
-        background: var(--card);
-        padding: 22px 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 2;
-      }
-
-      /* Card B */
-      #card-b-wrap {
-        left: 435px;
-        top: 0;
-        width: 405px;
-        height: 180px;
-      }
-
-      #card-b-shadow {
-        left: -10px;
-        top: 10px;
-        width: 405px;
-        height: 180px;
-        border-radius: 18px;
-      }
-
-      #card-b {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 405px;
-        height: 180px;
-        border-radius: 18px;
-        border: 3px solid var(--ink);
-        background: var(--card);
-        padding: 22px 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 2;
-      }
-
-      /* Card C (Hero / Main Payoff) */
-      #card-c-wrap {
-        left: 0;
-        top: 210px;
-        width: 840px;
-        height: 205px;
-      }
-
-      #card-c-shadow {
-        left: -13px;
-        top: 12px;
-        width: 840px;
-        height: 205px;
-        border-radius: 20px;
-      }
-
-      #card-c {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 840px;
-        height: 205px;
-        border-radius: 20px;
-        border: 3.5px solid var(--ink);
-        background: var(--card);
-        padding: 26px 36px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        z-index: 2;
-      }
-
-      /* Typography & details inside payoff cards */
-      .chip-tag {
-        display: inline-block;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--grey);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-      }
-
-      .payoff-title-compact {
-        font-family: 'Instrument Sans', sans-serif;
-        font-weight: 700;
-        font-size: 26px;
-        line-height: 1.15;
-        letter-spacing: -0.02em;
-        color: var(--ink);
-      }
-
-      .payoff-meta-text {
-        font-size: 15px;
+        font-size: 28px;
         font-weight: 500;
-        color: var(--grey);
-        letter-spacing: -0.01em;
-      }
-
-      .card-c-header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 12px;
-        border-radius: 8px;
-        background: var(--ink);
-        color: var(--card);
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-
-      .hero-spec-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--red);
+        color: var(--caption-inactive);
         letter-spacing: 0.04em;
       }
 
-      .card-c-title {
-        font-family: 'Instrument Sans', sans-serif;
+      .burden-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 16px;
+        border-radius: 8px;
+        background: rgba(255, 87, 34, 0.15);
+        border: 1.5px solid var(--neon-coral);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
         font-weight: 700;
-        font-size: 38px;
-        line-height: 1.1;
-        letter-spacing: -0.03em;
-        color: var(--ink);
+        color: var(--neon-coral-light);
+        letter-spacing: 0.04em;
       }
 
-      .card-c-subtitle {
-        font-size: 18px;
-        font-weight: 500;
-        color: var(--grey);
-        letter-spacing: -0.01em;
+      .code-display-block {
+        margin-top: 14px;
+        background: #0E1015;
+        border: 1.5px solid #222634;
+        border-radius: 16px;
+        padding: 24px 28px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 22px;
+        line-height: 1.5;
+        color: #D1D5DB;
+        overflow: hidden;
       }
 
-      /* Hand-Drawn Red Ring SVG around Card C */
-      #card-c-ring-svg {
+      .code-line {
+        display: block;
+        white-space: pre;
+      }
+
+      .c-kwd { color: var(--hyper-violet-light); font-weight: 700; }
+      .c-str { color: var(--gemini-cyan-light); }
+      .c-com { color: var(--neon-coral-light); opacity: 0.85; }
+      .c-fn  { color: #60A5FA; }
+      .c-var { color: #E5E7EB; }
+
+      .problem-status-strip {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 18px;
+        border-top: 1.5px dashed var(--border-glass);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+      }
+
+      .status-left {
+        color: var(--neon-coral-light);
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .status-right {
+        color: var(--caption-inactive);
+      }
+
+      /* Laser Strike Overlay */
+      #laser-svg {
         position: absolute;
-        left: -25px;
-        top: 185px;
-        width: 890px;
-        height: 250px;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 30;
+      }
+
+      /* Payoff Hero Cockpit Scene (2.4s – 6.5s) */
+      #payoff-container {
+        left: 90px;
+        top: 380px;
+        width: 900px;
+        height: 720px;
+        z-index: 25;
+        isolation: isolate;
+        perspective: 1400px;
+        transform-style: preserve-3d;
+      }
+
+      #hero-cockpit-card {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background-color: var(--polar-glass);
+        border: 2px solid var(--border-glass);
+        border-radius: 28px;
+        padding: 44px 48px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 28px 70px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        transform: translateZ(20px);
+        transform-origin: center center;
+        opacity: 0;
+        z-index: 2;
+      }
+
+      .hero-cockpit-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .studio-platform-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 20px;
+        border-radius: 999px;
+        background: rgba(66, 133, 244, 0.15);
+        border: 1.5px solid var(--gemini-cyan);
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--gemini-cyan-light);
+        letter-spacing: 0.06em;
+      }
+
+      .studio-status-live {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--status-green);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .live-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--status-green);
+        box-shadow: 0 0 12px var(--status-green);
+      }
+
+      .hero-title-group {
+        margin-top: 8px;
+      }
+
+      .hero-main-title {
+        font-family: 'Anton', sans-serif;
+        font-size: 136px;
+        line-height: 0.92;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        color: var(--text-white);
+      }
+
+      .hero-main-title .cyan-word {
+        color: var(--gemini-cyan-light);
+        text-shadow: 0 0 40px rgba(66, 133, 244, 0.45);
+      }
+
+      .hero-tagline {
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: var(--caption-inactive);
+        text-transform: uppercase;
+        margin-top: 14px;
+      }
+
+      /* Mini Cockpit Console Strip */
+      .cockpit-console-strip {
+        background: #0F1218;
+        border: 1.5px solid #23293D;
+        border-radius: 18px;
+        padding: 22px 28px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .console-spec-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .console-spec-label {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        color: var(--caption-inactive);
+        letter-spacing: 0.04em;
+      }
+
+      .console-spec-value {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--text-white);
+      }
+
+      .console-spec-value.cyan {
+        color: var(--gemini-cyan-light);
+      }
+
+      .console-spec-value.green {
+        color: var(--status-green);
+      }
+
+      /* Floating Micro-Cards (2.5D Depth) */
+      .floating-micro-card {
+        position: absolute;
         pointer-events: none;
         z-index: 35;
-        opacity: 0; /* Initially hidden */
+        opacity: 0;
+        transform-origin: center center;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
+      }
+
+      /* Micro-Card 1: 2M Multimodal Window */
+      #pill-multimodal {
+        top: -32px;
+        right: -24px;
+        background: #151C2C;
+        border: 2px solid var(--gemini-cyan);
+        border-radius: 999px;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--gemini-cyan-light);
+        letter-spacing: 0.04em;
+        transform: translateZ(60px);
+      }
+
+      /* Micro-Card 2: Zero Boilerplate Badge */
+      #badge-boilerplate {
+        bottom: 60px;
+        left: -32px;
+        background: #251616;
+        border: 2px solid var(--neon-coral);
+        border-radius: 18px;
+        padding: 14px 26px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--neon-coral-light);
+        letter-spacing: 0.04em;
+        transform: translateZ(90px);
+      }
+
+      /* Micro-Card 3: Instant Export Badge */
+      #badge-export {
+        bottom: -28px;
+        right: 36px;
+        background: #20152F;
+        border: 2px solid var(--hyper-violet);
+        border-radius: 18px;
+        padding: 14px 28px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--hyper-violet-light);
+        letter-spacing: 0.04em;
+        transform: translateZ(120px);
       }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-g8h2"
+    <div
       id="root"
       data-composition-id="hook"
       data-start="0"
-      data-duration="7.18"
+      data-duration="6.5"
       data-width="1080"
       data-height="1920"
     >
-      <!-- CAPTIONS CONTAINER (x: 120px, y: 196px, width: 850px) -->
-      <div data-hf-id="hf-69a5" id="captions" class="clip" data-start="0" data-duration="7.18">
-        <!-- Line 1 (0.0s to 1.68s): "Heavy models are too slow" -->
-        <div data-hf-id="hf-hj50" id="caption-line-1" class="caption-line">
-          <span data-hf-id="hf-iszr" class="word w-heavy">Heavy</span>
-          <span data-hf-id="hf-i1kn" class="word w-models">models</span>
-          <span data-hf-id="hf-aonb" class="word w-are">are</span>
-          <span data-hf-id="hf-5esk" class="word keyword w-too">too</span>
-          <span data-hf-id="hf-4kzp" class="word w-slow">slow</span>
-        </div>
+      <!-- Background Procedural Grain Overlay -->
+      <div id="grain-overlay" class="clip" data-start="0" data-duration="6.5" data-layout-ignore="true"></div>
 
-        <!-- Line 2 (1.68s to 7.18s): "New leaks suggest Google's Gemini Flash 4 is about to rewrite the rules of AI speed" -->
-        <div data-hf-id="hf-q70v" id="caption-line-2" class="caption-line">
-          <span data-hf-id="hf-mwg3" class="word w-new">New</span>
-          <span data-hf-id="hf-oocn" class="word w-leaks">leaks</span>
-          <span data-hf-id="hf-3uqb" class="word w-suggest">suggest</span>
-          <span data-hf-id="hf-1brc" class="word w-googles">Google's</span>
-          <span data-hf-id="hf-99mh" class="word w-gemini">Gemini</span>
-          <span data-hf-id="hf-b2qz" class="word w-flash">Flash</span>
-          <span data-hf-id="hf-qi0n" class="word w-4">4</span>
-          <span data-hf-id="hf-kymz" class="word w-is">is</span>
-          <span data-hf-id="hf-dfqj" class="word w-about">about</span>
-          <span data-hf-id="hf-w8nh" class="word w-to">to</span>
-          <span data-hf-id="hf-jgx3" class="word w-rewrite">rewrite</span>
-          <span data-hf-id="hf-c5cn" class="word w-the">the</span>
-          <span data-hf-id="hf-i5z4" class="word keyword w-rules">rules</span>
-          <span data-hf-id="hf-urt5" class="word w-of">of</span>
-          <span data-hf-id="hf-mue7" class="word w-ai">AI</span>
-          <span data-hf-id="hf-az6j" class="word w-speed">speed</span>
+      <!-- Top Editorial Category Tracker -->
+      <div id="top-tracker" class="clip" data-start="0" data-duration="6.5">
+        <div class="tracker-left">GOOGLE AI STUDIO // 00</div>
+        <div class="tracker-right">
+          <span class="tracker-dot"></span>
+          <span>PROMPT TO PROD</span>
         </div>
       </div>
 
-      <!-- PROBLEM CARD (0.0s to 1.68s) -->
-      <div data-hf-id="hf-bqpo" id="problem-card-wrapper" class="clip" data-start="0" data-duration="1.9">
-        <!-- Halftone Dot Shadow: offset 13px left, 12px down -->
-        <div data-hf-id="hf-evkf" id="problem-card-shadow" class="halftone-shadow"></div>
+      <!-- Captions Container -->
+      <div id="captions" class="clip" data-start="0" data-duration="6.5">
+        <!-- Line 1 (0.0s - 2.4s): "Stop wrestling with Gemini API boilerplate" -->
+        <div id="caption-line-1" class="caption-line">
+          <span class="word w-stop">Stop</span>
+          <span class="word keyword w-wrestling">wrestling</span>
+          <span class="word w-with">with</span>
+          <span class="word w-gemini">Gemini</span>
+          <span class="word w-api">API</span>
+          <span class="word keyword w-boilerplate">boilerplate</span>
+        </div>
 
-        <!-- Problem Card -->
-        <div data-hf-id="hf-r1v5" id="problem-card">
-          <!-- Status row -->
-          <div data-hf-id="hf-x10j" class="card-header-row">
-            <div data-hf-id="hf-rp3q" class="status-pill">
-              <span data-hf-id="hf-i0ip" class="status-dot"></span>
-              <span data-hf-id="hf-9uwe" class="status-pill-text">LATENCY BOTTLENECK</span>
-            </div>
-            <div data-hf-id="hf-6x9f" class="server-cluster-tag">CLUSTER // US-EAST-NODE-04</div>
-          </div>
-
-          <!-- Headline and metric -->
-          <div data-hf-id="hf-u6h2" class="problem-headline-block">
-            <div data-hf-id="hf-ewr4" class="problem-headline">LAGGING SERVER COMPUTE - 4,820ms</div>
-            <div data-hf-id="hf-lfk6" class="problem-subheadline">Time to First Token (TTFT) • Critical Model Stalling</div>
-          </div>
-
-          <!-- Sluggish Progress Bar stuck at 14% -->
-          <div data-hf-id="hf-uvo2" class="progress-bar-wrap">
-            <div data-hf-id="hf-lxwj" class="progress-track">
-              <div data-hf-id="hf-b9gd" class="progress-fill"></div>
-            </div>
-            <div data-hf-id="hf-mc1d" class="progress-bar-legend">
-              <span data-hf-id="hf-604m" class="legend-left">STUCK AT 14% COMPUTATION</span>
-              <span data-hf-id="hf-jzcu" class="legend-right">TIMEOUT CEILING: 5,000ms</span>
-            </div>
-          </div>
-
-          <!-- Footer stats -->
-          <div data-hf-id="hf-yg4g" class="problem-card-footer">
-            <div data-hf-id="hf-eygh" class="footer-item">THROUGHPUT: <strong data-hf-id="hf-7lf2">2.8 tok/s</strong></div>
-            <div data-hf-id="hf-4jeq" class="footer-item">MEMORY: <strong data-hf-id="hf-e33g">98.4% (OOM)</strong></div>
-            <div data-hf-id="hf-1rja" class="footer-item">THREADS: <strong data-hf-id="hf-ax2k">100% BLOCKED</strong></div>
-          </div>
-
-          <!-- Strike-through SVG (draws 0.4s to 0.9s) -->
-          <svg data-hf-id="hf-31nv" class="strikethrough-svg" viewBox="0 0 840 380" preserveAspectRatio="none">
-            <path data-hf-id="hf-76a0"
-              id="problem-strikethrough"
-              d="M 50 330 C 260 260, 560 130, 790 50"
-              stroke="#D7372C"
-              stroke-width="6"
-              stroke-linecap="round"
-              fill="none"
-            />
-          </svg>
+        <!-- Line 2 (2.4s - 6.5s): "Google AI Studio is the developer cockpit that changes everything" -->
+        <div id="caption-line-2" class="caption-line">
+          <span class="word w-google">Google</span>
+          <span class="word w-ai">AI</span>
+          <span class="word w-studio">Studio</span>
+          <span class="word w-is">is</span>
+          <span class="word w-the">the</span>
+          <span class="word w-developer">developer</span>
+          <span class="word keyword w-cockpit">cockpit</span>
+          <span class="word w-that">that</span>
+          <span class="word w-changes">changes</span>
+          <span class="word keyword w-everything">everything</span>
         </div>
       </div>
 
-      <!-- LINE 2 PAYOFF CARDS (1.68s to 7.18s) -->
-      <div data-hf-id="hf-bqu7" id="payoff-container" class="clip" data-start="1.68" data-duration="5.5" data-layout-ignore="true">
-        <!-- Card A (1.90s): "SUB-20MS STREAM" -->
-        <div data-hf-id="hf-iaad" id="card-a-wrap" class="payoff-card-wrapper">
-          <div data-hf-id="hf-j81b" id="card-a-shadow" class="halftone-shadow"></div>
-          <div data-hf-id="hf-9o0l" id="card-a">
-            <div data-hf-id="hf-yduh" class="chip-tag">LATENCY SPECS</div>
-            <div data-hf-id="hf-o381" class="payoff-title-compact">SUB-20MS STREAM</div>
-            <div data-hf-id="hf-o3bk" class="payoff-meta-text">Instant continuous token pipeline</div>
-          </div>
-        </div>
+      <!-- Problem Card (0.0s - 2.4s): Raw Boilerplate Nightmare -->
+      <div id="problem-card-wrapper" class="clip" data-start="0" data-duration="2.4">
+        <!-- Halftone Drop-Shadow (offset 14px down, 12px left) -->
+        <div class="halftone-shadow"></div>
 
-        <!-- Card B (2.06s): "10M TOKEN MEMORY" -->
-        <div data-hf-id="hf-hdzs" id="card-b-wrap" class="payoff-card-wrapper">
-          <div data-hf-id="hf-1x6m" id="card-b-shadow" class="halftone-shadow"></div>
-          <div data-hf-id="hf-dm4m" id="card-b">
-            <div data-hf-id="hf-9ro7" class="chip-tag">WORKING MEMORY</div>
-            <div data-hf-id="hf-oolk" class="payoff-title-compact">10M TOKEN MEMORY</div>
-            <div data-hf-id="hf-c67r" class="payoff-meta-text">Massive multi-document context</div>
-          </div>
-        </div>
-
-        <!-- Card C (2.22s): "FLASH 4 ARCHITECTURE" (Main Payoff Card) -->
-        <div data-hf-id="hf-o497" id="card-c-wrap" class="payoff-card-wrapper">
-          <div data-hf-id="hf-8mgd" id="card-c-shadow" class="halftone-shadow"></div>
-          <div data-hf-id="hf-hk8n" id="card-c">
-            <div data-hf-id="hf-pgx7" class="card-c-header-row">
-              <span data-hf-id="hf-w7g5" class="hero-badge">NEW BREAKTHROUGH</span>
-              <span data-hf-id="hf-d7hy" class="hero-spec-tag">GEMINI FLASH 4 // INTERNAL</span>
+        <!-- Problem Card Box -->
+        <div id="problem-card">
+          <!-- Terminal Header Bar -->
+          <div class="card-header-bar">
+            <div class="terminal-controls">
+              <span class="mac-dot red"></span>
+              <span class="mac-dot yellow"></span>
+              <span class="mac-dot green"></span>
             </div>
-            <div data-hf-id="hf-c39i" class="card-c-title">FLASH 4 ARCHITECTURE</div>
-            <div data-hf-id="hf-q4g5" class="card-c-subtitle">
-              Ultra-sparse mixture of experts • Zero-latency frontier intelligence
+            <div class="card-title-file">raw_api_client.py</div>
+            <div class="burden-badge">120+ LINES</div>
+          </div>
+
+          <!-- Code Texture Display -->
+          <div class="code-display-block" data-layout-ignore="true">
+            <div class="code-line"><span class="c-kwd">import</span> <span class="c-var">urllib.request</span>, <span class="c-var">json</span>, <span class="c-var">os</span></div>
+            <div class="code-line"><span class="c-com"># Raw header construction & auth management</span></div>
+            <div class="code-line"><span class="c-var">headers</span> = {<span class="c-str">"x-goog-api-key"</span>: <span class="c-var">os.getenv</span>(<span class="c-str">"KEY"</span>)}</div>
+            <div class="code-line"><span class="c-var">body</span> = {</div>
+            <div class="code-line">  <span class="c-str">"contents"</span>: [{<span class="c-str">"parts"</span>: [{<span class="c-str">"text"</span>: <span class="c-var">prompt</span>}]}],</div>
+            <div class="code-line">  <span class="c-str">"generationConfig"</span>: {<span class="c-str">"temp"</span>: <span class="c-var">0.7</span>, <span class="c-str">"maxOutputTokens"</span>: <span class="c-var">2048</span>}</div>
+            <div class="code-line">}</div>
+            <div class="code-line"><span class="c-com"># Manual retry buffer, SSL sockets, chunk decoder</span></div>
+            <div class="code-line"><span class="c-var">req</span> = <span class="c-var">urllib.request</span>.<span class="c-fn">Request</span>(<span class="c-var">ENDPOINT</span>, <span class="c-var">data</span>=<span class="c-fn">encode</span>(<span class="c-var">body</span>))</div>
+          </div>
+
+          <!-- Problem Footer Status -->
+          <div class="problem-status-strip">
+            <div class="status-left">
+              <span>⚠</span>
+              <span>COMPLEXITY BOTTLENECK</span>
             </div>
+            <div class="status-right">DEV TIME: -14 DAYS</div>
           </div>
         </div>
 
-        <!-- Hand-drawn Red Ring around Card C (draws at 3.4s) -->
-        <svg data-hf-id="hf-g9sd" id="card-c-ring-svg" viewBox="0 0 890 250" fill="none">
-          <path data-hf-id="hf-ex3a"
-            id="ring-path"
-            d="M 800 22 C 860 18, 882 72, 880 125 C 878 185, 854 232, 785 238 C 580 248, 310 244, 105 236 C 38 232, 12 185, 12 125 C 12 65, 42 20, 145 16 C 340 12, 605 18, 805 24 C 848 26, 876 38, 880 62"
-            stroke="#D7372C"
-            stroke-width="6"
+        <!-- Laser Strike Overlay (Draws at 1.4s) -->
+        <svg id="laser-svg" viewBox="0 0 900 700" preserveAspectRatio="none">
+          <line
+            id="laser-line"
+            x1="50"
+            y1="650"
+            x2="850"
+            y2="50"
+            stroke="#FF5722"
+            stroke-width="8"
             stroke-linecap="round"
-            stroke-linejoin="round"
+            style="filter: drop-shadow(0 0 16px #FF5722) drop-shadow(0 0 6px #FFFFFF);"
           />
         </svg>
+      </div>
+
+      <!-- Payoff Scene (2.4s - 6.5s): Google AI Studio Cockpit -->
+      <div id="payoff-container" class="clip" data-start="2.4" data-duration="4.1">
+        <!-- Floating Micro-Card 1: 2M Multimodal Window -->
+        <div id="pill-multimodal" class="floating-micro-card">
+          <span style="font-size: 30px;">✦</span>
+          <span>2M MULTIMODAL WINDOW</span>
+        </div>
+
+        <!-- Floating Micro-Card 2: Zero Boilerplate Badge -->
+        <div id="badge-boilerplate" class="floating-micro-card">
+          <span style="font-size: 30px;">⚡</span>
+          <span>ZERO BOILERPLATE</span>
+        </div>
+
+        <!-- Floating Micro-Card 3: Instant Export Badge -->
+        <div id="badge-export" class="floating-micro-card">
+          <span style="font-size: 30px;">⇲</span>
+          <span>INSTANT EXPORT</span>
+        </div>
+
+        <!-- Halftone Drop-Shadow (offset 14px down, 12px left) -->
+        <div class="halftone-shadow"></div>
+
+        <!-- Hero Cockpit Card Surface -->
+        <div id="hero-cockpit-card">
+          <!-- Card Header Bar -->
+          <div class="hero-cockpit-header">
+            <div class="studio-platform-pill">
+              <span>DEVELOPER COCKPIT</span>
+            </div>
+            <div class="studio-status-live">
+              <span class="live-dot"></span>
+              <span>LIVE PLAYGROUND</span>
+            </div>
+          </div>
+
+          <!-- Massive Hero Title -->
+          <div class="hero-title-group">
+            <div class="hero-main-title">
+              <span>GOOGLE AI</span>
+              <span class="cyan-word">STUDIO</span>
+            </div>
+            <div class="hero-tagline">
+              THE DEVELOPER COCKPIT THAT CHANGES EVERYTHING
+            </div>
+          </div>
+
+          <!-- Tactile Mini Console Strip -->
+          <div class="cockpit-console-strip">
+            <div class="console-spec-item">
+              <span class="console-spec-label">ACTIVE MODEL</span>
+              <span class="console-spec-value cyan">gemini-2.0-flash</span>
+            </div>
+            <div class="console-spec-item">
+              <span class="console-spec-label">LATENCY SPECS</span>
+              <span class="console-spec-value green">SUB-20MS STREAM</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -649,107 +669,115 @@
       const tl = gsap.timeline({ paused: true });
       window.__timelines["hook"] = tl;
 
-      // Stroke dash calculations for responsive drawing
-      const strikePath = document.getElementById("problem-strikethrough");
-      const strikeLen = strikePath.getTotalLength();
-      gsap.set(strikePath, { strokeDasharray: strikeLen, strokeDashoffset: strikeLen });
+      // Setup laser stroke drawing length
+      const laserLine = document.getElementById("laser-line");
+      const laserLen = laserLine.getTotalLength();
+      gsap.set(laserLine, { strokeDasharray: laserLen, strokeDashoffset: laserLen });
 
-      const ringPath = document.getElementById("ring-path");
-      const ringLen = ringPath.getTotalLength();
-      gsap.set(ringPath, { strokeDasharray: ringLen, strokeDashoffset: ringLen });
-
-      // -----------------------------------------------------------------
-      // LINE 1 CAPTIONS (0.0s to 1.68s)
-      // "Heavy" 0.0s, "models" 0.14s, "are" 0.44s,
-      // "too" 0.72s (KEY WORD: red #D7372C), "slow" 0.90s
-      // Words start in #B5AFA7 and turn #1E1C1A in 0.2s as spoken
-      // -----------------------------------------------------------------
-      tl.to(".w-heavy", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.0);
-      tl.to(".w-models", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.14);
-      tl.to(".w-are", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.44);
-      tl.to(".w-too", { color: "#D7372C", duration: 0.2, ease: "power1.out" }, 0.72);
-      tl.to(".w-slow", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 0.90);
+      const CORAL_ACCENT = "#FF7043";
+      const CYAN_ACCENT = "#5B9BFF";
 
       // -----------------------------------------------------------------
-      // PROBLEM CARD STRIKE-THROUGH (0.4s to 0.9s)
-      // Red strike-through (6px stroke, red #D7372C) draws across the card
+      // 0.0s: PROBLEM CARD SLAMS IN (scale: 1.25 -> 1, power4.out)
       // -----------------------------------------------------------------
-      tl.to(strikePath, { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, 0.4);
+      tl.fromTo(
+        "#problem-card-wrapper",
+        { scale: 1.25, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.45, ease: "power4.out" },
+        0.0
+      );
 
       // -----------------------------------------------------------------
-      // TRANSITION AT 1.68s:
+      // LINE 1 CAPTIONS (0.0s – 2.4s)
+      // "Stop wrestling with Gemini API boilerplate"
+      // Word color activation: grey (#9CA3AF) -> white (#FFFFFF) / coral (#FF7043)
+      // -----------------------------------------------------------------
+      tl.to(".w-stop", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 0.05);
+      tl.to(".w-wrestling", { color: CORAL_ACCENT, duration: 0.22, ease: "power1.out" }, 0.35);
+      tl.to(".w-with", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 0.85);
+      tl.to(".w-gemini", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 1.15);
+      tl.to(".w-api", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 1.45);
+      tl.to(".w-boilerplate", { color: CORAL_ACCENT, duration: 0.22, ease: "power1.out" }, 1.75);
+
+      // -----------------------------------------------------------------
+      // 1.4s: NEON CORAL LASER SLASH DRAWS ACROSS PROBLEM CARD
+      // -----------------------------------------------------------------
+      tl.to(laserLine, { strokeDashoffset: 0, duration: 0.35, ease: "power3.out" }, 1.40);
+      tl.to("#problem-card", { x: -6, duration: 0.04, yoyo: true, repeat: 3, ease: "power1.inOut" }, 1.45);
+
+      // -----------------------------------------------------------------
+      // 2.3s – 2.5s: TRANSITION TO PAYOFF
       // 1. Caption Line 1 exits, Line 2 enters
-      // 2. Problem card exits upward (50px up, fade out in 0.22s)
+      // 2. Problem card whips upward and out
       // -----------------------------------------------------------------
-      tl.to("#caption-line-1", { opacity: 0, duration: 0.15, ease: "power2.in" }, 1.53);
-      tl.to("#caption-line-2", { opacity: 1, duration: 0.15, ease: "power2.out" }, 1.68);
-
-      tl.to("#problem-card-wrapper", { y: -50, opacity: 0, duration: 0.22, ease: "power2.in" }, 1.68);
-
-      // -----------------------------------------------------------------
-      // LINE 2 PAYOFF CARDS POP IN (0.16s apart, scale 0.55 -> 1 in 0.34s, back.out(2.2))
-      // Card A: 1.90s
-      // Card B: 2.06s
-      // Card C: 2.22s (Main Payoff Card)
-      // -----------------------------------------------------------------
+      tl.to("#caption-line-1", { opacity: 0, y: -24, duration: 0.2, ease: "power2.in" }, 2.25);
       tl.fromTo(
-        "#card-a-wrap",
-        { scale: 0.55, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(2.2)" },
-        1.90
+        "#caption-line-2",
+        { opacity: 0, y: 24 },
+        { opacity: 1, y: 0, duration: 0.28, ease: "power2.out" },
+        2.45
       );
 
-      tl.fromTo(
-        "#card-b-wrap",
-        { scale: 0.55, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(2.2)" },
-        2.06
-      );
+      tl.to("#problem-card-wrapper", { y: -240, scale: 0.88, opacity: 0, duration: 0.35, ease: "power4.in" }, 2.35);
 
+      // -----------------------------------------------------------------
+      // 2.8s: "GOOGLE AI STUDIO" DEVELOPER COCKPIT HERO CARD POPS IN
+      // (scale: 0.55 -> 1, rotate: -3deg -> 0deg, ease: "back.out(2.4)")
+      // -----------------------------------------------------------------
       tl.fromTo(
-        "#card-c-wrap",
-        { scale: 0.55, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(2.2)" },
-        2.22
+        "#hero-cockpit-card",
+        { scale: 0.55, rotate: -3, opacity: 0 },
+        { scale: 1, rotate: 0, opacity: 1, duration: 0.55, ease: "back.out(2.4)" },
+        2.75
       );
 
       // -----------------------------------------------------------------
-      // LINE 2 CAPTIONS WORD SYNC (1.68s to 7.18s)
-      // "New" 1.68s, "leaks" 1.9s, "suggest" 2.2s, "Google's" 2.6s,
-      // "Gemini" 3.0s, "Flash" 3.4s, "4" 3.8s, "is" 4.1s, "about" 4.3s,
-      // "to" 4.6s, "rewrite" 4.8s, "the" 5.1s,
-      // "rules" 5.36s (KEY WORD: red #D7372C), "of" 5.7s, "AI" 6.0s, "speed" 6.3s
+      // 3.2s – 3.6s: FLOATING MICRO-CARDS SPRING IN AT 2.5D DEPTH
       // -----------------------------------------------------------------
-      tl.to(".w-new", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 1.68);
-      tl.to(".w-leaks", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 1.90);
-      tl.to(".w-suggest", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 2.20);
-      tl.to(".w-googles", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 2.60);
-      tl.to(".w-gemini", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 3.00);
-      tl.to(".w-flash", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 3.40);
-      tl.to(".w-4", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 3.80);
-      tl.to(".w-is", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.10);
-      tl.to(".w-about", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.30);
-      tl.to(".w-to", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.60);
-      tl.to(".w-rewrite", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 4.80);
-      tl.to(".w-the", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 5.10);
-      tl.to(".w-rules", { color: "#D7372C", duration: 0.2, ease: "power1.out" }, 5.36);
-      tl.to(".w-of", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 5.70);
-      tl.to(".w-ai", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 6.00);
-      tl.to(".w-speed", { color: "#1E1C1A", duration: 0.2, ease: "power1.out" }, 6.30);
-
-      // -----------------------------------------------------------------
-      // AT 3.4s: HAND-DRAWN RED RING DRAWS AROUND CARD C
-      // Spoken word "Flash" triggers the ring
-      // -----------------------------------------------------------------
-      tl.set("#card-c-ring-svg", { opacity: 1 }, 3.4);
       tl.fromTo(
-        ringPath,
-        { strokeDashoffset: ringLen },
-        { strokeDashoffset: 0, duration: 0.55, ease: "power2.out" },
-        3.4
+        "#pill-multimodal",
+        { scale: 0.35, opacity: 0, y: 25 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.45, ease: "back.out(2.4)" },
+        3.20
       );
 
-      // Seek to 0 initially (or respect URL ?t= query parameter for inspection)
+      tl.fromTo(
+        "#badge-boilerplate",
+        { scale: 0.35, opacity: 0, x: -25 },
+        { scale: 1, opacity: 1, x: 0, duration: 0.45, ease: "back.out(2.4)" },
+        3.40
+      );
+
+      tl.fromTo(
+        "#badge-export",
+        { scale: 0.35, opacity: 0, y: 25 },
+        { scale: 1, opacity: 1, y: 0, duration: 0.45, ease: "back.out(2.4)" },
+        3.60
+      );
+
+      // -----------------------------------------------------------------
+      // LINE 2 CAPTIONS WORD SYNC (2.4s – 6.5s)
+      // "Google AI Studio is the developer cockpit that changes everything"
+      // -----------------------------------------------------------------
+      tl.to(".w-google", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 2.55);
+      tl.to(".w-ai", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 2.75);
+      tl.to(".w-studio", { color: CYAN_ACCENT, duration: 0.22, ease: "power1.out" }, 2.95);
+      tl.to(".w-is", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 3.35);
+      tl.to(".w-the", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 3.55);
+      tl.to(".w-developer", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 3.75);
+      tl.to(".w-cockpit", { color: CORAL_ACCENT, duration: 0.24, ease: "power1.out" }, 4.15);
+      tl.to(".w-that", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 4.80);
+      tl.to(".w-changes", { color: "#FFFFFF", duration: 0.18, ease: "power1.out" }, 5.10);
+      tl.to(".w-everything", { color: CORAL_ACCENT, duration: 0.24, ease: "power1.out" }, 5.50);
+
+      // -----------------------------------------------------------------
+      // 3.8s – 6.5s: 2.5D AMBIENT CAMERA DRIFT (CINEMATIC PARALLAX)
+      // Deterministic, smooth, zero repeat:-1
+      // -----------------------------------------------------------------
+      tl.to("#payoff-container", { rotateX: 2.2, rotateY: -2.8, duration: 2.0, ease: "sine.inOut" }, 3.8);
+      tl.to("#payoff-container", { rotateX: -0.5, rotateY: 1.0, duration: 0.7, ease: "sine.inOut" }, 5.8);
+
+      // Seek to initial time or query parameter
       const urlParams = new URLSearchParams(window.location.search);
       const seekTime = parseFloat(urlParams.get("t") || "0");
       tl.seek(seekTime);

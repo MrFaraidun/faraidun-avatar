@@ -3,24 +3,29 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1080, height=1920" />
-    <title>Point 1 - Sub-20ms Stream</title>
+    <title>Point 1 - 2M+ Multimodal Canvas</title>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Instrument+Sans:ital,wght@0,500;0,600;0,700;1,500&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       :root {
-        --cream: #EBE7E1;
-        --ink: #1E1C1A;
-        --red: #D7372C;
-        --grey: #8A857E;
-        --card-bg: #FBFAF8;
-        --muted: #B5AFA7;
-        --green: #22A048;
+        --obsidian: #0C0D10;
+        --polar-glass: #171920;
+        --border-glass: #2B2F3E;
+        --cyan-gemini: #4285F4;
+        --violet-hyper: #9B51E0;
+        --coral-neon: #FF5722;
+        --text-steel: #8E95A5;
+        --text-white: #FFFFFF;
+        --font-anton: 'Anton', sans-serif;
+        --font-sans: 'Instrument Sans', sans-serif;
+        --font-serif: 'Instrument Serif', serif;
+        --font-mono: 'JetBrains Mono', monospace;
       }
 
       * {
@@ -36,721 +41,1134 @@
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
-        color: var(--ink);
-        font-family: 'Instrument Sans', sans-serif;
+        background-color: var(--obsidian);
+        color: var(--text-white);
+        font-family: var(--font-sans);
         -webkit-font-smoothing: antialiased;
       }
 
-      .clip {
+      #root {
         position: relative;
         width: 1080px;
         height: 1920px;
         overflow: hidden;
-        background-color: var(--cream);
+        background-color: var(--obsidian);
       }
 
-      /* 2. Top Small Label at y: 132px (JetBrains Mono 25px, grey #8A857E) */
-      .top-label {
+      .clip {
         position: absolute;
-        left: 120px;
-        top: 132px;
-        width: 840px;
+        box-sizing: border-box;
+      }
+
+      /* Solid canvas background to guarantee 100% opacity against any parent background */
+      .solid-canvas-bg {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        background-color: #0C0D10;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      /* Parallax layers */
+      .parallax-layer {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        pointer-events: none;
+      }
+
+      #layer-bg {
+        z-index: 2;
+        background-color: #0C0D10;
+      }
+
+      #layer-mid {
+        z-index: 10;
+      }
+
+      #layer-fg {
+        z-index: 20;
+      }
+
+      /* Ambient canvas texture and neon glows */
+      .bg-dots {
+        position: absolute;
+        inset: 0;
+        width: 1080px;
+        height: 1920px;
+        background-image: radial-gradient(#1E2332 1.8px, transparent 1.8px);
+        background-size: 24px 24px;
+        opacity: 0.75;
+      }
+
+      .ambient-glow-cyan {
+        position: absolute;
+        left: -100px;
+        top: 260px;
+        width: 600px;
+        height: 600px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(66, 133, 244, 0.18) 0%, transparent 70%);
+        filter: blur(80px);
+        pointer-events: none;
+      }
+
+      .ambient-glow-violet {
+        position: absolute;
+        right: -80px;
+        top: 580px;
+        width: 650px;
+        height: 650px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(155, 81, 224, 0.16) 0%, transparent 70%);
+        filter: blur(90px);
+        pointer-events: none;
+      }
+
+      .ambient-glow-coral {
+        position: absolute;
+        left: 180px;
+        top: 920px;
+        width: 600px;
+        height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 87, 34, 0.14) 0%, transparent 70%);
+        filter: blur(85px);
+        pointer-events: none;
+      }
+
+      /* Halftone Drop Shadow Component */
+      .halftone-shadow {
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        background-image: radial-gradient(rgba(43, 47, 62, 0.95) 2px, transparent 2px);
+        background-size: 10px 10px;
+        transform: translate(-14px, 16px);
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* 1. Top Badge */
+      .top-badge-container {
+        position: absolute;
+        left: 90px;
+        top: 105px;
         display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 25px;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .top-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 20px;
+        background: rgba(23, 25, 32, 0.9);
+        border: 2px solid var(--border-glass);
+        border-radius: 100px;
+        font-family: var(--font-mono);
+        font-size: 28px;
         font-weight: 700;
-        color: var(--grey);
+        color: var(--cyan-gemini);
         letter-spacing: 0.06em;
         text-transform: uppercase;
-        z-index: 10;
+        backdrop-filter: blur(10px);
       }
 
-      .top-label .clock-val {
-        color: var(--red);
+      .badge-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--cyan-gemini);
+        box-shadow: 0 0 10px var(--cyan-gemini);
+      }
+
+      .badge-aux {
+        font-family: var(--font-mono);
+        font-size: 28px;
         font-weight: 700;
+        color: var(--text-steel);
+        letter-spacing: 0.04em;
       }
 
-      /* 3. Captions (x: 120, y: 196, width: 850px, Instrument Sans 500 at 62px) */
-      .captions {
+      /* 2. Captions (Top Left) */
+      .captions-wrapper {
         position: absolute;
-        left: 120px;
-        top: 196px;
-        width: 850px;
-        font-family: 'Instrument Sans', sans-serif;
-        font-size: 62px;
+        left: 90px;
+        top: 165px;
+        width: 900px;
+        height: 130px;
+      }
+
+      .caption-sentence {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 900px;
+        font-family: var(--font-sans);
+        font-size: 48px;
         font-weight: 500;
-        line-height: 1.22;
+        line-height: 1.25;
         letter-spacing: -0.015em;
-        z-index: 10;
-        word-spacing: 0.04em;
       }
 
-      .c-word {
-        color: var(--muted);
+      .caption-line {
+        display: block;
+        white-space: nowrap;
+      }
+
+      #caption-sentence-2 {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      .w-word {
+        color: var(--text-steel);
         display: inline-block;
-        white-space: pre;
+        transition: color 0.15s ease;
       }
 
-      .c-keyword {
-        font-family: 'Instrument Serif', serif;
+      .w-accent-coral {
+        font-family: var(--font-serif);
         font-style: italic;
-        font-size: 72px;
-        font-weight: 400;
-        color: var(--muted);
+        font-size: 56px;
+        color: var(--text-steel);
         vertical-align: -2px;
       }
 
-      /* 4. Title: Anton 140px slams in at 0.0s */
+      .w-accent-cyan {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 56px;
+        color: var(--text-steel);
+        vertical-align: -2px;
+      }
+
+      .w-accent-violet {
+        font-family: var(--font-serif);
+        font-style: italic;
+        font-size: 56px;
+        color: var(--text-steel);
+        vertical-align: -2px;
+      }
+
+      /* 3. Title Headline */
       .title-container {
         position: absolute;
-        left: 120px;
-        top: 440px;
-        width: 840px;
-        z-index: 10;
+        left: 90px;
+        top: 310px;
+        width: 900px;
         transform-origin: 50% 50%;
-        opacity: 0;
       }
 
       .headline {
-        font-family: 'Anton', sans-serif;
-        font-size: 114px;
+        font-family: var(--font-anton);
+        font-size: 102px;
         line-height: 0.95;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.02em;
         text-transform: uppercase;
         display: flex;
-        gap: 24px;
-        white-space: nowrap;
+        align-items: baseline;
+        gap: 18px;
       }
 
-      .headline .t-black {
-        color: var(--ink);
+      .headline .hl-white {
+        color: var(--text-white);
       }
 
-      .headline .t-red {
-        color: var(--red);
+      .headline .hl-cyan {
+        color: var(--cyan-gemini);
+        text-shadow: 0 0 35px rgba(66, 133, 244, 0.45);
       }
 
-      .swash-svg {
+      .headline-line {
         position: absolute;
+        bottom: -12px;
         left: 0;
-        bottom: -22px;
-        width: 840px;
-        height: 28px;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--cyan-gemini) 0%, var(--violet-hyper) 60%, transparent 100%);
+        border-radius: 2px;
+      }
+
+      /* 4. Drag & Drop Zone Card */
+      .drop-zone-card {
+        position: absolute;
+        left: 90px;
+        top: 450px;
+        width: 900px;
+        height: 450px;
+        background: var(--polar-glass);
+        border: 2px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 28px 32px;
+        backdrop-filter: blur(20px);
+        isolation: isolate;
+      }
+
+      /* SVG Animated Dashed Border */
+      .drop-border-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 900px;
+        height: 450px;
+        pointer-events: none;
         overflow: visible;
       }
 
-      .swash-path {
-        stroke: var(--red);
-        stroke-width: 8;
-        stroke-linecap: round;
-        fill: none;
-      }
-
-      /* Halftone shadow pattern behind card */
-      .halftone-shadow {
-        position: absolute;
-        left: 132px;
-        top: 632px;
-        width: 840px;
-        height: 420px;
-        border-radius: 20px;
-        background: radial-gradient(#1E1C1A 22%, transparent 24%);
-        background-size: 10px 10px;
-        opacity: 0;
-        z-index: 4;
-      }
-
-      /* 5. Main Card (x: 120, y: 620, width: 840, height: 420, #FBFAF8, 3px ink border, 20px corners) */
-      .main-card {
-        position: absolute;
-        left: 120px;
-        top: 620px;
-        width: 840px;
-        height: 420px;
-        background-color: var(--card-bg);
-        border: 3px solid var(--ink);
-        border-radius: 20px;
-        padding: 34px 40px;
-        z-index: 6;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        opacity: 0;
-      }
-
-      .card-header {
+      .drop-zone-header {
         display: flex;
         justify-content: space-between;
-        align-items: flex-start;
+        align-items: center;
+        margin-bottom: 20px;
       }
 
-      .card-header-left {
+      .zone-header-left {
         display: flex;
-        flex-direction: column;
-        gap: 6px;
+        align-items: center;
+        gap: 14px;
       }
 
-      .card-metric-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
+      .zone-indicator-pulse {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background-color: var(--cyan-gemini);
+        box-shadow: 0 0 12px var(--cyan-gemini);
+      }
+
+      .zone-title {
+        font-family: var(--font-mono);
+        font-size: 28px;
         font-weight: 700;
-        color: var(--grey);
-        letter-spacing: 0.08em;
+        color: var(--text-white);
+        letter-spacing: 0.05em;
         text-transform: uppercase;
       }
 
-      .card-benchmark-sub {
-        font-size: 22px;
-        color: var(--grey);
-        font-weight: 500;
+      .zone-tag {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-steel);
+        letter-spacing: 0.04em;
       }
 
-      /* Red #1 badge */
-      .badge-1 {
-        width: 72px;
-        height: 72px;
-        background-color: var(--red);
-        border: 3px solid var(--ink);
-        border-radius: 50%;
+      /* 3 Landing Dock Slots */
+      .slots-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        height: 310px;
+      }
+
+      .dock-slot {
+        position: relative;
+        height: 100%;
+        background: rgba(12, 13, 16, 0.7);
+        border: 2px dashed #2B2F3E;
+        border-radius: 18px;
         display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 20px 16px;
+        transition: all 0.25s ease;
+      }
+
+      .slot-active-cyan {
+        border: 2px solid var(--cyan-gemini);
+        background: rgba(66, 133, 244, 0.12);
+        box-shadow: 0 0 30px rgba(66, 133, 244, 0.35);
+      }
+
+      .slot-active-violet {
+        border: 2px solid var(--violet-hyper);
+        background: rgba(155, 81, 224, 0.12);
+        box-shadow: 0 0 30px rgba(155, 81, 224, 0.35);
+      }
+
+      .slot-active-coral {
+        border: 2px solid var(--coral-neon);
+        background: rgba(255, 87, 34, 0.12);
+        box-shadow: 0 0 30px rgba(255, 87, 34, 0.35);
+      }
+
+      .slot-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .slot-num {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-steel);
+      }
+
+      .slot-badge-pill {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+      }
+
+      .badge-pill-cyan {
+        color: var(--text-white);
+        background: rgba(66, 133, 244, 0.45);
+      }
+
+      .badge-pill-violet {
+        color: var(--text-white);
+        background: rgba(155, 81, 224, 0.45);
+      }
+
+      .badge-pill-coral {
+        color: var(--text-white);
+        background: rgba(255, 87, 34, 0.45);
+      }
+
+      .slot-body {
+        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        box-shadow: 4px 4px 0px var(--ink);
-        opacity: 0;
-        transform: scale(0) rotate(0deg);
-        transform-origin: 50% 50%;
+        gap: 12px;
       }
 
-      .badge-1 span {
-        font-family: 'Anton', sans-serif;
-        font-size: 38px;
-        color: #FBFAF8;
-        line-height: 1;
-        margin-top: 2px;
+      .slot-icon-svg {
+        width: 64px;
+        height: 64px;
       }
 
-      /* Counter readout */
-      .counter-display-row {
-        display: flex;
-        align-items: baseline;
-        gap: 30px;
-        margin: 8px 0;
-      }
-
-      .big-counter {
-        font-family: 'Anton', sans-serif;
-        font-size: 124px;
-        line-height: 1;
-        color: var(--red);
-        letter-spacing: -0.02em;
-        min-width: 320px;
-      }
-
-      .comparison-col {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .comp-prev {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 22px;
-        color: var(--grey);
-        text-decoration: line-through;
-        text-decoration-thickness: 2px;
-        text-decoration-color: var(--red);
-      }
-
-      .comp-gain {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 26px;
+      .slot-filename {
+        font-family: var(--font-mono);
+        font-size: 28px;
         font-weight: 700;
-        color: var(--green);
+        color: var(--text-white);
+        text-align: center;
+        word-break: break-all;
       }
 
-      /* Search Bar Inside Card */
-      .search-bar {
-        width: 100%;
-        height: 72px;
-        background-color: #EFECE6;
-        border: 2px solid var(--ink);
-        border-radius: 12px;
+      .slot-footer {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        padding: 0 20px;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 24px;
-        color: var(--ink);
-        gap: 14px;
-        overflow: hidden;
+        padding-top: 10px;
+        border-top: 1px solid rgba(43, 47, 62, 0.6);
       }
 
-      .search-icon {
-        width: 22px;
-        height: 22px;
-        stroke: var(--grey);
-        stroke-width: 2.5;
-        fill: none;
+      .slot-status-text {
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-steel);
       }
 
-      .search-text {
-        white-space: nowrap;
-        font-weight: 500;
-      }
-
-      .blinking-cursor {
-        display: inline-block;
-        width: 3px;
-        height: 28px;
-        background-color: var(--ink);
-        vertical-align: middle;
-        margin-left: 2px;
-      }
-
-      /* 6. Demo Animation Container (Sub-20ms speed demo) */
-      .demo-container {
+      /* 5. Floating / Dropping Payload Cards */
+      .payload-card {
         position: absolute;
-        left: 120px;
-        top: 620px;
-        width: 840px;
-        height: 420px;
-        background-color: var(--card-bg);
-        border: 3px solid var(--ink);
-        border-radius: 20px;
-        padding: 34px 40px;
-        z-index: 5;
+        width: 250px;
+        height: 310px;
+        background: #1C1F2B;
+        border-radius: 18px;
+        padding: 20px 16px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        pointer-events: none;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        z-index: 30;
+      }
+
+      #payload-video {
+        left: 124px;
+        top: 360px;
+        border: 2px solid var(--cyan-gemini);
+        transform: rotate(-6deg);
         opacity: 0;
       }
 
-      .demo-header {
+      #payload-code {
+        left: 415px;
+        top: 340px;
+        border: 2px solid var(--violet-hyper);
+        transform: rotate(4deg);
+        opacity: 0;
+      }
+
+      #payload-pdf {
+        left: 706px;
+        top: 370px;
+        border: 2px solid var(--coral-neon);
+        transform: rotate(-3deg);
+        opacity: 0;
+      }
+
+      /* 6. Massive Digital Odometer Token Counter */
+      .odometer-card {
+        position: absolute;
+        left: 90px;
+        top: 925px;
+        width: 900px;
+        height: 250px;
+        background: var(--polar-glass);
+        border: 2px solid var(--border-glass);
+        border-radius: 24px;
+        padding: 26px 34px;
+        backdrop-filter: blur(20px);
+        isolation: isolate;
+      }
+
+      .odometer-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-bottom: 2px solid #E5E0D8;
-        padding-bottom: 14px;
+        margin-bottom: 8px;
       }
 
-      .demo-title {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
+      .odometer-label {
+        font-family: var(--font-mono);
+        font-size: 28px;
         font-weight: 700;
-        color: var(--ink);
+        color: var(--text-steel);
         letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .odometer-status {
         display: flex;
         align-items: center;
         gap: 10px;
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--cyan-gemini);
+        letter-spacing: 0.04em;
       }
 
-      .live-dot {
+      .status-pulse-dot {
         width: 12px;
         height: 12px;
-        background-color: var(--green);
         border-radius: 50%;
-        box-shadow: 0 0 8px rgba(34, 160, 72, 0.6);
+        background-color: var(--cyan-gemini);
+        box-shadow: 0 0 10px var(--cyan-gemini);
       }
 
-      .demo-speed-tag {
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--green);
-      }
-
-      /* Fast audio waveform stream */
-      .waveform-row {
+      .odometer-display {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 110px;
-        padding: 0 10px;
-        gap: 6px;
+        align-items: baseline;
+        gap: 18px;
+        margin-bottom: 14px;
       }
 
-      .wave-bar {
-        flex: 1;
-        background-color: var(--ink);
-        border-radius: 4px;
-        transform-origin: 50% 50%;
-        height: 20px;
-      }
-
-      .wave-bar.bar-green {
-        background-color: var(--green);
-      }
-
-      .wave-bar.bar-red {
-        background-color: var(--red);
-      }
-
-      /* Token stream rail */
-      .token-rail {
-        display: flex;
-        gap: 12px;
-        overflow: hidden;
-        padding: 10px 0;
-        font-family: 'JetBrains Mono', monospace;
-        font-size: 20px;
-      }
-
-      .token-chip {
-        padding: 8px 16px;
-        background-color: #EFECE6;
-        border: 2px solid var(--ink);
-        border-radius: 8px;
-        font-weight: 700;
-        white-space: nowrap;
-      }
-
-      .token-chip.active {
-        background-color: var(--red);
-        color: #FBFAF8;
-        border-color: var(--ink);
-      }
-
-      /* Stamp: Anton 52px red text REALTIME inside 5px red border box, tilted -6° */
-      .realtime-stamp {
-        position: absolute;
-        left: 310px;
-        top: 735px;
-        padding: 12px 36px;
-        border: 5px solid var(--red);
-        border-radius: 10px;
-        background-color: rgba(251, 250, 248, 0.94);
-        box-shadow: 6px 6px 0px rgba(215, 55, 44, 0.35);
-        font-family: 'Anton', sans-serif;
-        font-size: 52px;
-        color: var(--red);
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
+      #token-odometer-val {
+        font-family: var(--font-anton);
+        font-size: 96px;
         line-height: 1;
-        z-index: 20;
+        color: var(--text-white);
+        letter-spacing: 0.02em;
+        text-shadow: 0 0 30px rgba(66, 133, 244, 0.4);
+      }
+
+      .odometer-unit {
+        font-family: var(--font-anton);
+        font-size: 44px;
+        color: var(--cyan-gemini);
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+      }
+
+      .odometer-progress-track {
+        position: relative;
+        width: 100%;
+        height: 16px;
+        background: #0C0D10;
+        border: 1px solid var(--border-glass);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      #odometer-progress-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, var(--cyan-gemini) 0%, var(--violet-hyper) 55%, var(--coral-neon) 100%);
+        border-radius: 8px;
+        box-shadow: 0 0 16px rgba(66, 133, 244, 0.7);
+      }
+
+      .odometer-meta-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+        font-family: var(--font-mono);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text-steel);
+      }
+
+      /* 7. Stamp / Badge: "ZERO CHUNKING" */
+      #zero-chunking-stamp {
+        position: absolute;
+        left: 350px;
+        top: 865px;
+        width: 480px;
+        height: 85px;
+        background: #0C0D10;
+        border: 5px solid var(--coral-neon);
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 40;
+        box-shadow: 0 0 35px rgba(255, 87, 34, 0.5), inset 0 0 18px rgba(255, 87, 34, 0.25);
         opacity: 0;
         transform: scale(1.75) rotate(-18deg);
-        transform-origin: 50% 50%;
+      }
+
+      .stamp-text {
+        font-family: var(--font-anton);
+        font-size: 52px;
+        line-height: 1;
+        color: var(--coral-neon);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-shadow: 0 0 20px rgba(255, 87, 34, 0.6);
+      }
+
+      #stamp-shockwave {
+        position: absolute;
+        left: 350px;
+        top: 865px;
+        width: 480px;
+        height: 85px;
+        border-radius: 16px;
+        border: 4px solid var(--coral-neon);
         pointer-events: none;
+        opacity: 0;
+        z-index: 39;
       }
     </style>
   </head>
   <body>
-    <div data-hf-id="hf-l81j"
+    <div
       id="root"
+      class="clip"
       data-composition-id="point1"
       data-start="0"
-      data-duration="6.36"
+      data-duration="6.5"
       data-width="1080"
       data-height="1920"
+      data-layout-allow-overflow="true"
     >
-      <!-- 2. Small Label (NO //) -->
-      <div data-hf-id="hf-noog" class="top-label">
-        <div data-hf-id="hf-clmo" class="label-left">01 · LATENCY</div>
-        <div data-hf-id="hf-9wrz" class="label-right">CLOCK: <span data-hf-id="hf-ask2" class="clock-val">18ms</span></div>
+      <!-- Solid Obsidian Background -->
+      <div id="solid-obsidian-bg" class="clip solid-canvas-bg" data-start="0" data-duration="6.5"></div>
+
+      <!-- Parallax Layer 1: Background & Ambient Elements -->
+      <div id="layer-bg" class="clip parallax-layer" data-start="0" data-duration="6.5" data-layout-allow-overflow="true">
+        <div class="bg-dots"></div>
+        <div class="ambient-glow-cyan"></div>
+        <div class="ambient-glow-violet"></div>
+        <div class="ambient-glow-coral"></div>
       </div>
 
-      <!-- 3. Captions -->
-      <div data-hf-id="hf-jzzm" id="captions" class="captions">
-        <div data-hf-id="hf-e2d4" id="cap-phase-1" class="cap-phase">
-          <span data-hf-id="hf-sis4" class="c-word" id="cw-0">First </span>
-          <span data-hf-id="hf-qetx" class="c-word" id="cw-1">leaked </span>
-          <span data-hf-id="hf-07xk" class="c-word" id="cw-2">benchmarks </span>
-          <span data-hf-id="hf-j4ts" class="c-word" id="cw-3">reveal </span>
-          <span data-hf-id="hf-n51m" class="c-word" id="cw-4">sub-twenty </span>
-          <span data-hf-id="hf-ghe4" class="c-word" id="cw-5">millisecond </span>
-          <span data-hf-id="hf-raqf" class="c-word" id="cw-6">response </span>
-          <span data-hf-id="hf-0pld" class="c-word" id="cw-7">times</span>
-        </div>
-        <div data-hf-id="hf-y1wu" id="cap-phase-2" class="cap-phase" style="display: none; opacity: 0;">
-          <span data-hf-id="hf-8ywn" class="c-word" id="cw-8">making </span>
-          <span data-hf-id="hf-l1vt" class="c-word" id="cw-9">streaming </span>
-          <span data-hf-id="hf-dj9x" class="c-word" id="cw-10">feel </span>
-          <span data-hf-id="hf-e16c" class="c-word" id="cw-11">completely </span>
-          <span data-hf-id="hf-zckf" class="c-keyword" id="cw-12">instant</span>
-        </div>
-      </div>
+      <!-- Parallax Layer 2: Main Interface Cards -->
+      <div id="layer-mid" class="clip parallax-layer" data-start="0" data-duration="6.5" data-layout-allow-overflow="true">
+        <!-- 4. Drag & Drop Zone Card -->
+        <div id="drop-zone-wrapper" class="clip" data-start="0" data-duration="6.5" style="left: 90px; top: 450px; width: 900px; height: 450px;">
+          <div class="halftone-shadow"></div>
+          <div class="drop-zone-card" style="left: 0; top: 0;">
+            <!-- Animated Dashed Neon Border -->
+            <svg class="drop-border-svg" viewBox="0 0 900 450">
+              <defs>
+                <linearGradient id="neonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#4285F4" />
+                  <stop offset="50%" stop-color="#9B51E0" />
+                  <stop offset="100%" stop-color="#FF5722" />
+                </linearGradient>
+              </defs>
+              <rect
+                id="dashed-neon-rect"
+                x="2"
+                y="2"
+                width="896"
+                height="446"
+                rx="24"
+                fill="none"
+                stroke="url(#neonGradient)"
+                stroke-width="3"
+                stroke-dasharray="16 12"
+                stroke-dashoffset="0"
+              />
+            </svg>
 
-      <!-- 4. Title: SUB-20MS STREAM with swash underline -->
-      <div data-hf-id="hf-kaw0" id="title-box" class="title-container">
-        <div data-hf-id="hf-sodk" class="headline">
-          <span data-hf-id="hf-gzsa" class="t-black">SUB-20MS</span>
-          <span data-hf-id="hf-uyll" class="t-red">STREAM</span>
-        </div>
-        <svg data-hf-id="hf-dfut" class="swash-svg" viewBox="0 0 840 28">
-          <path data-hf-id="hf-drfs"
-            id="swash-stroke"
-            class="swash-path"
-            d="M 4 18 C 190 28, 540 8, 836 14"
-          />
-        </svg>
-      </div>
+            <!-- Card Header -->
+            <div class="drop-zone-header">
+              <div class="zone-header-left">
+                <div class="zone-indicator-pulse"></div>
+                <span class="zone-title">CONTEXT INGESTION MATRIX</span>
+              </div>
+              <span class="zone-tag" data-layout-ignore="true">TARGET: RAW ATTENTION</span>
+            </div>
 
-      <!-- Halftone shadow for main card -->
-      <div data-hf-id="hf-2021" id="card-shadow" class="halftone-shadow"></div>
+            <!-- 3 Docking Slots -->
+            <div class="slots-grid">
+              <!-- Slot 1: Video -->
+              <div id="dock-slot-1" class="dock-slot">
+                <div class="slot-header">
+                  <span class="slot-num" data-layout-ignore="true">01</span>
+                  <span class="slot-badge-pill badge-pill-cyan" data-layout-ignore="true">VIDEO</span>
+                </div>
+                <div class="slot-body">
+                  <svg class="slot-icon-svg" viewBox="0 0 48 48" fill="none">
+                    <rect x="4" y="8" width="40" height="32" rx="8" stroke="#4285F4" stroke-width="3" />
+                    <polygon points="20,16 32,24 20,32" fill="#4285F4" />
+                  </svg>
+                  <span class="slot-filename" data-layout-ignore="true">video_4k.mp4</span>
+                </div>
+                <div class="slot-footer">
+                  <span class="slot-status-text" data-layout-ignore="true">4K UHD</span>
+                  <span id="slot-1-state" class="slot-status-text" data-layout-ignore="true" style="color: var(--cyan-gemini);">READY</span>
+                </div>
+              </div>
 
-      <!-- 5. Main Card -->
-      <div data-hf-id="hf-pgw5" id="main-card" class="main-card" data-layout-ignore="true">
-        <div data-hf-id="hf-89q4" class="card-header">
-          <div data-hf-id="hf-v3r2" class="card-header-left">
-            <span data-hf-id="hf-mh3o" class="card-metric-tag" data-layout-ignore="true">TIME TO FIRST TOKEN (TTFT)</span>
-            <span data-hf-id="hf-56pb" class="card-benchmark-sub" data-layout-ignore="true">Measured Streaming Latency</span>
+              <!-- Slot 2: Codebase -->
+              <div id="dock-slot-2" class="dock-slot">
+                <div class="slot-header">
+                  <span class="slot-num" data-layout-ignore="true">02</span>
+                  <span class="slot-badge-pill badge-pill-violet" data-layout-ignore="true">CODE</span>
+                </div>
+                <div class="slot-body">
+                  <svg class="slot-icon-svg" viewBox="0 0 48 48" fill="none">
+                    <rect x="4" y="8" width="40" height="32" rx="8" stroke="#9B51E0" stroke-width="3" />
+                    <path d="M16 20L10 24L16 28" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M32 20L38 24L32 28" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M26 16L22 32" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" />
+                  </svg>
+                  <span class="slot-filename" data-layout-ignore="true">repo_archive.zip</span>
+                </div>
+                <div class="slot-footer">
+                  <span class="slot-status-text" data-layout-ignore="true">84K LOC</span>
+                  <span id="slot-2-state" class="slot-status-text" data-layout-ignore="true" style="color: var(--violet-hyper);">READY</span>
+                </div>
+              </div>
+
+              <!-- Slot 3: Document -->
+              <div id="dock-slot-3" class="dock-slot">
+                <div class="slot-header">
+                  <span class="slot-num" data-layout-ignore="true">03</span>
+                  <span class="slot-badge-pill badge-pill-coral" data-layout-ignore="true">PDF</span>
+                </div>
+                <div class="slot-body">
+                  <svg class="slot-icon-svg" viewBox="0 0 48 48" fill="none">
+                    <path d="M12 6H30L38 14V42H12V6Z" stroke="#FF5722" stroke-width="3" stroke-linejoin="round" />
+                    <path d="M30 6V14H38" stroke="#FF5722" stroke-width="3" stroke-linejoin="round" />
+                    <line x1="18" y1="22" x2="30" y2="22" stroke="#FF5722" stroke-width="3" stroke-linecap="round" />
+                    <line x1="18" y1="28" x2="30" y2="28" stroke="#FF5722" stroke-width="3" stroke-linecap="round" />
+                    <line x1="18" y1="34" x2="26" y2="34" stroke="#FF5722" stroke-width="3" stroke-linecap="round" />
+                  </svg>
+                  <span class="slot-filename" data-layout-ignore="true">research.pdf</span>
+                </div>
+                <div class="slot-footer">
+                  <span class="slot-status-text" data-layout-ignore="true">680 PGS</span>
+                  <span id="slot-3-state" class="slot-status-text" data-layout-ignore="true" style="color: var(--coral-neon);">READY</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div data-hf-id="hf-u00g" id="badge-1" class="badge-1">
-            <span data-hf-id="hf-l73p">#1</span>
-          </div>
         </div>
 
-        <div data-hf-id="hf-9dua" class="counter-display-row">
-          <div data-hf-id="hf-oss5" id="latency-counter" class="big-counter">120ms</div>
-          <div data-hf-id="hf-8vo2" class="comparison-col">
-            <div data-hf-id="hf-yn08" class="comp-prev" data-layout-ignore="true">PREV: 120ms</div>
-            <div data-hf-id="hf-ar9h" class="comp-gain">6.7x FASTER</div>
+        <!-- 6. Digital Odometer Token Counter Card -->
+        <div id="odometer-wrapper" class="clip" data-start="0" data-duration="6.5" style="left: 90px; top: 925px; width: 900px; height: 250px;">
+          <div class="halftone-shadow"></div>
+          <div class="odometer-card" style="left: 0; top: 0;">
+            <div class="odometer-top">
+              <span class="odometer-label">ACTIVE CONTEXT TOKENS</span>
+              <div class="odometer-status">
+                <div class="status-pulse-dot"></div>
+                <span id="odometer-status-txt" data-layout-ignore="true">INGESTING STREAM</span>
+              </div>
+            </div>
+            <div class="odometer-display">
+              <span id="token-odometer-val">0</span>
+              <span class="odometer-unit">/ 2,000,000+</span>
+            </div>
+            <div class="odometer-progress-track">
+              <div id="odometer-progress-fill"></div>
+            </div>
+            <div class="odometer-meta-bottom" data-layout-ignore="true">
+              <span data-layout-ignore="true">UNIFIED MEMORY BUFFER</span>
+              <span id="odometer-pct-txt" data-layout-ignore="true">0% FULL</span>
+            </div>
           </div>
-        </div>
-
-        <!-- Auto-typing Search Bar -->
-        <div data-hf-id="hf-1mng" class="search-bar">
-          <svg data-hf-id="hf-mvuk" class="search-icon" viewBox="0 0 24 24">
-            <circle data-hf-id="hf-r9ft" cx="11" cy="11" r="7" />
-            <line data-hf-id="hf-ks8u" x1="16.5" y1="16.5" x2="22" y2="22" />
-          </svg>
-          <span data-hf-id="hf-bylm" id="search-input" class="search-text"></span>
-          <span data-hf-id="hf-8v36" id="cursor" class="blinking-cursor"></span>
         </div>
       </div>
 
-      <!-- 6. Demo Animation Container (Sub-20ms speed demo) -->
-      <div data-hf-id="hf-4hk1" id="demo-box" class="demo-container" data-layout-ignore="true">
-        <div data-hf-id="hf-0p31" class="demo-header">
-          <div data-hf-id="hf-4d28" class="demo-title">
-            <div data-hf-id="hf-sv8g" class="live-dot"></div>
-            <span data-hf-id="hf-vcaf">BURST STREAM ACTIVE</span>
+      <!-- Parallax Layer 3: Foreground Elements, Badges, Dropping Cards, Stamp -->
+      <div id="layer-fg" class="clip parallax-layer" data-start="0" data-duration="6.5" data-layout-allow-overflow="true">
+        <!-- 1. Top Small Badge -->
+        <div id="top-badge-block" class="top-badge-container">
+          <div class="top-badge">
+            <span class="badge-dot"></span>
+            <span>01 · MULTIMODAL</span>
           </div>
-          <div data-hf-id="hf-n0hs" class="demo-speed-tag" data-layout-ignore="true">18.4ms · REALTIME</div>
+          <span class="badge-aux" data-layout-ignore="true">WINDOW: 6.5s – 13.0s</span>
         </div>
 
-        <div data-hf-id="hf-iqgp" class="waveform-row" id="waveform">
-          <div data-hf-id="hf-hdte" class="wave-bar bar-1"></div>
-          <div data-hf-id="hf-dfpd" class="wave-bar bar-2"></div>
-          <div data-hf-id="hf-nej5" class="wave-bar bar-3 bar-green"></div>
-          <div data-hf-id="hf-pmu2" class="wave-bar bar-4 bar-green"></div>
-          <div data-hf-id="hf-2k7q" class="wave-bar bar-5"></div>
-          <div data-hf-id="hf-4jdo" class="wave-bar bar-6 bar-red"></div>
-          <div data-hf-id="hf-xufw" class="wave-bar bar-7"></div>
-          <div data-hf-id="hf-xh8m" class="wave-bar bar-8 bar-green"></div>
-          <div data-hf-id="hf-py7u" class="wave-bar bar-9"></div>
-          <div data-hf-id="hf-zocb" class="wave-bar bar-10 bar-green"></div>
-          <div data-hf-id="hf-sijb" class="wave-bar bar-11"></div>
-          <div data-hf-id="hf-jung" class="wave-bar bar-12"></div>
-          <div data-hf-id="hf-sev0" class="wave-bar bar-13 bar-green"></div>
-          <div data-hf-id="hf-3e0y" class="wave-bar bar-14"></div>
-          <div data-hf-id="hf-49ym" class="wave-bar bar-15 bar-red"></div>
-          <div data-hf-id="hf-wgnc" class="wave-bar bar-16"></div>
-          <div data-hf-id="hf-de3k" class="wave-bar bar-17 bar-green"></div>
-          <div data-hf-id="hf-x4tq" class="wave-bar bar-18"></div>
-          <div data-hf-id="hf-vob6" class="wave-bar bar-19 bar-green"></div>
-          <div data-hf-id="hf-0pd7" class="wave-bar bar-20"></div>
-          <div data-hf-id="hf-rbaf" class="wave-bar bar-21 bar-green"></div>
-          <div data-hf-id="hf-st55" class="wave-bar bar-22"></div>
-          <div data-hf-id="hf-8vll" class="wave-bar bar-23 bar-green"></div>
-          <div data-hf-id="hf-lvrj" class="wave-bar bar-24"></div>
+        <!-- 2. Captions (Top Left) -->
+        <div class="captions-wrapper">
+          <!-- Sentence 1 (0.0s – 2.8s) -->
+          <div id="caption-sentence-1" class="caption-sentence">
+            <div class="caption-line">
+              <span class="w-word" id="cw-1">Point</span>
+              <span class="w-word" id="cw-2">one:</span>
+              <span class="w-word" id="cw-3">The</span>
+              <span class="w-word" id="cw-4">two</span>
+              <span class="w-word w-accent-coral" id="cw-5">million</span>
+            </div>
+            <div class="caption-line">
+              <span class="w-word" id="cw-6">multimodal</span>
+              <span class="w-word w-accent-coral" id="cw-7">canvas.</span>
+            </div>
+          </div>
+
+          <!-- Sentence 2 (2.9s – 6.5s) -->
+          <div id="caption-sentence-2" class="caption-sentence">
+            <div class="caption-line">
+              <span class="w-word" id="cw-8">Drop</span>
+              <span class="w-word" id="cw-9">massive</span>
+              <span class="w-word w-accent-cyan" id="cw-10">four-K</span>
+              <span class="w-word" id="cw-11">video,</span>
+              <span class="w-word" id="cw-12">full</span>
+              <span class="w-word w-accent-violet" id="cw-13">codebases,</span>
+            </div>
+            <div class="caption-line">
+              <span class="w-word" id="cw-14">or</span>
+              <span class="w-word w-accent-coral" id="cw-15">PDFs</span>
+              <span class="w-word" id="cw-16">directly</span>
+              <span class="w-word" id="cw-17">into</span>
+              <span class="w-word" id="cw-18">context.</span>
+            </div>
+          </div>
         </div>
 
-        <div data-hf-id="hf-e8ku" class="token-rail" id="token-rail">
-          <div data-hf-id="hf-zgsf" class="token-chip active">input_query</div>
-          <div data-hf-id="hf-xdan" class="token-chip">18ms</div>
-          <div data-hf-id="hf-s9mn" class="token-chip active">stream_0</div>
-          <div data-hf-id="hf-94ye" class="token-chip">stream_1</div>
-          <div data-hf-id="hf-z6bz" class="token-chip">instant</div>
+        <!-- 3. Title Headline -->
+        <div id="title-block" class="title-container">
+          <div class="headline">
+            <span class="hl-white">2M+</span>
+            <span class="hl-cyan">TOKEN CANVAS</span>
+          </div>
+          <div class="headline-line"></div>
         </div>
+
+        <!-- Floating & Dropping Payload Cards -->
+        <!-- Payload 1: Video -->
+        <div id="payload-video" class="payload-card" data-layout-ignore="true">
+          <div class="slot-header" data-layout-ignore="true">
+            <span class="slot-num" data-layout-ignore="true">01</span>
+            <span class="slot-badge-pill badge-pill-cyan" data-layout-ignore="true">4K UHD</span>
+          </div>
+          <div class="slot-body" data-layout-ignore="true">
+            <svg class="slot-icon-svg" viewBox="0 0 48 48" fill="none">
+              <rect x="4" y="8" width="40" height="32" rx="8" stroke="#4285F4" stroke-width="3" />
+              <polygon points="20,16 32,24 20,32" fill="#4285F4" />
+            </svg>
+            <span class="slot-filename" data-layout-ignore="true">video_4k.mp4</span>
+          </div>
+          <div class="slot-footer" data-layout-ignore="true">
+            <span class="slot-status-text" data-layout-ignore="true">1.2 GB</span>
+            <span class="slot-status-text" data-layout-ignore="true" style="color: var(--cyan-gemini);">PAYLOAD</span>
+          </div>
+        </div>
+
+        <!-- Payload 2: Codebase -->
+        <div id="payload-code" class="payload-card" data-layout-ignore="true">
+          <div class="slot-header" data-layout-ignore="true">
+            <span class="slot-num" data-layout-ignore="true">02</span>
+            <span class="slot-badge-pill badge-pill-violet" data-layout-ignore="true">REPO</span>
+          </div>
+          <div class="slot-body" data-layout-ignore="true">
+            <svg class="slot-icon-svg" viewBox="0 0 48 48" fill="none">
+              <rect x="4" y="8" width="40" height="32" rx="8" stroke="#9B51E0" stroke-width="3" />
+              <path d="M16 20L10 24L16 28" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M32 20L38 24L32 28" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M26 16L22 32" stroke="#9B51E0" stroke-width="3" stroke-linecap="round" />
+            </svg>
+            <span class="slot-filename" data-layout-ignore="true">repo_archive.zip</span>
+          </div>
+          <div class="slot-footer" data-layout-ignore="true">
+            <span class="slot-status-text" data-layout-ignore="true">84K LOC</span>
+            <span class="slot-status-text" data-layout-ignore="true" style="color: var(--violet-hyper);">PAYLOAD</span>
+          </div>
+        </div>
+
+        <!-- Payload 3: PDF Document -->
+        <div id="payload-pdf" class="payload-card" data-layout-ignore="true">
+          <div class="slot-header" data-layout-ignore="true">
+            <span class="slot-num" data-layout-ignore="true">03</span>
+            <span class="slot-badge-pill badge-pill-coral" data-layout-ignore="true">DOC</span>
+          </div>
+          <div class="slot-body" data-layout-ignore="true">
+            <svg class="slot-icon-svg" viewBox="0 0 48 48" fill="none">
+              <path d="M12 6H30L38 14V42H12V6Z" stroke="#FF5722" stroke-width="3" stroke-linejoin="round" />
+              <path d="M30 6V14H38" stroke="#FF5722" stroke-width="3" stroke-linejoin="round" />
+              <line x1="18" y1="22" x2="30" y2="22" stroke="#FF5722" stroke-width="3" stroke-linecap="round" />
+              <line x1="18" y1="28" x2="30" y2="28" stroke="#FF5722" stroke-width="3" stroke-linecap="round" />
+              <line x1="18" y1="34" x2="26" y2="34" stroke="#FF5722" stroke-width="3" stroke-linecap="round" />
+            </svg>
+            <span class="slot-filename" data-layout-ignore="true">research.pdf</span>
+          </div>
+          <div class="slot-footer" data-layout-ignore="true">
+            <span class="slot-status-text" data-layout-ignore="true">680 PGS</span>
+            <span class="slot-status-text" data-layout-ignore="true" style="color: var(--coral-neon);">PAYLOAD</span>
+          </div>
+        </div>
+
+        <!-- 7. Stamp / Badge: "ZERO CHUNKING" -->
+        <div id="zero-chunking-stamp" data-layout-ignore="true">
+          <span class="stamp-text" data-layout-ignore="true">ZERO CHUNKING</span>
+        </div>
+        <div id="stamp-shockwave"></div>
       </div>
-
-      <!-- Stamp: REALTIME -->
-      <div data-hf-id="hf-8wqp" id="stamp" class="realtime-stamp">REALTIME</div>
     </div>
 
+    <!-- GSAP Master Animation Script -->
     <script>
-      // Initialize GSAP Root Timeline
+      // 1. HyperFrames Root Timeline Registration
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
       window.__timelines["point1"] = tl;
 
-      // 1. Swash setup (stroke-dasharray / stroke-dashoffset)
-      const swash = document.getElementById("swash-stroke");
-      const swashLen = swash ? swash.getTotalLength() : 840;
-      if (swash) {
-        gsap.set(swash, {
-          strokeDasharray: swashLen,
-          strokeDashoffset: swashLen
-        });
-      }
+      // 2. Continuous 2.5D Parallax Camera Drift
+      tl.to("#layer-bg", { y: -16, duration: 6.5, ease: "none" }, 0);
+      tl.to("#layer-mid", { y: -8, duration: 6.5, ease: "none" }, 0);
+      tl.to("#layer-fg", { y: 12, duration: 6.5, ease: "none" }, 0);
 
-      // Initial state setup
-      gsap.set("#title-box", { opacity: 0, scale: 1.22 });
-      gsap.set("#card-shadow", { opacity: 0, y: 70 });
-      gsap.set("#main-card", { opacity: 0, y: 70 });
-      gsap.set("#badge-1", { opacity: 0, scale: 0, rotation: 0 });
-      gsap.set("#demo-box", { opacity: 0, y: 30 });
-      gsap.set("#stamp", { opacity: 0, scale: 1.75, rotation: -18 });
+      // Continuous animated dashed neon border on drop zone
+      tl.to("#dashed-neon-rect", {
+        strokeDashoffset: -280,
+        duration: 6.5,
+        ease: "none"
+      }, 0);
 
-      // 4. Title slams in at 0.0s on spoken word "First" (scale 1.22 to 1 in 0.24s, power4.out)
-      tl.fromTo("#title-box", 
-        { opacity: 0, scale: 1.22 },
-        { opacity: 1, scale: 1, duration: 0.24, ease: "power4.out" },
-        0.0
+      // 3. Opening Micro-Interactions (0.0s – 0.5s)
+      // Top badge entrance
+      tl.fromTo(
+        "#top-badge-block",
+        { opacity: 0, y: -24 },
+        { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+        0.05
       );
 
-      // Hand-drawn red swash underline draws across at 0.12s
-      if (swash) {
-        tl.to(swash, {
-          strokeDashoffset: 0,
-          duration: 0.38,
-          ease: "power2.out"
-        }, 0.12);
-      }
+      // Title Headline Slams In at 0.12s
+      tl.fromTo(
+        "#title-block",
+        { opacity: 0, scale: 1.18, y: -45 },
+        { opacity: 1, scale: 1.0, y: 0, duration: 0.42, ease: "power4.out" },
+        0.12
+      );
 
-      // 3. Caption word sync
-      const wordTimings = [
-        { id: "#cw-0", time: 0.0 },
-        { id: "#cw-1", time: 0.3 },
-        { id: "#cw-2", time: 0.7 },
-        { id: "#cw-3", time: 1.2 },
-        { id: "#cw-4", time: 1.6 },
-        { id: "#cw-5", time: 2.1 },
-        { id: "#cw-6", time: 2.6 },
-        { id: "#cw-7", time: 3.1 },
-        { id: "#cw-8", time: 3.6 },
-        { id: "#cw-9", time: 4.0 },
-        { id: "#cw-10", time: 4.4 },
-        { id: "#cw-11", time: 4.8 }
-      ];
+      // Main Drop Zone card and Odometer card enter
+      tl.fromTo(
+        "#drop-zone-wrapper",
+        { opacity: 0, y: 35 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" },
+        0.2
+      );
 
-      tl.set("#cap-phase-1", { display: "block", opacity: 1 }, 0);
-      tl.set("#cap-phase-2", { display: "none", opacity: 0 }, 0);
-      tl.set("#cap-phase-1", { display: "none" }, 3.5);
-      tl.set("#cap-phase-2", { display: "block", opacity: 1 }, 3.5);
+      tl.fromTo(
+        "#odometer-wrapper",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" },
+        0.35
+      );
 
-      wordTimings.forEach(item => {
-        tl.to(item.id, {
-          color: "#1E1C1A",
-          duration: 0.2,
-          ease: "power1.out"
-        }, item.time);
-      });
+      // 4. Word-Level Caption Choreography
+      // Sentence 1: "Point one: The two million multimodal canvas."
+      tl.to("#cw-1", { color: "#FFFFFF", duration: 0.12 }, 0.05); // Point
+      tl.to("#cw-2", { color: "#FFFFFF", duration: 0.12 }, 0.38); // one:
+      tl.to("#cw-3", { color: "#FFFFFF", duration: 0.12 }, 0.72); // The
+      tl.to("#cw-4", { color: "#FFFFFF", duration: 0.12 }, 1.02); // two
+      tl.to("#cw-5", { color: "#FF5722", duration: 0.16 }, 1.34); // million (coral accent)
+      tl.to("#cw-6", { color: "#FFFFFF", duration: 0.14 }, 1.78); // multimodal
+      tl.to("#cw-7", { color: "#FF5722", duration: 0.16 }, 2.22); // canvas. (coral accent)
 
-      // KEY WORD: "instant" at 5.22s turns #D7372C
-      tl.to("#cw-12", {
-        color: "#D7372C",
-        duration: 0.2,
-        ease: "power1.out"
-      }, 5.22);
+      // Sentence transition at 2.82s
+      tl.to("#caption-sentence-1", { opacity: 0, y: -12, duration: 0.18, ease: "power2.in" }, 2.80);
+      tl.to("#caption-sentence-2", { opacity: 1, y: 0, duration: 0.22, ease: "power2.out" }, 2.94);
 
-      // 5. Main Card rises 0.18s later (70px up in 0.4s, power3.out)
-      tl.to(["#main-card", "#card-shadow"], {
-        opacity: 1,
-        y: 0,
-        duration: 0.4,
-        ease: "power3.out"
-      }, 0.18);
+      // Sentence 2: "Drop massive four-K video, full codebases, or PDFs directly into context."
+      tl.to("#cw-8", { color: "#FFFFFF", duration: 0.12 }, 2.96); // Drop
+      tl.to("#cw-9", { color: "#FFFFFF", duration: 0.12 }, 3.26); // massive
+      tl.to("#cw-10", { color: "#4285F4", duration: 0.16 }, 3.64); // four-K (cyan accent)
+      tl.to("#cw-11", { color: "#FFFFFF", duration: 0.12 }, 4.02); // video,
+      tl.to("#cw-12", { color: "#FFFFFF", duration: 0.12 }, 4.42); // full
+      tl.to("#cw-13", { color: "#9B51E0", duration: 0.16 }, 4.72); // codebases, (violet accent)
+      tl.to("#cw-14", { color: "#FFFFFF", duration: 0.12 }, 5.12); // or
+      tl.to("#cw-15", { color: "#FF5722", duration: 0.16 }, 5.34); // PDFs (coral accent)
+      tl.to("#cw-16", { color: "#FFFFFF", duration: 0.12 }, 5.72); // directly
+      tl.to("#cw-17", { color: "#FFFFFF", duration: 0.12 }, 5.96); // into
+      tl.to("#cw-18", { color: "#FFFFFF", duration: 0.14 }, 6.18); // context.
 
-      // Number counter: counts down from 120ms to 18ms over 1.15s (0.18s to 1.33s)
-      const counterTarget = { val: 120 };
-      const counterEl = document.getElementById("latency-counter");
-      tl.to(counterTarget, {
-        val: 18,
-        duration: 1.15,
-        ease: "power2.out",
-        onUpdate: function () {
-          if (counterEl) {
-            counterEl.textContent = Math.round(counterTarget.val) + "ms";
+      // 5. Floating File Payloads Appearance (2.7s – 3.2s)
+      tl.to("#payload-video", { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 2.75);
+      tl.to("#payload-code", { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 3.00);
+      tl.to("#payload-pdf", { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 3.25);
+
+      // Gentle floating bob before drop
+      tl.to("#payload-video", { y: "+=12", rotation: -4, duration: 0.5, yoyo: true, repeat: 1, ease: "sine.inOut" }, 3.10);
+      tl.to("#payload-code", { y: "+=10", rotation: 2, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, 3.35);
+      tl.to("#payload-pdf", { y: "+=14", rotation: -1, duration: 0.6, yoyo: true, repeat: 1, ease: "sine.inOut" }, 3.60);
+
+      // 6. Tactical File Drops into Context Matrix
+      // File 1: video_4k.mp4 drops at 3.78s (on "four-K video")
+      tl.to("#payload-video", {
+        y: 114,
+        scale: 1.0,
+        rotation: 0,
+        duration: 0.28,
+        ease: "power3.in"
+      }, 3.78);
+
+      // Landing impact at 4.06s
+      tl.call(function() {
+        const slot1 = document.getElementById("dock-slot-1");
+        const state1 = document.getElementById("slot-1-state");
+        if (slot1) slot1.classList.add("slot-active-cyan");
+        if (state1) state1.textContent = "IN CONTEXT";
+      }, null, 4.06);
+
+      tl.to("#payload-video", { opacity: 0, duration: 0.1 }, 4.06);
+
+      tl.fromTo("#dock-slot-1",
+        { scale: 0.94 },
+        { scale: 1.0, duration: 0.22, ease: "back.out(2)" },
+        4.06
+      );
+
+      // File 2: repo_archive.zip drops at 4.70s (on "codebases")
+      tl.to("#payload-code", {
+        y: 134,
+        scale: 1.0,
+        rotation: 0,
+        duration: 0.28,
+        ease: "power3.in"
+      }, 4.70);
+
+      // Landing impact at 4.98s
+      tl.call(function() {
+        const slot2 = document.getElementById("dock-slot-2");
+        const state2 = document.getElementById("slot-2-state");
+        if (slot2) slot2.classList.add("slot-active-violet");
+        if (state2) state2.textContent = "IN CONTEXT";
+      }, null, 4.98);
+
+      tl.to("#payload-code", { opacity: 0, duration: 0.1 }, 4.98);
+
+      tl.fromTo("#dock-slot-2",
+        { scale: 0.94 },
+        { scale: 1.0, duration: 0.22, ease: "back.out(2)" },
+        4.98
+      );
+
+      // File 3: research_paper.pdf drops at 5.32s (on "PDFs")
+      tl.to("#payload-pdf", {
+        y: 104,
+        scale: 1.0,
+        rotation: 0,
+        duration: 0.28,
+        ease: "power3.in"
+      }, 5.32);
+
+      // Landing impact at 5.60s
+      tl.call(function() {
+        const slot3 = document.getElementById("dock-slot-3");
+        const state3 = document.getElementById("slot-3-state");
+        if (slot3) slot3.classList.add("slot-active-coral");
+        if (state3) state3.textContent = "IN CONTEXT";
+      }, null, 5.60);
+
+      tl.to("#payload-pdf", { opacity: 0, duration: 0.1 }, 5.60);
+
+      tl.fromTo("#dock-slot-3",
+        { scale: 0.94 },
+        { scale: 1.0, duration: 0.22, ease: "back.out(2)" },
+        5.60
+      );
+
+      // 7. Massive Digital Odometer Token Counter Rolling (3.80s – 5.90s)
+      const odometerData = { tokens: 0 };
+      const odometerEl = document.getElementById("token-odometer-val");
+      const progressFillEl = document.getElementById("odometer-progress-fill");
+      const pctTxtEl = document.getElementById("odometer-pct-txt");
+      const statusTxtEl = document.getElementById("odometer-status-txt");
+
+      tl.to(odometerData, {
+        tokens: 2097152,
+        duration: 2.10,
+        ease: "power3.out",
+        onUpdate: function() {
+          const val = Math.floor(odometerData.tokens);
+          if (odometerEl) {
+            odometerEl.textContent = val.toLocaleString("en-US");
+          }
+          const pct = Math.min(100, Math.floor((val / 2097152) * 100));
+          if (progressFillEl) {
+            progressFillEl.style.width = pct + "%";
+          }
+          if (pctTxtEl) {
+            pctTxtEl.textContent = pct + "% FULL";
           }
         }
-      }, 0.18);
+      }, 3.80);
 
-      // Red #1 badge spins in at 0.6s (scale 0->1, rotation 0->360deg)
-      tl.to("#badge-1", {
-        opacity: 1,
-        scale: 1,
-        rotation: 360,
-        duration: 0.45,
-        ease: "back.out(1.8)"
-      }, 0.6);
-
-      // Search bar auto-types "stream prompt token..." in under 0.9s with blinking cursor
-      const searchText = "stream prompt token...";
-      const searchEl = document.getElementById("search-input");
-      const typeTarget = { progress: 0 };
-      tl.to(typeTarget, {
-        progress: 1,
-        duration: 0.85,
-        ease: "none",
-        onUpdate: function () {
-          if (searchEl) {
-            const count = Math.floor(typeTarget.progress * searchText.length);
-            searchEl.textContent = searchText.substring(0, count);
-          }
+      tl.call(function() {
+        if (statusTxtEl) {
+          statusTxtEl.textContent = "2M BUFFER READY";
+          statusTxtEl.style.color = "#FF5722";
         }
-      }, 0.7);
+      }, null, 5.65);
 
-      // Blinking cursor toggle pulses
-      const cursorEl = document.getElementById("cursor");
-      for (let t = 0.7; t < 4.5; t += 0.28) {
-        tl.set(cursorEl, { opacity: 0 }, t);
-        tl.set(cursorEl, { opacity: 1 }, t + 0.14);
-      }
+      // 8. Stamp / Badge: "ZERO CHUNKING" Slam Impact at 5.68s
+      // Anton 52px in 5px high-contrast box stamped at -6° rotation (scale: 1.75 -> 1, rotate: -18deg -> -6deg)
+      tl.fromTo(
+        "#zero-chunking-stamp",
+        { opacity: 0, scale: 1.75, rotation: -18 },
+        { opacity: 1, scale: 1.0, rotation: -6, duration: 0.18, ease: "power4.in" },
+        5.68
+      );
 
-      // 6. Explanation exit & Demo animation:
-      // At ~4.7s: Card exits upward (50px up, fade out in 0.22s)
-      tl.to(["#main-card", "#card-shadow"], {
-        y: -50,
-        opacity: 0,
-        duration: 0.22,
-        ease: "power2.in"
-      }, 4.7);
+      // Impact Shockwave expanding outwards
+      tl.fromTo(
+        "#stamp-shockwave",
+        { opacity: 0.95, scale: 0.85, rotation: -6 },
+        { opacity: 0, scale: 1.55, rotation: -6, duration: 0.38, ease: "power2.out" },
+        5.68
+      );
 
-      // Demo animation appears at 4.75s
-      tl.to("#demo-box", {
-        opacity: 1,
-        y: 0,
-        duration: 0.25,
-        ease: "power3.out"
-      }, 4.75);
+      // Tactile UI jolt on stamp landing
+      tl.to("#layer-mid", {
+        y: "+=6",
+        duration: 0.04,
+        yoyo: true,
+        repeat: 3,
+        ease: "sine.inOut"
+      }, 5.68);
 
-      // Waveform bars pulsing to simulate instant speed from 4.75s to 6.36s
-      const bars = document.querySelectorAll(".wave-bar");
-      bars.forEach((bar, index) => {
-        const baseHeight = 25 + ((index * 13) % 65);
-        const peakHeight = 40 + ((index * 19) % 60);
-        tl.fromTo(bar, 
-          { height: baseHeight },
-          { height: peakHeight, duration: 0.12 + (index % 5) * 0.02, yoyo: true, repeat: 7, ease: "sine.inOut" },
-          4.78 + (index * 0.015)
-        );
-      });
-
-      // Token rail shift to show high throughput stream
-      tl.to("#token-rail", {
-        x: -80,
-        duration: 1.2,
-        ease: "none"
-      }, 4.8);
-
-      // Stamp lands on key word "instant" at 5.22s:
-      // Anton 52px red text REALTIME inside 5px red border box, tilted -6°
-      // Motion: scale 1.75 to 1 and -18° to -6° in 0.2s
-      tl.to("#stamp", {
-        opacity: 1,
-        scale: 1,
-        rotation: -6,
-        duration: 0.2,
-        ease: "power4.in"
-      }, 5.22);
-
-      // Final seek to 0 for HyperFrames playback
-      tl.seek(0);
+      // Initial seek to 0 for HyperFrames engine
+      const urlParams = new URLSearchParams(window.location.search);
+      const seekTime = parseFloat(urlParams.get("t") || "0");
+      tl.seek(seekTime);
     </script>
   </body>
 </html>
